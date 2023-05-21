@@ -116,7 +116,7 @@
       const onClickLeft = () => history.back()
 
       const onSubmit = (values) => {
-        router.push({ name: 'chukudanResultQuery', params: values })
+        router.push({ name: 'chukudanResultQuery', query: values })
       }
 
       return {
