@@ -7,6 +7,7 @@
       <van-button type="primary" block @click="onScan2">红外线扫描（PDA设备专属）</van-button>
       <van-button type="primary" block @click="writeLocalData">本地数据缓存（长期有效）</van-button>
       <van-button type="primary" block @click="readLocalData">读取本地已缓存的数据</van-button>
+      <van-button type="primary" block @click="update">检查更新</van-button>
     </div>
   </main>
 </template>
@@ -27,7 +28,7 @@ export default {
   },
   methods: {
     gotoLogin() {
-      this.$router.push("/login")
+      this.$router.replace("/login")
     },
     onScan() {
       fc.scan()
@@ -40,6 +41,9 @@ export default {
     },
     readLocalData() {
       fc.readLocal("hell")
+    },
+    update() {
+      fc.appUpdate("https://gitee.com/whutpsychic/RTZL-ZiJinScanner/raw/main/app-releasev0.2.1.apk")
     },
   }
 }
