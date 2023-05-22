@@ -42,8 +42,9 @@ class AppUpdater {
           }
         },
         onCancelTagListener: (tag) {
-          print(' ==================================== ');
-          print(' ==================================== ');
+          // 下载失败时
+          Navigator.of(context).pop();
+          Toast.show(context, "已经是最新版本了");
         },
       );
     }
