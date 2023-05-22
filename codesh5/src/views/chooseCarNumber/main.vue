@@ -45,13 +45,13 @@
       </van-form>
 
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
-        <el-table-column prop="col1" label="车号" />
-        <el-table-column prop="col2" label="单据号" />
-        <el-table-column prop="col3" label="泵房" />
+        <el-table-column prop="chehao" label="车号" />
+        <el-table-column prop="danjuhao" label="单据号" />
+        <el-table-column prop="chengfang" label="秤房" />
       </el-table>
 
       <van-cell-group inset>
-        <van-field v-model="carNo" label="车号" placeholder="请输入用户名" />
+        <van-field v-model="chehao" label="车号" placeholder="请输入车号" />
       </van-cell-group>
 
       <div style="margin: 16px">
@@ -74,16 +74,17 @@
 <script>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import { reactive } from 'vue'
+  import { useStore } from 'vuex'
   export default {
     setup() {
       const startDate = ref('')
       const endDate = ref('')
 
-      const carNo = ref('')
+      const chehao = ref('')
 
       const showPicker = ref(false)
       const showPicker2 = ref(false)
+      const store = useStore()
 
       const router = useRouter()
 
@@ -98,36 +99,40 @@
       }
 
       const onClickLeft = () => history.back()
-
       const onQuery = () => {
         tableData.value = [
-          { col1: 1, col2: 2, col3: 3 },
-          { col1: 1, col2: 2, col3: 3 },
-          { col1: 1, col2: 2, col3: 3 },
+          { chehao: 1, danjuhao: 2, chengfang: 3 },
+          { chehao: 11, danjuhao: 22, chengfang: 33 },
+          { chehao: 111, danjuhao: 222, chengfang: 333 },
         ]
       }
 
       const onSubmit = (values) => {}
 
-      let selectedCarNo = ''
+      let selectedCheHao = ''
       const selectRow = (row, column, event) => {
-        selectedCarNo = row.col1
+        selectedCheHao = row.chehao
       }
 
       const confirmSelect = () => {
-        if (selectedCarNo) {
-          alert(selectedCarNo)
-          router.push({ name: 'chukudanDetails', query: { id: selectedCarNo } })
+        if (selectedCheHao) {
+          let chukudanInfo = store.state.chukudan
+          chukudanInfo.chehao = selectedCheHao
+          store.commit('setChukudan', chukudanInfo)
+          router.push({
+            name: 'chukudanDetails',
+          })
         } else {
           alert('请选择正确的行')
         }
       }
 
       const handleConfirmSelect = () => {
-        if (carNo.value) {
-          debugger
-          alert(carNo.value)
-          router.push({ name: 'chukudanDetails', query: { id: carNo } })
+        if (chehao.value) {
+          let chukudanInfo = store.state.chukudan
+          chukudanInfo.chehao = chehao.value
+          store.commit('setChukudan', chukudanInfo)
+          router.push({ name: 'chukudanDetails' })
         } else {
           alert('请选输入车号')
         }
@@ -147,7 +152,7 @@
         selectRow,
         confirmSelect,
         handleConfirmSelect,
-        carNo,
+        chehao,
       }
     },
   }

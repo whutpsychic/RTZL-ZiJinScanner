@@ -9,23 +9,23 @@
 
     <div class="table-content">
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
-        <el-table-column prop="id" label="发货单号" />
-        <el-table-column prop="name" label="收货单号" />
-        <el-table-column prop="address" label="计划重量" />
-        <el-table-column prop="address" label="已发数量" />
-        <el-table-column prop="address" label="发货单日期" />
-        <el-table-column prop="address" label="计划日期" />
-        <el-table-column prop="address" label="订单号" />
-        <el-table-column prop="address" label="序号" />
-        <el-table-column prop="address" label="产品编码" />
-        <el-table-column prop="address" label="产品名称" />
-        <el-table-column prop="address" label="批次号" />
-        <el-table-column prop="address" label="计量单位" />
-        <el-table-column prop="address" label="库房名称" />
+        <el-table-column prop="fahuodanhao" label="发货单号" />
+        <el-table-column prop="shouhuodanwei" label="收货单号" />
+        <el-table-column prop="jihuazhongliang" label="计划重量" />
+        <el-table-column prop="yifashuliang" label="已发数量" />
+        <el-table-column prop="fahuodanriqi" label="发货单日期" />
+        <el-table-column prop="jihuariqi" label="计划日期" />
+        <el-table-column prop="dingdanhao" label="订单号" />
+        <el-table-column prop="xuhao" label="序号" />
+        <el-table-column prop="chanpinbianma" label="产品编码" />
+        <el-table-column prop="chanpinmingcheng" label="产品名称" />
+        <el-table-column prop="picihao" label="批次号" />
+        <el-table-column prop="jiliangdanwei" label="计量单位" />
+        <el-table-column prop="kufangmingcheng" label="库房名称" />
 
-        <el-table-column prop="address" label="运输区分" />
-        <el-table-column prop="address" label="车号" />
-        <el-table-column prop="address" label="计划类型" />
+        <el-table-column prop="yuanshuqufen" label="运输区分" />
+        <el-table-column prop="chehao" label="车号" />
+        <el-table-column prop="jihualeixing" label="计划类型" />
       </el-table>
       <div style="margin: 16px">
         <div class="btn-area">
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-  import { ref } from 'vue'
+  import { toRaw } from '@vue/reactivity'
   import { onMounted } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   export default {
@@ -56,16 +56,20 @@
       const onClickLeft = () => history.back()
       const onRefresh = () => {}
 
-      let selectedId = ''
+      let selectedRow = ''
 
       const selectRow = (row, column, event) => {
-        selectedId = row.id
+        selectedRow = toRaw(row)
       }
 
       const showDetail = () => {
-        if (selectedId) {
-          alert(selectedId)
-          router.push({ name: 'chukudanDetails', query: { id: selectedId } })
+        if (selectedRow) {
+          router.push({
+            name: 'chukudanDetails',
+            query: {
+              rowData: encodeURIComponent(JSON.stringify(selectedRow)),
+            },
+          })
         } else {
           alert('请选择正确的行')
         }
@@ -73,24 +77,40 @@
 
       const tableData = [
         {
-          id: '1',
-          name: 'asds',
-          address: '222',
+          fahuodanhao: '1',
+          shouhuodanwei: 'asds',
+          jihuazhongliang: '222',
+          yifashuliang: '1',
+          fahuodanriqi: 'asds',
+          jihuariqi: '222',
+          dingdanhao: '1',
+          xuhao: 'asds',
+          chanpinbianma: '222',
+          chanpinmingcheng: '1',
+          picihao: 'asds',
+          jiliangdanwei: '222',
+          kufangmingcheng: '1',
+          yuanshuqufen: 'asds',
+          chehao: '222',
+          jihualeixing: '123',
         },
         {
-          id: '2',
-          name: 'asd',
-          address: '333',
-        },
-        {
-          id: '3',
-          name: 'asdf',
-          address: '444',
-        },
-        {
-          id: '4',
-          name: 'dsdf',
-          address: '5',
+          fahuodanhao: '2',
+          shouhuodanwei: 'asds',
+          jihuazhongliang: '222',
+          yifashuliang: '1',
+          fahuodanriqi: 'asds',
+          jihuariqi: '222',
+          dingdanhao: '1',
+          xuhao: 'asds',
+          chanpinbianma: '222',
+          chanpinmingcheng: '1',
+          picihao: 'asds',
+          jiliangdanwei: '222',
+          kufangmingcheng: '1',
+          yuanshuqufen: 'asds',
+          chehao: '222',
+          jihualeixing: '123',
         },
       ]
 
