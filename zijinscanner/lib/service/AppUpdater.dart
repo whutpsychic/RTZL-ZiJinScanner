@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:easy_app_installer/easy_app_installer.dart';
-import '../service/ModalProgress.dart';
-import '../service/Toast.dart';
+import './ModalProgress.dart';
+import './Toast.dart';
 
 import '../appConfig.dart';
 
@@ -40,6 +40,10 @@ class AppUpdater {
             Navigator.of(context).pop();
             Toast.show(context, "下载成功");
           }
+        },
+        onCancelTagListener: (tag) {
+          print(' ==================================== ');
+          print(' ==================================== ');
         },
       );
     }
