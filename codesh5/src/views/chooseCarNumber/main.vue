@@ -54,17 +54,32 @@
         <van-field v-model="chehao" label="车号" placeholder="请输入车号" />
       </van-cell-group>
 
-      <div style="margin: 16px">
-        <div class="btn-area">
-          <van-button round block type="primary" @click="onQuery">
-            查询
-          </van-button>
-          <van-button round block type="primary" @click="confirmSelect">
-            确认
-          </van-button>
-          <van-button round block type="primary" @click="handleConfirmSelect">
-            手动确认
-          </van-button>
+      <div class="btn-area">
+        <div>
+          <img
+            src="@/assets/image/btn_fanhui2.png"
+            alt=""
+            @click="onClickLeft"
+          />
+          <div>返回</div>
+        </div>
+        <div>
+          <img
+            src="@/assets/image/btn_shuaxin2.png"
+            alt=""
+            type="primary"
+            @click="onSearch"
+          />
+          <div>刷新</div>
+        </div>
+        <div>
+          <img
+            src="@/assets/image/btn_chaxun2.png"
+            alt=""
+            type="primary"
+            @click="showDetail"
+          />
+          <div>查看</div>
         </div>
       </div>
     </div>
@@ -174,24 +189,27 @@
     max-height: 20%;
   }
 
-  .btn-area {
-    display: flex;
-    justify-content: space-around;
-  }
+  /** 按钮样式 */
 
-  .van-button {
-    width: 30%;
+  .btn-area div {
     border-radius: 25px;
     font-size: 25px;
-    cursor: pointer;
+    width: 30%;
+    height: 115px;
   }
-  .van-button:nth-child(2) {
-    background-color: #003363;
+  .btn-area > div:nth-child(2) {
+    background-color: var(--btn-color2);
   }
-  .van-button:nth-child(1) {
-    background-color: #d77100;
+  .btn-area > div:nth-child(1) {
+    background-color: var(--btn-color1);
   }
-  .van-button:nth-child(3) {
-    background-color: #d77100;
+  .btn-area > div:nth-child(3) {
+    background-color: var(--btn-color1);
+  }
+
+  /**输入框 */
+  .van-field__label {
+    text-align: right;
+    color: red !important;
   }
 </style>

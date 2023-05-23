@@ -9,35 +9,73 @@
 
     <div class="table-content">
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
-        <el-table-column prop="fahuodanhao" label="发货单号" />
-        <el-table-column prop="shouhuodanwei" label="收货单号" />
-        <el-table-column prop="jihuazhongliang" label="计划重量" />
-        <el-table-column prop="yifashuliang" label="已发数量" />
-        <el-table-column prop="fahuodanriqi" label="发货单日期" />
-        <el-table-column prop="jihuariqi" label="计划日期" />
-        <el-table-column prop="dingdanhao" label="订单号" />
-        <el-table-column prop="xuhao" label="序号" />
-        <el-table-column prop="chanpinbianma" label="产品编码" />
-        <el-table-column prop="chanpinmingcheng" label="产品名称" />
-        <el-table-column prop="picihao" label="批次号" />
-        <el-table-column prop="jiliangdanwei" label="计量单位" />
-        <el-table-column prop="kufangmingcheng" label="库房名称" />
+        <el-table-column prop="fahuodanhao" label="发货单号" width="110px" />
+        <el-table-column prop="shouhuodanwei" label="收货单号" width="110px" />
+        <el-table-column
+          prop="jihuazhongliang"
+          label="计划重量"
+          width="110px"
+        />
+        <el-table-column prop="yifashuliang" label="已发数量" width="110px" />
+        <el-table-column prop="fahuodanriqi" label="发货单日期" width="120px" />
+        <el-table-column prop="jihuariqi" label="计划日期" width="110px" />
+        <el-table-column prop="dingdanhao" label="订单号" width="110px" />
+        <el-table-column prop="xuhao" label="序号" width="110px" />
+        <el-table-column prop="chanpinbianma" label="产品编码" width="110px" />
+        <el-table-column
+          prop="chanpinmingcheng"
+          label="产品名称"
+          width="110px"
+        />
+        <el-table-column prop="picihao" label="批次号" width="110px" />
+        <el-table-column prop="jiliangdanwei" label="计量单位" width="110px" />
+        <el-table-column
+          prop="kufangmingcheng"
+          label="库房名称"
+          width="110px"
+        />
 
-        <el-table-column prop="yuanshuqufen" label="运输区分" />
-        <el-table-column prop="chehao" label="车号" />
-        <el-table-column prop="jihualeixing" label="计划类型" />
+        <el-table-column prop="yuanshuqufen" label="运输区分" width="110px" />
+        <el-table-column prop="chehao" label="车号" width="110px" />
+        <el-table-column prop="jihualeixing" label="计划类型" width="110px" />
       </el-table>
-      <div style="margin: 16px">
-        <div class="btn-area">
-          <van-button round block type="primary" @click="onClickLeft">
-            返回
-          </van-button>
-          <van-button round block type="primary" @click="onRefresh">
-            刷新
-          </van-button>
-          <van-button round block type="primary" @click="showDetail">
-            查询
-          </van-button>
+      <!-- <div class="btn-area">
+        <van-button round block type="primary" @click="onClickLeft">
+          返回
+        </van-button>
+        <van-button round block type="primary" @click="onRefresh">
+          刷新
+        </van-button>
+        <van-button round block type="primary" @click="showDetail">
+          查询
+        </van-button>
+      </div> -->
+      <div class="btn-area">
+        <div>
+          <img
+            src="@/assets/image/btn_fanhui2.png"
+            alt=""
+            @click="onClickLeft"
+          />
+          <div>返回</div>
+        </div>
+        <div>
+          <img
+            src="@/assets/image/btn_shuaxin2.png"
+            alt=""
+            type="primary"
+            @click="onSearch"
+          />
+          <div>刷新</div>
+        </div>
+        <div>
+          <img
+            src="@/assets/image/btn_chaxun2.png"
+            alt=""
+            type="primary"
+            @click="showDetail"
+          />
+          <div>查看</div>
         </div>
       </div>
     </div>
@@ -48,6 +86,7 @@
   import { toRaw } from '@vue/reactivity'
   import { onMounted } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
+  import { showToast } from 'vant'
   export default {
     setup() {
       const route = useRoute()
@@ -71,7 +110,10 @@
             },
           })
         } else {
-          alert('请选择正确的行')
+          showToast({
+            message: '请选择正确的行！',
+            type: 'fail',
+          })
         }
       }
 
@@ -130,11 +172,6 @@
 </script>
 
 <style scoped>
-  .btn {
-    display: flex;
-    justify-content: space-around;
-  }
-
   /**------------------------------------- */
 
   .table-content {
@@ -149,37 +186,22 @@
 
   .table-content > .btn-area {
     height: 20%;
-    max-height: 20%;
   }
+  /** 按钮样式 */
 
-  .btn-area {
-    display: flex;
-    justify-content: space-around;
-  }
-
-  .van-button {
-    width: 30%;
+  .btn-area div {
     border-radius: 25px;
     font-size: 25px;
-    cursor: pointer;
+    width: 30%;
+    height: 115px;
   }
-  .van-button:nth-child(2) {
-    background-color: #003363;
+  .btn-area > div:nth-child(2) {
+    background-color: var(--btn-color2);
   }
-  .van-button:nth-child(1) {
-    background-color: #d77100;
+  .btn-area > div:nth-child(1) {
+    background-color: var(--btn-color1);
   }
-  .van-button:nth-child(3) {
-    background-color: #d77100;
-  }
-  /**------------------------------------------ */
-
-  :deep(thead .el-table__cell) {
-    background-color: #3c5d85;
-  }
-
-  :deep(thead .el-table__cell > .cell) {
-    text-align: center;
-    color: #ffffff;
+  .btn-area > div:nth-child(3) {
+    background-color: var(--btn-color1);
   }
 </style>

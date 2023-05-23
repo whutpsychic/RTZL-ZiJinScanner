@@ -35,16 +35,24 @@
     <div class="prop-value-div">
       <div class="label">车号</div>
       <div class="value" style="width: 40%">{{ formData.chehao }}</div>
-      <div class="showMore" style="width: 25%" @click="selectCarNo">...</div>
+      <div class="showMore" @click="selectCarNo">
+        <img src="@/assets/image/btn_showmore.png" alt="" />
+      </div>
     </div>
 
-    <div style="margin: 16px">
-      <div class="btn">
-        <van-button round block type="primary" @click="onClickLeft">
-          返回
-        </van-button>
-
-        <van-button round block type="primary" @click="onScan">扫描</van-button>
+    <div class="btn-area">
+      <div>
+        <img src="@/assets/image/btn_fanhui1.png" alt="" @click="onClickLeft" />
+        <div>返回</div>
+      </div>
+      <div>
+        <img
+          src="@/assets/image/btn_chaxun1.png"
+          alt=""
+          type="primary"
+          @click="onSearch"
+        />
+        <div>查询</div>
       </div>
     </div>
   </main>
@@ -124,50 +132,58 @@
 </script>
 
 <style scoped>
-  .btn {
-    display: flex;
-    justify-content: space-around;
+  main {
+    background-color: var(--main-background-color);
   }
 
-  .van-button {
-    width: 150px;
-    height: 150px;
-    border-radius: 25px;
+  /**================== */
+
+  .btn-area div {
     font-size: 35px;
-    cursor: pointer;
+    width: 45%;
   }
-  .van-button:nth-child(2) {
-    margin-top: 17%;
-    background-color: #003363;
+  .btn-area > div:nth-child(2) {
+    background-color: var(--btn-color1);
   }
-  .van-button:nth-child(1) {
-    margin-top: 17%;
-    background-color: #d77100;
+  .btn-area > div:nth-child(1) {
+    background-color: var(--btn-color2);
   }
 
   /**--------------------------------------------------- */
   .prop-value-div {
     display: flex;
-    padding: 1em;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
   .prop-value-div div {
-    color: blue;
     font-size: 25px;
   }
 
   .prop-value-div .label {
+    margin: auto;
     width: 35%;
+    color: var(--form-label-color);
   }
 
   .prop-value-div .value {
-    border: 1px solid;
+    border: 1px solid var(--form-input-border-color);
+    background-color: white;
     width: 65%;
+    border-radius: 10px;
+    padding: 5px;
+    color: #000000;
   }
 
   .showMore {
-    background-color: blue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--form-label-color);
     color: #ffffff !important;
     text-align: center;
-    font-size: 50px;
+    width: 25%;
+    margin-left: 10px;
+    border-radius: 10px;
   }
 </style>

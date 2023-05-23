@@ -39,8 +39,22 @@ a,
 }
 
 
+/** 公共样式 */
+
+:root {
+  --main-background-color:#f3f3f3;
+  --top-bar-color:#003363;
+  --btn-color1:#003363;
+  --btn-color2:#d77100;
+  --table-header-color:#3c5d85;
+  --table-border-color:#dde2e3;
+  --form-label-color:#003363;
+  --form-input-border-color:#dbe3e3;
+}
+
+
 .van-nav-bar{
-  background-color: #003263 !important;
+  background-color: var(--top-bar-color) !important;
 }
 
 .van-nav-bar__title{
@@ -51,3 +65,51 @@ a,
 .van-cell{
   margin-top: 15px;
 }
+
+
+.van-icon-arrow-left{
+  color: #ffffff !important;
+  font-size: 25px !important;
+
+}
+
+
+.el-table__header-wrapper{
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+
+/**按钮*/
+.btn-area {
+  display: flex;
+  justify-content: space-around;
+  padding-top:25px;
+}
+
+.btn-area div {
+  border-radius: 25px;
+  cursor: pointer;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  white-space: nowrap;
+  justify-content: center;
+}
+
+.btn-area div img{
+  top: 10px;
+  position: relative;
+  }
+
+  /**---------------element plus--------------------------- */
+
+  :deep(thead .el-table__cell) {
+    background-color: var(--table-header-color);
+  }
+
+  :deep(thead .el-table__cell > .cell) {
+    text-align: center;
+    color: #ffffff;
+  }
