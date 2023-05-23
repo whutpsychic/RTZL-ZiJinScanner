@@ -13,17 +13,32 @@
         <el-table-column prop="chehao" label="车号" />
         <el-table-column prop="shouhuodanwei" label="收货单位" />
       </el-table>
-      <div style="margin: 16px">
-        <div class="btn-area">
-          <van-button round block type="primary" @click="onClickLeft">
-            返回
-          </van-button>
-          <van-button round block type="primary" @click="onDelete">
-            删除
-          </van-button>
-          <van-button round block type="primary" @click="showDetail">
-            明细
-          </van-button>
+      <div class="btn-area">
+        <div>
+          <img
+            src="@/assets/image/btn_queren.png"
+            alt=""
+            @click="onClickLeft"
+          />
+          <div>返回</div>
+        </div>
+        <div>
+          <img
+            src="@/assets/image/btn_tichu.png"
+            alt=""
+            type="primary"
+            @click="onDelete"
+          />
+          <div>删除</div>
+        </div>
+        <div>
+          <img
+            src="@/assets/image/btn_mingxi.png"
+            alt=""
+            type="primary"
+            @click="showDetail"
+          />
+          <div>明细</div>
         </div>
       </div>
     </div>
@@ -34,6 +49,7 @@
   import { toRaw } from '@vue/reactivity'
   import { onMounted } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
+  import { showSuccessToast, showFailToast, showToast } from 'vant'
   export default {
     setup() {
       const route = useRoute()
@@ -49,9 +65,8 @@
       }
 
       const onDelete = () => {
-        debugger
         if (!selectedRow) {
-          alert('请选择要删除的行')
+          showFailToast('请选择要删除的行')
         }
       }
 
@@ -64,7 +79,7 @@
             },
           })
         } else {
-          alert('请选择正确的行')
+          showFailToast('请选择正确的行')
         }
       }
 
@@ -125,26 +140,22 @@
     max-height: 20%;
   }
 
-  .btn-area {
-    display: flex;
-    justify-content: space-around;
-  }
-
-  .van-button {
-    width: 30%;
+  .btn-area div {
     border-radius: 25px;
     font-size: 25px;
-    cursor: pointer;
+    width: 30%;
+    height: 115px;
   }
-  .van-button:nth-child(2) {
-    background-color: #003363;
+  .btn-area > div:nth-child(2) {
+    background-color: var(--btn-color2);
   }
-  .van-button:nth-child(1) {
-    background-color: #d77100;
+  .btn-area > div:nth-child(1) {
+    background-color: var(--btn-color1);
   }
-  .van-button:nth-child(3) {
-    background-color: #d77100;
+  .btn-area > div:nth-child(3) {
+    background-color: var(--btn-color1);
   }
+
   /**------------------------------------------ */
 
   :deep(thead .el-table__cell) {

@@ -50,8 +50,20 @@ a,
   --table-border-color:#dde2e3;
   --form-label-color:#003363;
   --form-input-border-color:#dbe3e3;
+
+  --table-body-back-color2:#b6ceeb;
+  --table-body-border-color2:#4971a0;
 }
 
+
+main {
+  background-color: var(--main-background-color);
+}
+
+
+.container{
+  padding:15px;
+}
 
 .van-nav-bar{
   background-color: var(--top-bar-color) !important;
@@ -74,16 +86,20 @@ a,
 }
 
 
-.el-table__header-wrapper{
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+/**vant表单*/
+ .van-cell-group--inset{
+  margin:0px !important;
+  background-color: transparent !important;
 }
 
+.van-field{
+  margin-top:15px;
+}
 
 /**按钮*/
 .btn-area {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   padding-top:25px;
 }
 
@@ -105,11 +121,19 @@ a,
 
   /**---------------element plus--------------------------- */
 
-  :deep(thead .el-table__cell) {
-    background-color: var(--table-header-color);
+ thead .el-table__cell{
+    background-color: var(--table-header-color) !important;
   }
 
-  :deep(thead .el-table__cell > .cell) {
-    text-align: center;
+thead .el-table__cell > .cell {
     color: #ffffff;
+  }
+
+  .el-table__header-wrapper{
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+  
+  .el-table__cell>.cell {
+    text-align: center;
   }

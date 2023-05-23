@@ -7,52 +7,58 @@
       @click-left="onClickLeft"
     />
 
-    <div class="prop-value-div">
-      <div class="label">发货单号</div>
-      <div class="value">{{ formData.fahuodanhao }}</div>
-    </div>
-
-    <div class="prop-value-div">
-      <div class="label">制单日期</div>
-      <div class="value">{{ formData.zhidanriqi }}</div>
-    </div>
-    <div class="prop-value-div">
-      <div class="label">计划数量</div>
-      <div class="value">{{ formData.jihuashuliang }}</div>
-    </div>
-    <div class="prop-value-div">
-      <div class="label">已发数量</div>
-      <div class="value">{{ formData.yifashuliang }}</div>
-    </div>
-    <div class="prop-value-div">
-      <div class="label">应捡数量</div>
-      <div class="value">{{ formData.yingjianshuliang }}</div>
-    </div>
-    <div class="prop-value-div">
-      <div class="label">收货单位</div>
-      <div class="value">{{ formData.shouhuodanwei }}</div>
-    </div>
-    <div class="prop-value-div">
-      <div class="label">车号</div>
-      <div class="value" style="width: 40%">{{ formData.chehao }}</div>
-      <div class="showMore" @click="selectCarNo">
-        <img src="@/assets/image/btn_showmore.png" alt="" />
+    <div class="container">
+      <div class="prop-value-div">
+        <div class="label">发货单号</div>
+        <div class="value">{{ formData.fahuodanhao }}</div>
       </div>
-    </div>
 
-    <div class="btn-area">
-      <div>
-        <img src="@/assets/image/btn_fanhui1.png" alt="" @click="onClickLeft" />
-        <div>返回</div>
+      <div class="prop-value-div">
+        <div class="label">制单日期</div>
+        <div class="value">{{ formData.zhidanriqi }}</div>
       </div>
-      <div>
-        <img
-          src="@/assets/image/btn_chaxun1.png"
-          alt=""
-          type="primary"
-          @click="onSearch"
-        />
-        <div>查询</div>
+      <div class="prop-value-div">
+        <div class="label">计划数量</div>
+        <div class="value">{{ formData.jihuashuliang }}</div>
+      </div>
+      <div class="prop-value-div">
+        <div class="label">已发数量</div>
+        <div class="value">{{ formData.yifashuliang }}</div>
+      </div>
+      <div class="prop-value-div">
+        <div class="label">应捡数量</div>
+        <div class="value">{{ formData.yingjianshuliang }}</div>
+      </div>
+      <div class="prop-value-div">
+        <div class="label">收货单位</div>
+        <div class="value">{{ formData.shouhuodanwei }}</div>
+      </div>
+      <div class="prop-value-div">
+        <div class="label">车号</div>
+        <div class="value" style="width: 40%">{{ formData.chehao }}</div>
+        <div class="showMore" @click="selectCarNo">
+          <img src="@/assets/image/btn_showmore.png" alt="" />
+        </div>
+      </div>
+
+      <div class="btn-area">
+        <div>
+          <img
+            src="@/assets/image/btn_fanhui1.png"
+            alt=""
+            @click="onClickLeft"
+          />
+          <div>返回</div>
+        </div>
+        <div>
+          <img
+            src="@/assets/image/btn_chaxun1.png"
+            alt=""
+            type="primary"
+            @click="onScan"
+          />
+          <div>扫描</div>
+        </div>
       </div>
     </div>
   </main>
@@ -96,6 +102,7 @@
 
       onMounted(() => {
         let rowData = ''
+        debugger
         if (store.state.chukudan) {
           rowData = store.state.chukudan
           formData.fahuodanhao = rowData.fahuodanhao
@@ -132,10 +139,6 @@
 </script>
 
 <style scoped>
-  main {
-    background-color: var(--main-background-color);
-  }
-
   /**================== */
 
   .btn-area div {
@@ -153,8 +156,6 @@
   .prop-value-div {
     display: flex;
     padding: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
   }
   .prop-value-div div {
     font-size: 25px;

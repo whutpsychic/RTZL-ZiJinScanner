@@ -7,81 +7,86 @@
       @click-left="onClickLeft"
     />
 
-    <van-form @submit="onSubmit" ref="formRef">
-      <van-cell-group inset>
-        <van-field
-          v-model="startDate"
-          is-link
-          readonly
-          name="startDate"
-          label="开始日期"
-          placeholder="点击选择时间"
-          @click="showPicker = true"
-        />
-        <van-popup v-model:show="showPicker" position="bottom">
-          <van-date-picker @confirm="onConfirm" @cancel="showPicker = false" />
-        </van-popup>
-
-        <van-field
-          v-model="endDate"
-          is-link
-          readonly
-          name="endDate"
-          label="结束日期"
-          placeholder="点击选择时间"
-          @click="showPicker2 = true"
-        />
-        <van-popup v-model:show="showPicker2" position="bottom">
-          <van-date-picker
-            @confirm="onConfirm2"
-            @cancel="showPicker2 = false"
+    <div class="container">
+      <van-form @submit="onSubmit" ref="formRef">
+        <van-cell-group inset>
+          <van-field
+            v-model="startDate"
+            is-link
+            readonly
+            name="startDate"
+            label="开始日期"
+            placeholder="点击选择时间"
+            @click="showPicker = true"
           />
-        </van-popup>
+          <van-popup v-model:show="showPicker" position="bottom">
+            <van-date-picker
+              @confirm="onConfirm"
+              @cancel="showPicker = false"
+            />
+          </van-popup>
 
-        <van-field
-          v-model="fahuodanhao"
-          name="fahuodanhao"
-          label="发货单号"
-          placeholder="填写单号"
-        />
+          <van-field
+            v-model="endDate"
+            is-link
+            readonly
+            name="endDate"
+            label="结束日期"
+            placeholder="点击选择时间"
+            @click="showPicker2 = true"
+          />
+          <van-popup v-model:show="showPicker2" position="bottom">
+            <van-date-picker
+              @confirm="onConfirm2"
+              @cancel="showPicker2 = false"
+            />
+          </van-popup>
 
-        <van-field
-          v-model="kuqu"
-          is-link
-          readonly
-          name="kuqu"
-          label="库区"
-          placeholder="点击选择库区"
-          @click="showPicker3 = true"
-        />
-        <van-popup v-model:show="showPicker3" position="bottom">
-          <van-picker
-            :columns="kuquOptions"
-            @confirm="onConfirm3"
-            @cancel="showPicker3 = false"
+          <van-field
+            v-model="fahuodanhao"
+            name="fahuodanhao"
+            label="发货单号"
+            placeholder="填写单号"
           />
-        </van-popup>
-      </van-cell-group>
-      <div class="btn-area">
-        <div>
-          <img
-            src="@/assets/image/btn_fanhui1.png"
-            alt=""
-            @click="onClickLeft"
+
+          <van-field
+            v-model="kuqu"
+            is-link
+            readonly
+            name="kuqu"
+            label="库区"
+            placeholder="点击选择库区"
+            @click="showPicker3 = true"
           />
-          <div>返回</div>
+          <van-popup v-model:show="showPicker3" position="bottom">
+            <van-picker
+              :columns="kuquOptions"
+              @confirm="onConfirm3"
+              @cancel="showPicker3 = false"
+            />
+          </van-popup>
+        </van-cell-group>
+        <div class="btn-area">
+          <div>
+            <img
+              src="@/assets/image/btn_fanhui1.png"
+              alt=""
+              @click="onClickLeft"
+            />
+            <div>返回</div>
+          </div>
+          <div>
+            <img
+              src="@/assets/image/btn_chaxun1.png"
+              alt=""
+              type="primary"
+              @click="onSearch"
+            />
+            <div>查询</div>
+          </div>
         </div>
-        <div>
-          <img
-            src="@/assets/image/btn_chaxun1.png"
-            alt=""
-            type="primary"
-            @click="onSearch"
-          />
-          <div>查询</div>
-        </div>
-      </div>
-    </van-form>
+      </van-form>
+    </div>
   </main>
 </template>
 

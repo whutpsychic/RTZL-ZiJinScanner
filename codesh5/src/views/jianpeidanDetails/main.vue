@@ -9,18 +9,21 @@
 
     <div class="table-content">
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
-        <el-table-column prop="jianpeidanhao" label="拣配单号" />
+        <el-table-column prop="jianpeidanhao" label="拣配单号" width="120px;" />
         <el-table-column prop="picihao" label="批次号" />
-        <el-table-column prop="picibianma" label="批次编码" />
+        <el-table-column prop="picibianma" label="批次编码" width="120px;" />
         <el-table-column prop="zhongliang" label="重量" />
         <el-table-column prop="kuaishu" label="块数" />
-        <el-table-column prop="jiliangdanwei" label="计量单位" />
+        <el-table-column prop="jiliangdanwei" label="计量单位" width="120px;" />
       </el-table>
-      <div style="margin: 16px">
-        <div class="btn-area">
-          <van-button round block type="primary" @click="onClickLeft">
-            返回
-          </van-button>
+      <div class="btn-area">
+        <div>
+          <img
+            src="@/assets/image/btn_fanhui2.png"
+            alt=""
+            @click="onClickLeft"
+          />
+          <div>返回</div>
         </div>
       </div>
     </div>
@@ -90,28 +93,20 @@
   .table-content > .btn-area {
     height: 20%;
     max-height: 20%;
+    justify-content: center;
   }
 
-  .btn-area {
-    display: flex;
-    justify-content: space-around;
-  }
-
-  .van-button {
-    width: 30%;
+  .btn-area div {
     border-radius: 25px;
     font-size: 25px;
-    cursor: pointer;
+    width: 30%;
+    height: 115px;
   }
-  .van-button:nth-child(2) {
-    background-color: #003363;
+
+  .btn-area > div:nth-child(1) {
+    background-color: var(--btn-color1);
   }
-  .van-button:nth-child(1) {
-    background-color: #d77100;
-  }
-  .van-button:nth-child(3) {
-    background-color: #d77100;
-  }
+
   /**------------------------------------------ */
 
   :deep(thead .el-table__cell) {

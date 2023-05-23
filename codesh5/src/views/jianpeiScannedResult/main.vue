@@ -26,15 +26,32 @@
         <el-table-column prop="queshao" label="缺少" />
       </el-table>
 
-      <div style="margin: 1%">
-        <div class="btn-area">
-          <van-button round block type="primary">确认</van-button>
-          <van-button round block type="primary" @click="onHandle">
-            手动
-          </van-button>
-          <van-button round block type="primary" @click="handleDeleteSelect">
-            剔除
-          </van-button>
+      <div class="btn-area">
+        <div>
+          <img
+            src="@/assets/image/btn_queren.png"
+            alt=""
+            @click="onClickLeft"
+          />
+          <div>确认</div>
+        </div>
+        <div>
+          <img
+            src="@/assets/image/btn_shoudong.png"
+            alt=""
+            type="primary"
+            @click="onSearch"
+          />
+          <div>手动</div>
+        </div>
+        <div>
+          <img
+            src="@/assets/image/btn_tichu.png"
+            alt=""
+            type="primary"
+            @click="showDetail"
+          />
+          <div>剔除</div>
         </div>
       </div>
     </div>
@@ -84,36 +101,38 @@
   }
 
   .table-content > #data-area1 {
-    height: 40%;
+    height: 60%;
     max-height: 80%;
+    margin-bottom: 5%;
   }
-  .table-content > #data-area2 {
-    height: 40%;
-    max-height: 80%;
-  }
+
   .table-content > .btn-area {
     height: 20%;
     max-height: 20%;
   }
 
-  .btn-area {
-    display: flex;
-    justify-content: space-around;
-  }
-
-  .van-button {
-    width: 30%;
+  .btn-area div {
     border-radius: 25px;
     font-size: 25px;
-    cursor: pointer;
+    width: 30%;
+    height: 115px;
   }
-  .van-button:nth-child(2) {
-    background-color: #003363;
+  .btn-area > div:nth-child(2) {
+    background-color: var(--btn-color2);
   }
-  .van-button:nth-child(1) {
-    background-color: #d77100;
+  .btn-area > div:nth-child(1) {
+    background-color: var(--btn-color1);
   }
-  .van-button:nth-child(3) {
-    background-color: #d77100;
+  .btn-area > div:nth-child(3) {
+    background-color: var(--btn-color1);
+  }
+
+  /** */
+  ::v-deep(#data-area2 .el-table__cell) {
+    background-color: var(--table-body-back-color2);
+  }
+
+  ::v-deep(#data-area2 .el-table__cell) {
+    border: 1px solid var(--table-body-border-color2);
   }
 </style>

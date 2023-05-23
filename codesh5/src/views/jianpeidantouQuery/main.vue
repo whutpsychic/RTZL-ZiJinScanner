@@ -7,64 +7,94 @@
       @click-left="onClickLeft"
     />
 
-    <van-form @submit="onSubmit">
-      <van-cell-group inset>
-        <van-field
-          v-model="startDate"
-          is-link
-          readonly
-          name="startDate"
-          label="开始日期"
-          placeholder="点击选择时间"
-          @click="showPicker = true"
-        />
-        <van-popup v-model:show="showPicker" position="bottom">
-          <van-date-picker @confirm="onConfirm" @cancel="showPicker = false" />
-        </van-popup>
-
-        <van-field
-          v-model="endDate"
-          is-link
-          readonly
-          name="endDate"
-          label="结束日期"
-          placeholder="点击选择时间"
-          @click="showPicker2 = true"
-        />
-        <van-popup v-model:show="showPicker2" position="bottom">
-          <van-date-picker
-            @confirm="onConfirm2"
-            @cancel="showPicker2 = false"
+    <div class="container">
+      <van-form @submit="onSubmit" ref="formRef">
+        <van-cell-group inset>
+          <van-field
+            v-model="startDate"
+            is-link
+            readonly
+            name="startDate"
+            label="开始日期"
+            placeholder="点击选择时间"
+            @click="showPicker = true"
           />
-        </van-popup>
+          <van-popup v-model:show="showPicker" position="bottom">
+            <van-date-picker
+              @confirm="onConfirm"
+              @cancel="showPicker = false"
+            />
+          </van-popup>
 
-        <van-field
-          v-model="fahuodanhao"
-          name="fahuodanhao"
-          label="发货单号"
-          placeholder="填写单号"
-          :rules="[{ required: true, message: '请填写单号' }]"
-        />
-      </van-cell-group>
-      <div style="margin: 16px">
-        <div class="btn">
-          <van-button round block type="primary" @click="onClickLeft">
-            返回
-          </van-button>
+          <van-field
+            v-model="endDate"
+            is-link
+            readonly
+            name="endDate"
+            label="结束日期"
+            placeholder="点击选择时间"
+            @click="showPicker2 = true"
+          />
+          <van-popup v-model:show="showPicker2" position="bottom">
+            <van-date-picker
+              @confirm="onConfirm2"
+              @cancel="showPicker2 = false"
+            />
+          </van-popup>
 
-          <van-button round block type="primary" native-type="submit">
-            查询
-          </van-button>
+          <van-field
+            v-model="fahuodanhao"
+            name="fahuodanhao"
+            label="发货单号"
+            placeholder="填写单号"
+            :rules="[{ required: true, message: '请填写单号' }]"
+          />
+        </van-cell-group>
+        <!-- <div style="margin: 16px">
+          <div class="btn">
+            <van-button round block type="primary" @click="onClickLeft">
+              返回
+            </van-button>
+
+            <van-button round block type="primary" native-type="submit">
+              查询
+            </van-button>
+          </div>
+        </div> -->
+
+        <div class="btn-area">
+          <div>
+            <img
+              src="@/assets/image/btn_fanhui1.png"
+              alt=""
+              @click="onClickLeft"
+            />
+            <div>返回</div>
+          </div>
+          <div>
+            <img
+              src="@/assets/image/btn_chaxun1.png"
+              alt=""
+              type="primary"
+              @click="onSearch"
+            />
+            <div>查询</div>
+          </div>
         </div>
-      </div>
-    </van-form>
+      </van-form>
+    </div>
   </main>
 </template>
 
 <script>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
+  let formRef = ''
   export default {
+    mounted() {
+      formRef = this.$refs['formRef']
+    },
+
     setup() {
       const startDate = ref('')
       const endDate = ref('')
@@ -85,6 +115,9 @@
 
       const onClickLeft = () => history.back()
 
+      const onSearch = () => {
+        formRef.submit()
+      }
       const onSubmit = (values) => {
         router.push({ name: 'jianpeidanQueryResult', query: values })
       }
@@ -98,6 +131,7 @@
         onClickLeft,
         onConfirm,
         onConfirm2,
+        onSearch,
         onSubmit,
       }
     },
@@ -105,24 +139,14 @@
 </script>
 
 <style scoped>
-  .btn {
-    display: flex;
-    justify-content: space-around;
-  }
-
-  .van-button {
-    width: 150px;
-    height: 150px;
-    border-radius: 25px;
+  .btn-area div {
     font-size: 35px;
-    cursor: pointer;
+    width: 45%;
   }
-  .van-button:nth-child(2) {
-    margin-top: 17%;
-    background-color: #003363;
+  .btn-area > div:nth-child(2) {
+    background-color: var(--btn-color1);
   }
-  .van-button:nth-child(1) {
-    margin-top: 17%;
-    background-color: #d77100;
+  .btn-area > div:nth-child(1) {
+    background-color: var(--btn-color2);
   }
 </style>

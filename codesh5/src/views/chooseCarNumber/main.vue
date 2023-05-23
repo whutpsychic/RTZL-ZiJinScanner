@@ -7,8 +7,8 @@
       @click-left="onClickLeft"
     />
 
-    <div class="table-content">
-      <van-form @submit="onSubmit">
+    <div class="table-content container">
+      <van-form @submit="onSubmit" id="form-area">
         <van-cell-group inset>
           <van-field
             v-model="startDate"
@@ -56,30 +56,26 @@
 
       <div class="btn-area">
         <div>
-          <img
-            src="@/assets/image/btn_fanhui2.png"
-            alt=""
-            @click="onClickLeft"
-          />
-          <div>返回</div>
+          <img src="@/assets/image/btn_chaxun3.png" alt="" @click="onQuery" />
+          <div>查询</div>
         </div>
         <div>
           <img
-            src="@/assets/image/btn_shuaxin2.png"
+            src="@/assets/image/btn_queren.png"
             alt=""
             type="primary"
-            @click="onSearch"
+            @click="confirmSelect"
           />
-          <div>刷新</div>
+          <div>确认</div>
         </div>
         <div>
           <img
-            src="@/assets/image/btn_chaxun2.png"
+            src="@/assets/image/btn_shoudong.png"
             alt=""
             type="primary"
-            @click="showDetail"
+            @click="handleConfirmSelect"
           />
-          <div>查看</div>
+          <div>手动确认</div>
         </div>
       </div>
     </div>
@@ -90,6 +86,8 @@
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { useStore } from 'vuex'
+  import { showSuccessToast, showFailToast, showToast } from 'vant'
+  import { showNotify } from 'vant'
   export default {
     setup() {
       const startDate = ref('')
@@ -114,6 +112,7 @@
       }
 
       const onClickLeft = () => history.back()
+
       const onQuery = () => {
         tableData.value = [
           { chehao: 1, danjuhao: 2, chengfang: 3 },
@@ -122,7 +121,7 @@
         ]
       }
 
-      const onSubmit = (values) => {}
+      const onSubmit = () => {}
 
       let selectedCheHao = ''
       const selectRow = (row, column, event) => {
@@ -138,7 +137,7 @@
             name: 'chukudanDetails',
           })
         } else {
-          alert('请选择正确的行')
+          showFailToast('请选择正确的行！')
         }
       }
 
@@ -149,7 +148,10 @@
           store.commit('setChukudan', chukudanInfo)
           router.push({ name: 'chukudanDetails' })
         } else {
-          alert('请选输入车号')
+          showToast({
+            message: '请手工录入车号！',
+            type: 'fail',
+          })
         }
       }
 
@@ -175,25 +177,27 @@
 
 <style scoped>
   .table-content {
-    padding: 3%;
     height: calc(100vh - var(--van-nav-bar-height));
+  }
+
+  .table-content > #form-area {
+    height: 20%;
+    min-height: 100px;
   }
 
   .table-content > #data-area {
     height: 50%;
-    max-height: 80%;
   }
 
   .table-content > .btn-area {
-    height: 30%;
-    max-height: 20%;
+    height: 25%;
   }
 
   /** 按钮样式 */
 
   .btn-area div {
     border-radius: 25px;
-    font-size: 25px;
+    font-size: 20px;
     width: 30%;
     height: 115px;
   }

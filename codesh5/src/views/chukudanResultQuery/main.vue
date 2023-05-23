@@ -7,7 +7,7 @@
       @click-left="onClickLeft"
     />
 
-    <div class="table-content">
+    <div class="table-content container">
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
         <el-table-column prop="fahuodanhao" label="发货单号" width="110px" />
         <el-table-column prop="shouhuodanwei" label="收货单号" width="110px" />
@@ -39,17 +39,6 @@
         <el-table-column prop="chehao" label="车号" width="110px" />
         <el-table-column prop="jihualeixing" label="计划类型" width="110px" />
       </el-table>
-      <!-- <div class="btn-area">
-        <van-button round block type="primary" @click="onClickLeft">
-          返回
-        </van-button>
-        <van-button round block type="primary" @click="onRefresh">
-          刷新
-        </van-button>
-        <van-button round block type="primary" @click="showDetail">
-          查询
-        </van-button>
-      </div> -->
       <div class="btn-area">
         <div>
           <img
@@ -103,10 +92,12 @@
 
       const showDetail = () => {
         if (selectedRow) {
+          let rowData = encodeURIComponent(JSON.stringify(selectedRow))
+          debugger
           router.push({
             name: 'chukudanDetails',
             query: {
-              rowData: encodeURIComponent(JSON.stringify(selectedRow)),
+              rowData,
             },
           })
         } else {
@@ -175,7 +166,6 @@
   /**------------------------------------- */
 
   .table-content {
-    padding: 3%;
     height: calc(100vh - var(--van-nav-bar-height));
   }
 

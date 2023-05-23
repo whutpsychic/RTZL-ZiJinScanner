@@ -1,33 +1,35 @@
 <template>
-  <main class="container">
-    <van-form @submit="onSubmit">
-      <p class="title">紫金铜业阴极铜条码管理系统</p>
-      <van-cell-group inset>
-        <van-field
-          v-model="username"
-          name="username"
-          placeholder="用户名"
-          :rules="[{ required: true, message: '请填写用户名' }]"
-        />
+  <main>
+    <div class="container">
+      <van-form @submit="onSubmit">
+        <p class="title">紫金铜业阴极铜条码管理系统</p>
+        <van-cell-group inset>
+          <van-field
+            v-model="username"
+            name="username"
+            placeholder="用户名"
+            :rules="[{ required: true, message: '请填写用户名' }]"
+          />
 
-        <van-field v-model="rolename" name="rolename" placeholder="角色名" />
-        <van-field
-          v-model="password"
-          type="password"
-          name="password"
-          placeholder="密码"
-          :rules="[{ required: true, message: '请填写密码' }]"
-        />
-      </van-cell-group>
-      <div class="login-btn-area">
-        <van-button round block type="primary" @click="onClickLeft">
-          取消
-        </van-button>
-        <van-button round block type="primary" native-type="submit">
-          登录
-        </van-button>
-      </div>
-    </van-form>
+          <van-field v-model="rolename" name="rolename" placeholder="角色名" />
+          <van-field
+            v-model="password"
+            type="password"
+            name="password"
+            placeholder="密码"
+            :rules="[{ required: true, message: '请填写密码' }]"
+          />
+        </van-cell-group>
+        <div class="login-btn-area">
+          <van-button round block type="primary" @click="onClickLeft">
+            取消
+          </van-button>
+          <van-button round block type="primary" native-type="submit">
+            登录
+          </van-button>
+        </div>
+      </van-form>
+    </div>
   </main>
 </template>
 
