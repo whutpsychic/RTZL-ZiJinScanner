@@ -50,32 +50,33 @@
         <el-table-column prop="chengfang" label="秤房" />
       </el-table>
 
-      <van-cell-group inset>
-        <van-field v-model="chehao" label="车号" placeholder="请输入车号" />
-      </van-cell-group>
-
-      <div class="btn-area">
-        <div>
-          <img src="@/assets/image/btn_chaxun3.png" alt="" @click="onQuery" />
-          <div>查询</div>
-        </div>
-        <div>
-          <img
-            src="@/assets/image/btn_queren.png"
-            alt=""
-            type="primary"
-            @click="confirmSelect"
-          />
-          <div>确认</div>
-        </div>
-        <div>
-          <img
-            src="@/assets/image/btn_shoudong.png"
-            alt=""
-            type="primary"
-            @click="handleConfirmSelect"
-          />
-          <div>手动确认</div>
+      <div>
+        <van-cell-group inset>
+          <van-field v-model="chehao" label="车号" placeholder="请输入车号" />
+        </van-cell-group>
+        <div class="btn-area">
+          <div>
+            <img src="@/assets/image/btn_chaxun3.png" alt="" @click="onQuery" />
+            <div>查询</div>
+          </div>
+          <div>
+            <img
+              src="@/assets/image/btn_queren.png"
+              alt=""
+              type="primary"
+              @click="confirmSelect"
+            />
+            <div>确认</div>
+          </div>
+          <div>
+            <img
+              src="@/assets/image/btn_shoudong.png"
+              alt=""
+              type="primary"
+              @click="handleConfirmSelect"
+            />
+            <div>手动确认</div>
+          </div>
         </div>
       </div>
     </div>
@@ -176,31 +177,30 @@
 </script>
 
 <style scoped>
-  .table-content {
-    height: calc(100vh - var(--van-nav-bar-height));
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
-  .table-content > #form-area {
-    height: 20%;
-    min-height: 100px;
-  }
-
-  .table-content > #data-area {
-    height: 50%;
-  }
-
-  .table-content > .btn-area {
-    height: 25%;
+  #data-area {
+    flex-grow: 1;
+    margin-bottom: 25px;
   }
 
   /** 按钮样式 */
 
   .btn-area div {
     border-radius: 25px;
-    font-size: 20px;
+    font-size: 23px;
     width: 30%;
-    height: 115px;
+    min-height: 50px;
   }
+
+  .btn-area img {
+    width: 60px;
+  }
+
   .btn-area > div:nth-child(2) {
     background-color: var(--btn-color2);
   }
@@ -210,10 +210,8 @@
   .btn-area > div:nth-child(3) {
     background-color: var(--btn-color1);
   }
-
   /**输入框 */
-  .van-field__label {
-    text-align: right;
-    color: red !important;
+  ::v-deep(.van-field) {
+    margin-bottom: 15px;
   }
 </style>

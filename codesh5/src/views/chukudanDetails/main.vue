@@ -141,10 +141,22 @@
 <style scoped>
   /**================== */
 
-  .btn-area div {
-    font-size: 35px;
-    width: 45%;
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
+
+  .btn-area > div {
+    font-size: 30px;
+    width: 45%;
+    max-height: 150px;
+  }
+
+  .btn-area img {
+    width: 90px;
+  }
+
   .btn-area > div:nth-child(2) {
     background-color: var(--btn-color1);
   }
@@ -162,9 +174,10 @@
   }
 
   .prop-value-div .label {
-    margin: auto;
-    width: 35%;
+    width: 120px;
     color: var(--form-label-color);
+    display: flex;
+    align-items: center;
   }
 
   .prop-value-div .value {
@@ -174,6 +187,9 @@
     border-radius: 10px;
     padding: 5px;
     color: #000000;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: 15px;
   }
 
   .showMore {

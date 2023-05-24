@@ -7,7 +7,7 @@
       @click-left="onClickLeft"
     />
 
-    <div class="table-content">
+    <div class="table-content container">
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
         <el-table-column prop="jianpeiriqi" label="拣配日期" />
         <el-table-column prop="chehao" label="车号" />
@@ -118,34 +118,35 @@
 </script>
 
 <style scoped>
-  .btn {
-    display: flex;
-    justify-content: space-around;
-  }
-
   /**------------------------------------- */
 
   .table-content {
-    padding: 3%;
-    height: calc(100vh - var(--van-nav-bar-height));
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
-  .table-content > #data-area {
-    height: 80%;
-    max-height: 80%;
+  #data-area {
+    flex-grow: 1;
   }
 
-  .table-content > .btn-area {
-    height: 20%;
-    max-height: 20%;
+  .btn-area {
+    flex-grow: 0;
   }
+
+  /** 按钮样式 */
 
   .btn-area div {
     border-radius: 25px;
-    font-size: 25px;
+    font-size: 23px;
     width: 30%;
-    height: 115px;
+    min-height: 50px;
   }
+
+  .btn-area img {
+    width: 60px;
+  }
+
   .btn-area > div:nth-child(2) {
     background-color: var(--btn-color2);
   }
@@ -157,13 +158,4 @@
   }
 
   /**------------------------------------------ */
-
-  :deep(thead .el-table__cell) {
-    background-color: #3c5d85;
-  }
-
-  :deep(thead .el-table__cell > .cell) {
-    text-align: center;
-    color: #ffffff;
-  }
 </style>

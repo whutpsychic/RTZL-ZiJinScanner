@@ -7,25 +7,45 @@
       @click-left="onClickLeft"
     />
 
-    <div class="table-content">
+    <div class="table-content container">
       <div class="search-area">
         <van-cell-group inset>
           <van-field v-model="picihao" label="批次号" placeholder="四位" />
           <van-field v-model="bianhao" label="编号" placeholder="三位" />
         </van-cell-group>
-        <div class="search-btn">
-          <van-button type="primary" @click="onSearch">查询</van-button>
+        <div class="btn-area btn-area1">
+          <div>
+            <img
+              src="@/assets/image/btn_chaxun3.png"
+              alt=""
+              type="primary"
+              @click="onSearch"
+            />
+            <div>查询</div>
+          </div>
         </div>
       </div>
 
       <van-field v-model="tiaoxingma" label="条形码" placeholder="" />
 
-      <div style="margin: 1%">
-        <div class="btn-area">
-          <van-button round block type="primary">确认</van-button>
-          <van-button round block type="primary" @click="onHandle">
-            取消
-          </van-button>
+      <div class="btn-area">
+        <div>
+          <img
+            src="@/assets/image/btn_queren.png"
+            alt=""
+            type="primary"
+            @click="onSearch"
+          />
+          <div>确认</div>
+        </div>
+        <div>
+          <img
+            src="@/assets/image/btn_tichu.png"
+            alt=""
+            type="primary"
+            @click="onSearch"
+          />
+          <div>取消</div>
         </div>
       </div>
     </div>
@@ -77,35 +97,33 @@
 </script>
 
 <style scoped>
-  .table-content {
-    padding: 3%;
-    height: calc(100vh - var(--van-nav-bar-height));
-  }
-
-  .search-btn {
-    width: 100%;
-    text-align: center;
-    margin-top: 1%;
-  }
-
-  .btn-area {
+  .container {
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: space-evenly;
   }
 
-  .van-button {
-    width: 30%;
-    border-radius: 25px;
-    font-size: 25px;
-    cursor: pointer;
+  .btn-area > div {
+    margin-bottom: 25px;
+    border-radius: 15px;
+    font-size: 20px;
+    width: 45%;
+    max-height: 150px;
   }
-  .van-button:nth-child(2) {
-    background-color: #003363;
+
+  .btn-area1 {
+    justify-content: center;
   }
-  .van-button:nth-child(1) {
-    background-color: #d77100;
+
+  .btn-area img {
+    width: 50px;
+    margin-bottom: 10px;
   }
-  .van-button:nth-child(3) {
-    background-color: #d77100;
+
+  .btn-area > div:nth-child(2) {
+    background-color: var(--btn-color1);
+  }
+  .btn-area > div:nth-child(1) {
+    background-color: var(--btn-color1);
   }
 </style>

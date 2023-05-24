@@ -139,14 +139,25 @@
 </script>
 
 <style scoped>
-  .btn-area div {
-    font-size: 35px;
+  .btn-area > div {
+    font-size: 30px;
     width: 45%;
+    max-height: 150px;
   }
+
+  .btn-area img {
+    width: 90px;
+  }
+
   .btn-area > div:nth-child(2) {
     background-color: var(--btn-color1);
   }
   .btn-area > div:nth-child(1) {
     background-color: var(--btn-color2);
+  }
+
+  ::v-deep(.van-field) {
+    margin-top: 15px;
+    margin-bottom: 25px;
   }
 </style>

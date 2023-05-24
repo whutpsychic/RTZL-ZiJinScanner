@@ -9,35 +9,35 @@
 
     <div class="table-content container">
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
-        <el-table-column prop="fahuodanhao" label="发货单号" width="110px" />
-        <el-table-column prop="shouhuodanwei" label="收货单号" width="110px" />
+        <el-table-column prop="fahuodanhao" label="发货单号" width="130px" />
+        <el-table-column prop="shouhuodanwei" label="收货单号" width="130px" />
         <el-table-column
           prop="jihuazhongliang"
           label="计划重量"
-          width="110px"
+          width="130px"
         />
-        <el-table-column prop="yifashuliang" label="已发数量" width="110px" />
-        <el-table-column prop="fahuodanriqi" label="发货单日期" width="120px" />
-        <el-table-column prop="jihuariqi" label="计划日期" width="110px" />
-        <el-table-column prop="dingdanhao" label="订单号" width="110px" />
-        <el-table-column prop="xuhao" label="序号" width="110px" />
-        <el-table-column prop="chanpinbianma" label="产品编码" width="110px" />
+        <el-table-column prop="yifashuliang" label="已发数量" width="130px" />
+        <el-table-column prop="fahuodanriqi" label="发货单日期" width="150px" />
+        <el-table-column prop="jihuariqi" label="计划日期" width="130px" />
+        <el-table-column prop="dingdanhao" label="订单号" width="130px" />
+        <el-table-column prop="xuhao" label="序号" width="130px" />
+        <el-table-column prop="chanpinbianma" label="产品编码" width="130px" />
         <el-table-column
           prop="chanpinmingcheng"
           label="产品名称"
-          width="110px"
+          width="130px"
         />
-        <el-table-column prop="picihao" label="批次号" width="110px" />
-        <el-table-column prop="jiliangdanwei" label="计量单位" width="110px" />
+        <el-table-column prop="picihao" label="批次号" width="130px" />
+        <el-table-column prop="jiliangdanwei" label="计量单位" width="130px" />
         <el-table-column
           prop="kufangmingcheng"
           label="库房名称"
-          width="110px"
+          width="130px"
         />
 
-        <el-table-column prop="yuanshuqufen" label="运输区分" width="110px" />
-        <el-table-column prop="chehao" label="车号" width="110px" />
-        <el-table-column prop="jihualeixing" label="计划类型" width="110px" />
+        <el-table-column prop="yuanshuqufen" label="运输区分" width="130px" />
+        <el-table-column prop="chehao" label="车号" width="130px" />
+        <el-table-column prop="jihualeixing" label="计划类型" width="130px" />
       </el-table>
       <div class="btn-area">
         <div>
@@ -93,7 +93,6 @@
       const showDetail = () => {
         if (selectedRow) {
           let rowData = encodeURIComponent(JSON.stringify(selectedRow))
-          debugger
           router.push({
             name: 'chukudanDetails',
             query: {
@@ -163,28 +162,33 @@
 </script>
 
 <style scoped>
-  /**------------------------------------- */
-
   .table-content {
-    height: calc(100vh - var(--van-nav-bar-height));
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
-  .table-content > #data-area {
-    height: 80%;
-    max-height: 80%;
+  #data-area {
+    flex-grow: 1;
   }
 
-  .table-content > .btn-area {
-    height: 20%;
+  .btn-area {
+    flex-grow: 0;
   }
+
   /** 按钮样式 */
 
   .btn-area div {
     border-radius: 25px;
-    font-size: 25px;
+    font-size: 23px;
     width: 30%;
-    height: 115px;
+    min-height: 50px;
   }
+
+  .btn-area img {
+    width: 60px;
+  }
+
   .btn-area > div:nth-child(2) {
     background-color: var(--btn-color2);
   }

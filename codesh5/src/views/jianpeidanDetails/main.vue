@@ -7,10 +7,10 @@
       @click-left="onClickLeft"
     />
 
-    <div class="table-content">
+    <div class="table-content container">
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
         <el-table-column prop="jianpeidanhao" label="拣配单号" width="120px;" />
-        <el-table-column prop="picihao" label="批次号" />
+        <el-table-column prop="picihao" label="批次号" width="100px;" />
         <el-table-column prop="picibianma" label="批次编码" width="120px;" />
         <el-table-column prop="zhongliang" label="重量" />
         <el-table-column prop="kuaishu" label="块数" />
@@ -73,26 +73,23 @@
 </script>
 
 <style scoped>
-  .btn {
+  .table-content {
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  #data-area {
+    flex-grow: 1;
+  }
+
+  .btn-area {
+    flex-grow: 0;
   }
 
   /**------------------------------------- */
 
-  .table-content {
-    padding: 3%;
-    height: calc(100vh - var(--van-nav-bar-height));
-  }
-
-  .table-content > #data-area {
-    height: 80%;
-    max-height: 80%;
-  }
-
   .table-content > .btn-area {
-    height: 20%;
-    max-height: 20%;
     justify-content: center;
   }
 
@@ -100,21 +97,10 @@
     border-radius: 25px;
     font-size: 25px;
     width: 30%;
-    height: 115px;
+    min-height: 50px;
   }
 
   .btn-area > div:nth-child(1) {
     background-color: var(--btn-color1);
-  }
-
-  /**------------------------------------------ */
-
-  :deep(thead .el-table__cell) {
-    background-color: #3c5d85;
-  }
-
-  :deep(thead .el-table__cell > .cell) {
-    text-align: center;
-    color: #ffffff;
   }
 </style>

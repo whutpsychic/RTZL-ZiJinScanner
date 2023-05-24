@@ -159,14 +159,57 @@
 </script>
 
 <style scoped>
-  .btn-area div {
-    font-size: 35px;
+  /** */
+
+  .btn-area > div {
+    font-size: 30px;
     width: 45%;
+    max-height: 150px;
   }
+
+  .btn-area img {
+    width: 90px;
+  }
+
   .btn-area > div:nth-child(2) {
     background-color: var(--btn-color1);
   }
   .btn-area > div:nth-child(1) {
     background-color: var(--btn-color2);
   }
+
+  /**vant form */
+
+  ::v-deep(.van-form) {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* ::v-deep(.van-cell-group) {
+    margin: 0px;
+    background-color: transparent;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  ::v-deep(.van-field) {
+    height: 65px;
+    font-size: var(--form-label-font-size);
+    display: flex;
+    align-items: center;
+  }
+
+  ::v-deep(.van-field__label) {
+    display: flex;
+    align-items: center;
+    width: 105px;
+  }
+  ::v-deep(.van-field__value) {
+    display: flex;
+    align-items: center;
+  } */
 </style>

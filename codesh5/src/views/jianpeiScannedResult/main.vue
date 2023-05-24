@@ -7,7 +7,7 @@
       @click-left="onClickLeft"
     />
 
-    <div class="table-content">
+    <div class="container">
       <el-table
         :data="tableData1"
         border
@@ -16,7 +16,7 @@
       >
         <el-table-column prop="riqi" label="日期" />
         <el-table-column prop="baohao" label="包号" />
-        <el-table-column prop="yiweima" label="一维码" />
+        <el-table-column prop="yiweima" label="一维码" width="110px" />
         <el-table-column prop="zhongliang" label="重量" />
       </el-table>
 
@@ -40,7 +40,7 @@
             src="@/assets/image/btn_shoudong.png"
             alt=""
             type="primary"
-            @click="onSearch"
+            @click="onHandle"
           />
           <div>手动</div>
         </div>
@@ -95,28 +95,25 @@
 </script>
 
 <style scoped>
-  .table-content {
-    padding: 3%;
-    height: calc(100vh - var(--van-nav-bar-height));
-  }
-
-  .table-content > #data-area1 {
-    height: 60%;
+  .container > #data-area1 {
+    height: 50%;
     max-height: 80%;
     margin-bottom: 5%;
   }
 
-  .table-content > .btn-area {
-    height: 20%;
-    max-height: 20%;
-  }
+  /** 按钮样式 */
 
   .btn-area div {
     border-radius: 25px;
-    font-size: 25px;
+    font-size: 23px;
     width: 30%;
-    height: 115px;
+    min-height: 50px;
   }
+
+  .btn-area img {
+    width: 60px;
+  }
+
   .btn-area > div:nth-child(2) {
     background-color: var(--btn-color2);
   }
