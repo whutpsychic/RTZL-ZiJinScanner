@@ -135,6 +135,7 @@
     height: 65px;
     text-align: center !important;
     font-size: 25px !important;
+    color: #ffffff;
   }
 
   ::v-deep(.van-cell) {
