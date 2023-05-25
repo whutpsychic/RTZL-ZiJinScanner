@@ -19,7 +19,7 @@ export function chukudanQuery(data, pageNum) {
 
 //获取车辆信息列表
 export function cheliangQuery(data, pageNum) {
-  data.pageSize = 10
+  data.pageSize = 999
   data.pageNum = pageNum
   return request({
     url: `${baseUrl.api_base_url}/vehicleprebook/weightData/v1/queryVehicle`,

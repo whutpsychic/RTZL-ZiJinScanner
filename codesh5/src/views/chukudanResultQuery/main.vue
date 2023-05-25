@@ -6,7 +6,6 @@
       left-arrow
       @click-left="onClickLeft"
     />
-
     <div class="table-content container">
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
         <el-table-column prop="billNo" label="发货单号" width="130px" />
@@ -45,7 +44,7 @@
             src="@/assets/image/btn_shuaxin2.png"
             alt=""
             type="primary"
-            @click="onSearch"
+            @click="queryData"
           />
           <div>刷新</div>
         </div>
@@ -67,7 +66,7 @@
   import { toRaw } from '@vue/reactivity'
   import { onMounted, ref } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
-  import { showToast } from 'vant'
+  import { showToast, showLoadingToast, closeToast } from 'vant'
   import * as chukudanApi from '@/api/chukudan'
   export default {
     setup() {
@@ -76,8 +75,9 @@
 
       const tableData = ref([])
 
+      let queryParams = ''
+
       const onClickLeft = () => history.back()
-      const onRefresh = () => {}
 
       let selectedRow = ''
 
@@ -102,12 +102,20 @@
         }
       }
 
-      onMounted(() => {
-        let queryParams = route.query
+      const queryData = () => {
+        showLoadingToast({
+          duration: 0,
+          message: '加载中...',
+        })
         chukudanApi.chukudanQuery(queryParams, 0).then((res) => {
-          debugger
+          closeToast()
           tableData.value = res.data.value.records
         })
+      }
+
+      onMounted(() => {
+        queryParams = route.query
+        queryData()
       })
 
       return {
@@ -115,7 +123,7 @@
         selectRow,
         tableData,
         showDetail,
-        onRefresh,
+        queryData,
       }
     },
   }

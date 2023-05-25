@@ -35,16 +35,19 @@
   import { onMounted, ref } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import * as jianpeidanApi from '@/api/jianpeidan'
+  import { showLoadingToast, closeToast, showFailToast } from 'vant'
   export default {
     setup() {
       const route = useRoute()
-      const router = useRouter()
       const tableData = ref([])
 
       const onClickLeft = () => history.back()
 
       onMounted(() => {
-        debugger
+        showLoadingToast({
+          duration: 0,
+          message: '加载中...',
+        })
         let rowData = JSON.parse(decodeURIComponent(route.query.rowData))
         jianpeidanApi
           .jianpeidanDetail({
@@ -52,7 +55,7 @@
             billNo: rowData.billNo,
           })
           .then((res) => {
-            debugger
+            closeToast()
             tableData.value = res.data.value
           })
       })

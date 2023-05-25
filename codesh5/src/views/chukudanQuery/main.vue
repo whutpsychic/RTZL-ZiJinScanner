@@ -17,6 +17,7 @@
             name="startTime"
             label="开始日期"
             placeholder="点击选择时间"
+            :rules="[{ required: true, message: '请选择' }]"
             @click="showPicker = true"
           />
           <van-popup v-model:show="showPicker" position="bottom">
@@ -34,6 +35,7 @@
             label="结束日期"
             placeholder="点击选择时间"
             @click="showPicker2 = true"
+            :rules="[{ required: true, message: '请选择' }]"
           />
           <van-popup v-model:show="showPicker2" position="bottom">
             <van-date-picker

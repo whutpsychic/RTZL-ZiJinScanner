@@ -18,6 +18,7 @@
             label="开始日期"
             placeholder="点击选择时间"
             @click="showPicker = true"
+            :rules="[{ required: true, message: '请选择' }]"
           />
           <van-popup v-model:show="showPicker" position="bottom">
             <van-date-picker
@@ -34,6 +35,7 @@
             label="结束日期"
             placeholder="点击选择时间"
             @click="showPicker2 = true"
+            :rules="[{ required: true, message: '请选择' }]"
           />
           <van-popup v-model:show="showPicker2" position="bottom">
             <van-date-picker
@@ -70,8 +72,6 @@
           </div>
         </div>
       </van-form>
-
-      <van-loading color="#0094ff" />
     </div>
   </main>
 </template>

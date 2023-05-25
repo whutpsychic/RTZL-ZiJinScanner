@@ -49,7 +49,7 @@
   import { toRaw } from '@vue/reactivity'
   import { onMounted, ref } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
-  import { showSuccessToast, showFailToast, showToast } from 'vant'
+  import { showLoadingToast, closeToast, showFailToast } from 'vant'
   import * as jianpeidanApi from '@/api/jianpeidan'
   import { showConfirmDialog } from 'vant'
   export default {
@@ -58,10 +58,10 @@
       const router = useRouter()
 
       const onClickLeft = () => history.back()
-      const onRefresh = () => {}
       const tableData = ref([])
 
       let selectedRow = ''
+      let queryParams = ''
 
       const selectRow = (row, column, event) => {
         selectedRow = toRaw(row)
@@ -81,9 +81,8 @@
             message: '是否确认删除',
           })
             .then(() => {
-              debugger
               jianpeidanApi.jianpeidanDelete(selectedRow.id).then((res) => {
-                debugger
+                queryData()
               })
             })
             .catch(() => {
@@ -105,11 +104,20 @@
         }
       }
 
-      onMounted(() => {
-        let queryParams = route.query
+      const queryData = () => {
+        showLoadingToast({
+          duration: 0,
+          message: '加载中...',
+        })
         jianpeidanApi.jianpeidanQuery(queryParams).then((res) => {
+          closeToast()
           tableData.value = res.data.value
         })
+      }
+
+      onMounted(() => {
+        queryParams = route.query
+        queryData()
       })
 
       return {
@@ -117,7 +125,6 @@
         selectRow,
         tableData,
         showDetail,
-        onRefresh,
         onDelete,
       }
     },
