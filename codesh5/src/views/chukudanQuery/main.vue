@@ -11,10 +11,10 @@
       <van-form @submit="onSubmit" ref="formRef">
         <van-cell-group inset>
           <van-field
-            v-model="startDate"
+            v-model="startTime"
             is-link
             readonly
-            name="startDate"
+            name="startTime"
             label="开始日期"
             placeholder="点击选择时间"
             @click="showPicker = true"
@@ -27,10 +27,10 @@
           </van-popup>
 
           <van-field
-            v-model="endDate"
+            v-model="endTime"
             is-link
             readonly
-            name="endDate"
+            name="endTime"
             label="结束日期"
             placeholder="点击选择时间"
             @click="showPicker2 = true"
@@ -43,24 +43,24 @@
           </van-popup>
 
           <van-field
-            v-model="fahuodanhao"
-            name="fahuodanhao"
+            v-model="billNo"
+            name="billNo"
             label="发货单号"
             placeholder="填写单号"
           />
 
           <van-field
-            v-model="kuqu"
+            v-model="storagePlace"
             is-link
             readonly
-            name="kuqu"
+            name="storagePlace"
             label="库区"
             placeholder="点击选择库区"
             @click="showPicker3 = true"
           />
           <van-popup v-model:show="showPicker3" position="bottom">
             <van-picker
-              :columns="kuquOptions"
+              :columns="storagePlaceOptions"
               @confirm="onConfirm3"
               @cancel="showPicker3 = false"
             />
@@ -93,6 +93,8 @@
 <script>
   import { ref, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
+  import * as chukudanApi from '@/api/chukudan'
+
   let formRef = ''
   export default {
     mounted() {
@@ -100,28 +102,28 @@
     },
 
     setup() {
-      const startDate = ref('')
-      const endDate = ref('')
-      const fahuodanhao = ref('')
-      const kuqu = ref('1403')
+      const startTime = ref('')
+      const endTime = ref('')
+      const billNo = ref('')
+      const storagePlace = ref('')
       const showPicker = ref(false)
       const showPicker2 = ref(false)
       const showPicker3 = ref(false)
-      const kuquOptions = [{ text: '1403', value: '1403' }]
+      const storagePlaceOptions = ref([])
 
       const router = useRouter()
 
       const onConfirm = ({ selectedValues }) => {
-        startDate.value = selectedValues.join('/')
+        startTime.value = selectedValues.join('/')
         showPicker.value = false
       }
       const onConfirm2 = ({ selectedValues }) => {
-        endDate.value = selectedValues.join('/')
+        endTime.value = selectedValues.join('/')
         showPicker2.value = false
       }
 
       const onConfirm3 = ({ selectedOptions }) => {
-        kuqu.value = selectedOptions[0]?.text
+        storagePlace.value = selectedOptions[0]?.text
         showPicker3.value = false
       }
 
@@ -132,18 +134,33 @@
       }
 
       const onSubmit = (values) => {
-        debugger
-        // values.startDate = values.startDate.replaceAll('/', '-') + ' 00:00:00'
-        // values.endDate = values.endDate.replaceAll('/', '-') + ' 23:59:59'
+        values.startTime
+          ? (values.startTime =
+              values.startTime.replaceAll('/', '-') + ' 00:00:00')
+          : ''
+        values.endTime
+          ? (values.endTime = values.endTime.replaceAll('/', '-') + ' 23:59:59')
+          : ''
         router.push({ name: 'chukudanResultQuery', query: values })
       }
 
+      onMounted(() => {
+        chukudanApi.getWarehouse().then((res) => {
+          res.data.value.map((e) => {
+            storagePlaceOptions.value.push({
+              text: e.name,
+              value: e.code,
+            })
+          })
+        })
+      })
+
       return {
-        startDate,
-        endDate,
-        fahuodanhao,
-        kuqu,
-        kuquOptions,
+        startTime,
+        endTime,
+        billNo,
+        storagePlace,
+        storagePlaceOptions,
         showPicker,
         showPicker2,
         showPicker3,

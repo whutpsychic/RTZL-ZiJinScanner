@@ -10,7 +10,7 @@
     <div class="container">
       <div class="prop-value-div">
         <div class="label">发货单号</div>
-        <div class="value">{{ formData.fahuodanhao }}</div>
+        <div class="value">{{ formData.billNo }}</div>
       </div>
 
       <div class="prop-value-div">
@@ -73,7 +73,7 @@
   export default {
     setup() {
       let formData = reactive({
-        fahuodanhao: '',
+        billNo: '',
         zhidanriqi: '',
         jihuashuliang: '',
         yifashuliang: '',
@@ -94,7 +94,7 @@
         router.push({
           name: 'jianpeiScannedResult',
           query: {
-            fahuodanhao: formData.fahuodanhao,
+            billNo: formData.billNo,
             shouhuodanwei: formData.shouhuodanwei,
           },
         })
@@ -105,7 +105,7 @@
         debugger
         if (store.state.chukudan) {
           rowData = store.state.chukudan
-          formData.fahuodanhao = rowData.fahuodanhao
+          formData.billNo = rowData.billNo
           formData.zhidanriqi = rowData.zhidanriqi
           formData.jihuashuliang = rowData.jihuashuliang
           formData.yifashuliang = rowData.yifashuliang
@@ -115,13 +115,13 @@
         }
         if (route.query && Object.keys(route.query).length > 0) {
           rowData = JSON.parse(decodeURIComponent(route.query.rowData))
-          formData.fahuodanhao = rowData.fahuodanhao
-          formData.zhidanriqi = rowData.fahuodanriqi
-          formData.jihuashuliang = rowData.jihuazhongliang
-          formData.yifashuliang = rowData.yifashuliang
+          formData.billNo = rowData.billNo
+          formData.zhidanriqi = rowData.deliveryDate
+          formData.jihuashuliang = rowData.planNum
+          formData.yifashuliang = rowData.actualNum
           formData.yingjianshuliang =
-            parseInt(rowData.jihuazhongliang) - parseInt(rowData.yifashuliang)
-          formData.shouhuodanwei = rowData.shouhuodanwei
+            parseInt(rowData.planNum) - parseInt(rowData.actualNum)
+          formData.shouhuodanwei = rowData.receiveUnit
           formData.chehao = rowData.chehao
         }
 

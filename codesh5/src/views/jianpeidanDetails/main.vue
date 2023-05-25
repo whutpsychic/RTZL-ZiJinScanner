@@ -9,12 +9,12 @@
 
     <div class="table-content container">
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
-        <el-table-column prop="jianpeidanhao" label="拣配单号" width="120px;" />
-        <el-table-column prop="picihao" label="批次号" width="100px;" />
-        <el-table-column prop="picibianma" label="批次编码" width="120px;" />
-        <el-table-column prop="zhongliang" label="重量" />
-        <el-table-column prop="kuaishu" label="块数" />
-        <el-table-column prop="jiliangdanwei" label="计量单位" width="120px;" />
+        <el-table-column prop="billNo" label="拣配单号" width="120px;" />
+        <el-table-column prop="batchNo" label="批次号" width="100px;" />
+        <el-table-column prop="barcode" label="批次编码" width="120px;" />
+        <el-table-column prop="weight" label="重量" />
+        <el-table-column prop="blocks" label="块数" />
+        <el-table-column prop="unit" label="计量单位" width="120px;" />
       </el-table>
       <div class="btn-area">
         <div>
@@ -32,36 +32,29 @@
 
 <script>
   import { toRaw } from '@vue/reactivity'
-  import { onMounted } from 'vue'
+  import { onMounted, ref } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
+  import * as jianpeidanApi from '@/api/jianpeidan'
   export default {
     setup() {
       const route = useRoute()
       const router = useRouter()
+      const tableData = ref([])
 
       const onClickLeft = () => history.back()
 
-      const tableData = [
-        {
-          jianpeidanhao: '1',
-          picihao: 'asds',
-          picibianma: '222',
-          zhongliang: 'asd',
-          kuaishu: 'xasd',
-          jiliangdanwei: 'sda',
-        },
-        {
-          jianpeidanhao: '1',
-          picihao: 'asds',
-          picibianma: '222',
-          zhongliang: 'asd',
-          kuaishu: 'xasd',
-          jiliangdanwei: 'sda',
-        },
-      ]
-
       onMounted(() => {
-        let queryParams = route.query
+        debugger
+        let rowData = JSON.parse(decodeURIComponent(route.query.rowData))
+        jianpeidanApi
+          .jianpeidanDetail({
+            billId: rowData.id,
+            billNo: rowData.billNo,
+          })
+          .then((res) => {
+            debugger
+            tableData.value = res.data.value
+          })
       })
 
       return {

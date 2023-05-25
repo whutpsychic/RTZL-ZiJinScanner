@@ -36,10 +36,10 @@ export default defineConfig({
     open: true,
     // proxy: {
     //   '/api': {
-    //     target: 'http://192.168.0.213:8031',
+    //     target: 'http://139.155.181.145:8022',
     //     changeOrigin: true,
     //     rewrite: (path) => path.replace(/^\/api/, ''),
-    //   },
+    //   }
     // },
   },
 })

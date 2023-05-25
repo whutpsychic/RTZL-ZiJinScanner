@@ -45,9 +45,8 @@
       </van-form>
 
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
-        <el-table-column prop="chehao" label="车号" />
-        <el-table-column prop="danjuhao" label="单据号" />
-        <el-table-column prop="chengfang" label="秤房" />
+        <el-table-column prop="plateNo" label="车号" />
+        <el-table-column prop="contractNo" label="单据号" />
       </el-table>
 
       <div>
@@ -88,7 +87,7 @@
   import { useRouter } from 'vue-router'
   import { useStore } from 'vuex'
   import { showSuccessToast, showFailToast, showToast } from 'vant'
-  import { showNotify } from 'vant'
+  import * as chukudanApi from '@/api/chukudan'
   export default {
     setup() {
       const startDate = ref('')
@@ -104,29 +103,36 @@
 
       let tableData = ref([])
       const onConfirm = ({ selectedValues }) => {
-        startDate.value = selectedValues.join('/')
+        startDate.value = selectedValues.join('-')
         showPicker.value = false
       }
       const onConfirm2 = ({ selectedValues }) => {
-        endDate.value = selectedValues.join('/')
+        endDate.value = selectedValues.join('-')
         showPicker2.value = false
       }
 
       const onClickLeft = () => history.back()
 
       const onQuery = () => {
-        tableData.value = [
-          { chehao: 1, danjuhao: 2, chengfang: 3 },
-          { chehao: 11, danjuhao: 22, chengfang: 33 },
-          { chehao: 111, danjuhao: 222, chengfang: 333 },
-        ]
+        chukudanApi
+          .cheliangQuery(
+            {
+              startTime: startDate.value.replaceAll('-', '-') + ' 00:00:00',
+              endTime: endDate.value.replaceAll('-', '-') + ' 23:59:59',
+            },
+            0
+          )
+          .then((res) => {
+            debugger
+            tableData.value = res.data.value.records
+          })
       }
 
       const onSubmit = () => {}
 
       let selectedCheHao = ''
       const selectRow = (row, column, event) => {
-        selectedCheHao = row.chehao
+        selectedCheHao = row.plateNo
       }
 
       const confirmSelect = () => {

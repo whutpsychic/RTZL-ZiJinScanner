@@ -9,35 +9,27 @@
 
     <div class="table-content container">
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
-        <el-table-column prop="fahuodanhao" label="发货单号" width="130px" />
-        <el-table-column prop="shouhuodanwei" label="收货单号" width="130px" />
-        <el-table-column
-          prop="jihuazhongliang"
-          label="计划重量"
-          width="130px"
-        />
-        <el-table-column prop="yifashuliang" label="已发数量" width="130px" />
-        <el-table-column prop="fahuodanriqi" label="发货单日期" width="150px" />
+        <el-table-column prop="billNo" label="发货单号" width="130px" />
+        <el-table-column prop="receiveUnit" label="收货单位" width="130px" />
+        <el-table-column prop="planNum" label="计划重量" width="130px" />
+        <el-table-column prop="actualNum" label="已发数量" width="130px" />
+        <el-table-column prop="deliveryDate" label="发货单日期" width="150px" />
         <el-table-column prop="jihuariqi" label="计划日期" width="130px" />
         <el-table-column prop="dingdanhao" label="订单号" width="130px" />
         <el-table-column prop="xuhao" label="序号" width="130px" />
-        <el-table-column prop="chanpinbianma" label="产品编码" width="130px" />
+        <el-table-column prop="materialCode" label="产品编码" width="130px" />
         <el-table-column
-          prop="chanpinmingcheng"
+          prop="materialDescribe"
           label="产品名称"
           width="130px"
         />
-        <el-table-column prop="picihao" label="批次号" width="130px" />
-        <el-table-column prop="jiliangdanwei" label="计量单位" width="130px" />
-        <el-table-column
-          prop="kufangmingcheng"
-          label="库房名称"
-          width="130px"
-        />
+        <!-- <el-table-column prop="picihao" label="批次号" width="130px" /> -->
+        <el-table-column prop="unit" label="计量单位" width="130px" />
+        <el-table-column prop="storagePlace" label="库房名称" width="130px" />
 
         <el-table-column prop="yuanshuqufen" label="运输区分" width="130px" />
         <el-table-column prop="chehao" label="车号" width="130px" />
-        <el-table-column prop="jihualeixing" label="计划类型" width="130px" />
+        <!-- <el-table-column prop="jihualeixing" label="计划类型" width="130px" /> -->
       </el-table>
       <div class="btn-area">
         <div>
@@ -73,13 +65,16 @@
 
 <script>
   import { toRaw } from '@vue/reactivity'
-  import { onMounted } from 'vue'
+  import { onMounted, ref } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import { showToast } from 'vant'
+  import * as chukudanApi from '@/api/chukudan'
   export default {
     setup() {
       const route = useRoute()
       const router = useRouter()
+
+      const tableData = ref([])
 
       const onClickLeft = () => history.back()
       const onRefresh = () => {}
@@ -107,47 +102,12 @@
         }
       }
 
-      const tableData = [
-        {
-          fahuodanhao: '1',
-          shouhuodanwei: 'asds',
-          jihuazhongliang: '222',
-          yifashuliang: '1',
-          fahuodanriqi: 'asds',
-          jihuariqi: '222',
-          dingdanhao: '1',
-          xuhao: 'asds',
-          chanpinbianma: '222',
-          chanpinmingcheng: '1',
-          picihao: 'asds',
-          jiliangdanwei: '222',
-          kufangmingcheng: '1',
-          yuanshuqufen: 'asds',
-          chehao: '222',
-          jihualeixing: '123',
-        },
-        {
-          fahuodanhao: '2',
-          shouhuodanwei: 'asds',
-          jihuazhongliang: '222',
-          yifashuliang: '1',
-          fahuodanriqi: 'asds',
-          jihuariqi: '222',
-          dingdanhao: '1',
-          xuhao: 'asds',
-          chanpinbianma: '222',
-          chanpinmingcheng: '1',
-          picihao: 'asds',
-          jiliangdanwei: '222',
-          kufangmingcheng: '1',
-          yuanshuqufen: 'asds',
-          chehao: '222',
-          jihualeixing: '123',
-        },
-      ]
-
       onMounted(() => {
         let queryParams = route.query
+        chukudanApi.chukudanQuery(queryParams, 0).then((res) => {
+          debugger
+          tableData.value = res.data.value.records
+        })
       })
 
       return {

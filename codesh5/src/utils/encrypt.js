@@ -9,7 +9,8 @@ import { getPublicKey } from '@/api/publicKey'
 export async function encryptedData(password) {
   let publicKey = ''
   const res = await getPublicKey()
-  publicKey = res.value
+  debugger
+  publicKey = res.data.value
   if (publicKey == '') {
     return password
   }

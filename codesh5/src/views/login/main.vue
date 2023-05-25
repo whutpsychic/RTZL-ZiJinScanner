@@ -62,8 +62,8 @@
 
       const onSubmit = (values) => {
         login(values).then((res) => {
-          if (res.code == 1) {
-            store.commit('setUser', values)
+          if (res.data.loginStatus) {
+            store.commit('setUser', res.data)
             showToast({
               message: '登录成功',
               type: 'success',

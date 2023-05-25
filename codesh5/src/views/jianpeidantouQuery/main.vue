@@ -11,10 +11,10 @@
       <van-form @submit="onSubmit" ref="formRef">
         <van-cell-group inset>
           <van-field
-            v-model="startDate"
+            v-model="startTime"
             is-link
             readonly
-            name="startDate"
+            name="startTime"
             label="开始日期"
             placeholder="点击选择时间"
             @click="showPicker = true"
@@ -27,10 +27,10 @@
           </van-popup>
 
           <van-field
-            v-model="endDate"
+            v-model="endTime"
             is-link
             readonly
-            name="endDate"
+            name="endTime"
             label="结束日期"
             placeholder="点击选择时间"
             @click="showPicker2 = true"
@@ -43,24 +43,12 @@
           </van-popup>
 
           <van-field
-            v-model="fahuodanhao"
-            name="fahuodanhao"
+            v-model="sendPlanNo"
+            name="sendPlanNo"
             label="发货单号"
             placeholder="填写单号"
-            :rules="[{ required: true, message: '请填写单号' }]"
           />
         </van-cell-group>
-        <!-- <div style="margin: 16px">
-          <div class="btn">
-            <van-button round block type="primary" @click="onClickLeft">
-              返回
-            </van-button>
-
-            <van-button round block type="primary" native-type="submit">
-              查询
-            </van-button>
-          </div>
-        </div> -->
 
         <div class="btn-area">
           <div>
@@ -82,6 +70,8 @@
           </div>
         </div>
       </van-form>
+
+      <van-loading color="#0094ff" />
     </div>
   </main>
 </template>
@@ -96,20 +86,20 @@
     },
 
     setup() {
-      const startDate = ref('')
-      const endDate = ref('')
-      const fahuodanhao = ref('')
+      const startTime = ref('')
+      const endTime = ref('')
+      const sendPlanNo = ref('')
       const showPicker = ref(false)
       const showPicker2 = ref(false)
 
       const router = useRouter()
 
       const onConfirm = ({ selectedValues }) => {
-        startDate.value = selectedValues.join('/')
+        startTime.value = selectedValues.join('/')
         showPicker.value = false
       }
       const onConfirm2 = ({ selectedValues }) => {
-        endDate.value = selectedValues.join('/')
+        endTime.value = selectedValues.join('/')
         showPicker2.value = false
       }
 
@@ -119,13 +109,21 @@
         formRef.submit()
       }
       const onSubmit = (values) => {
+        values.startTime
+          ? (values.startTime =
+              values.startTime.replaceAll('/', '-') + ' 00:00:00')
+          : ''
+        values.endTime
+          ? (values.endTime = values.endTime.replaceAll('/', '-') + ' 23:59:59')
+          : ''
+
         router.push({ name: 'jianpeidanQueryResult', query: values })
       }
 
       return {
-        startDate,
-        endDate,
-        fahuodanhao,
+        startTime,
+        endTime,
+        sendPlanNo,
         showPicker,
         showPicker2,
         onClickLeft,

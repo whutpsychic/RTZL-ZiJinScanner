@@ -10,8 +10,8 @@
     <div class="table-content container">
       <div class="search-area">
         <van-cell-group inset>
-          <van-field v-model="picihao" label="批次号" placeholder="四位" />
-          <van-field v-model="bianhao" label="编号" placeholder="三位" />
+          <van-field v-model="batchNo" label="批次号" placeholder="四位" />
+          <van-field v-model="code" label="编号" placeholder="三位" />
         </van-cell-group>
         <div class="btn-area btn-area1">
           <div>
@@ -56,13 +56,14 @@
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { reactive } from 'vue'
+  import * as chukudanApi from '@/api/chukudan'
   export default {
     setup() {
       const router = useRouter()
 
-      const picihao = ref('')
+      const batchNo = ref('')
       const tiaoxingma = ref('')
-      const bianhao = ref('')
+      const code = ref('')
 
       let tableData1 = ref([
         { riqi: 1, baohao: 2, yiweima: 3, zhongliang: 4 },
@@ -80,15 +81,24 @@
         router.push({ name: 'manualUnqualifiedBarcodes' })
       }
 
-      const onSearch = () => {}
+      const onSearch = () => {
+        chukudanApi
+          .getBarCode({
+            batchNo: batchNo.value,
+            code: code.value,
+          })
+          .then((res) => {
+            debugger
+          })
+      }
 
       return {
         onClickLeft,
         tableData1,
         tableData2,
         onHandle,
-        picihao,
-        bianhao,
+        batchNo,
+        code,
         tiaoxingma,
         onSearch,
       }

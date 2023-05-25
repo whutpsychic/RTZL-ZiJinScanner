@@ -1,8 +1,8 @@
-import request from '@/utils/request'
+import { request, baseUrl } from '@/utils/request'
 
 export function getPublicKey() {
   return request({
-    url: `/base/tools/v1/getPublicKey`,
+    url: `${baseUrl.auth_base_url}/base/tools/v1/getPublicKey`,
     method: 'get',
   })
 }

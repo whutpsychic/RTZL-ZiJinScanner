@@ -9,9 +9,9 @@
 
     <div class="table-content container">
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
-        <el-table-column prop="jianpeiriqi" label="拣配日期" />
-        <el-table-column prop="chehao" label="车号" />
-        <el-table-column prop="shouhuodanwei" label="收货单位" />
+        <el-table-column prop="billNo" label="单号" />
+        <el-table-column prop="pickDate" label="拣配日期" />
+        <el-table-column prop="receiveUnit" label="收货单位" />
       </el-table>
       <div class="btn-area">
         <div>
@@ -47,9 +47,11 @@
 
 <script>
   import { toRaw } from '@vue/reactivity'
-  import { onMounted } from 'vue'
+  import { onMounted, ref } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import { showSuccessToast, showFailToast, showToast } from 'vant'
+  import * as jianpeidanApi from '@/api/jianpeidan'
+  import { showConfirmDialog } from 'vant'
   export default {
     setup() {
       const route = useRoute()
@@ -57,6 +59,7 @@
 
       const onClickLeft = () => history.back()
       const onRefresh = () => {}
+      const tableData = ref([])
 
       let selectedRow = ''
 
@@ -67,6 +70,25 @@
       const onDelete = () => {
         if (!selectedRow) {
           showFailToast('请选择要删除的行')
+        } else {
+          if (selectedRow.pickState != 0) {
+            showFailToast('已装车，不能删除！')
+            return
+          }
+
+          showConfirmDialog({
+            title: '提醒',
+            message: '是否确认删除',
+          })
+            .then(() => {
+              debugger
+              jianpeidanApi.jianpeidanDelete(selectedRow.id).then((res) => {
+                debugger
+              })
+            })
+            .catch(() => {
+              // on cancel
+            })
         }
       }
 
@@ -83,26 +105,11 @@
         }
       }
 
-      const tableData = [
-        {
-          jianpeiriqi: '1',
-          chehao: 'asds',
-          shouhuodanwei: '222',
-        },
-        {
-          jianpeiriqi: '1',
-          chehao: 'asds',
-          shouhuodanwei: '222',
-        },
-        {
-          jianpeiriqi: '1',
-          chehao: 'asds',
-          shouhuodanwei: '222',
-        },
-      ]
-
       onMounted(() => {
         let queryParams = route.query
+        jianpeidanApi.jianpeidanQuery(queryParams).then((res) => {
+          tableData.value = res.data.value
+        })
       })
 
       return {
