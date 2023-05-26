@@ -7,8 +7,8 @@
       @click-left="onClickLeft"
     />
 
-    <div class="table-content">
-      <van-form @submit="onSubmit">
+    <div class="table-content container">
+      <van-form @submit="onSubmit" id="form-area">
         <van-cell-group inset>
           <van-field
             v-model="startDate"
@@ -45,26 +45,37 @@
       </van-form>
 
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
-        <el-table-column prop="col1" label="车号" />
-        <el-table-column prop="col2" label="单据号" />
-        <el-table-column prop="col3" label="泵房" />
+        <el-table-column prop="plateNo" label="车号" />
+        <el-table-column prop="contractNo" label="单据号" />
       </el-table>
 
-      <van-cell-group inset>
-        <van-field v-model="carNo" label="车号" placeholder="请输入用户名" />
-      </van-cell-group>
-
-      <div style="margin: 16px">
+      <div>
+        <van-cell-group inset>
+          <van-field v-model="chehao" label="车号" placeholder="请输入车号" />
+        </van-cell-group>
         <div class="btn-area">
-          <van-button round block type="primary" @click="onQuery">
-            查询
-          </van-button>
-          <van-button round block type="primary" @click="confirmSelect">
-            确认
-          </van-button>
-          <van-button round block type="primary" @click="handleConfirmSelect">
-            手动确认
-          </van-button>
+          <div>
+            <img src="@/assets/image/btn_chaxun3.png" alt="" @click="onQuery" />
+            <div>查询</div>
+          </div>
+          <div>
+            <img
+              src="@/assets/image/btn_queren.png"
+              alt=""
+              type="primary"
+              @click="confirmSelect"
+            />
+            <div>确认</div>
+          </div>
+          <div>
+            <img
+              src="@/assets/image/btn_shoudong.png"
+              alt=""
+              type="primary"
+              @click="handleConfirmSelect"
+            />
+            <div>手动确认</div>
+          </div>
         </div>
       </div>
     </div>
@@ -74,62 +85,80 @@
 <script>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import { reactive } from 'vue'
+  import { useStore } from 'vuex'
+  import { showSuccessToast, showFailToast, showToast } from 'vant'
+  import * as chukudanApi from '@/api/chukudan'
   export default {
     setup() {
       const startDate = ref('')
       const endDate = ref('')
 
-      const carNo = ref('')
+      const chehao = ref('')
 
       const showPicker = ref(false)
       const showPicker2 = ref(false)
+      const store = useStore()
 
       const router = useRouter()
 
       let tableData = ref([])
       const onConfirm = ({ selectedValues }) => {
-        startDate.value = selectedValues.join('/')
+        startDate.value = selectedValues.join('-')
         showPicker.value = false
       }
       const onConfirm2 = ({ selectedValues }) => {
-        endDate.value = selectedValues.join('/')
+        endDate.value = selectedValues.join('-')
         showPicker2.value = false
       }
 
       const onClickLeft = () => history.back()
 
       const onQuery = () => {
-        tableData.value = [
-          { col1: 1, col2: 2, col3: 3 },
-          { col1: 1, col2: 2, col3: 3 },
-          { col1: 1, col2: 2, col3: 3 },
-        ]
+        chukudanApi
+          .cheliangQuery(
+            {
+              startTime: startDate.value.replaceAll('-', '-') + ' 00:00:00',
+              endTime: endDate.value.replaceAll('-', '-') + ' 23:59:59',
+            },
+            0
+          )
+          .then((res) => {
+            debugger
+            tableData.value = res.data.value.records
+          })
       }
 
-      const onSubmit = (values) => {}
+      const onSubmit = () => {}
 
-      let selectedCarNo = ''
+      let selectedCheHao = ''
       const selectRow = (row, column, event) => {
-        selectedCarNo = row.col1
+        selectedCheHao = row.plateNo
       }
 
       const confirmSelect = () => {
-        if (selectedCarNo) {
-          alert(selectedCarNo)
-          router.push({ name: 'chukudanDetails', query: { id: selectedCarNo } })
+        if (selectedCheHao) {
+          let chukudanInfo = store.state.chukudan
+          chukudanInfo.chehao = selectedCheHao
+          store.commit('setChukudan', chukudanInfo)
+          router.push({
+            name: 'chukudanDetails',
+          })
         } else {
-          alert('请选择正确的行')
+          showFailToast('请选择正确的行！')
         }
       }
 
       const handleConfirmSelect = () => {
-        if (carNo.value) {
-          debugger
-          alert(carNo.value)
-          router.push({ name: 'chukudanDetails', query: { id: carNo } })
+        if (chehao.value) {
+          let chukudanInfo = store.state.chukudan
+          chukudanInfo.chehao = chehao.value
+          store.commit('setChukudan', chukudanInfo)
+          router.push({ name: 'chukudanDetails' })
         } else {
-          alert('请选输入车号')
+          showToast({
+            message: '请手工录入车号！',
+            type: 'fail',
+          })
         }
       }
 
@@ -147,46 +176,48 @@
         selectRow,
         confirmSelect,
         handleConfirmSelect,
-        carNo,
+        chehao,
       }
     },
   }
 </script>
 
 <style scoped>
-  .table-content {
-    padding: 3%;
-    height: calc(100vh - var(--van-nav-bar-height));
-  }
-
-  .table-content > #data-area {
-    height: 50%;
-    max-height: 80%;
-  }
-
-  .table-content > .btn-area {
-    height: 30%;
-    max-height: 20%;
-  }
-
-  .btn-area {
+  .container {
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
-  .van-button {
-    width: 30%;
+  #data-area {
+    flex-grow: 1;
+    margin-bottom: 25px;
+  }
+
+  /** 按钮样式 */
+
+  .btn-area div {
     border-radius: 25px;
-    font-size: 25px;
-    cursor: pointer;
+    font-size: 23px;
+    width: 30%;
+    min-height: 50px;
   }
-  .van-button:nth-child(2) {
-    background-color: #003363;
+
+  .btn-area img {
+    width: 60px;
   }
-  .van-button:nth-child(1) {
-    background-color: #d77100;
+
+  .btn-area > div:nth-child(2) {
+    background-color: var(--btn-color2);
   }
-  .van-button:nth-child(3) {
-    background-color: #d77100;
+  .btn-area > div:nth-child(1) {
+    background-color: var(--btn-color1);
+  }
+  .btn-area > div:nth-child(3) {
+    background-color: var(--btn-color1);
+  }
+  /**输入框 */
+  ::v-deep(.van-field) {
+    margin-bottom: 15px;
   }
 </style>

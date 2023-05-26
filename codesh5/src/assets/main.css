@@ -1,16 +1,15 @@
 @import './base.css';
 
 #app {
-  height:100vh;
+  height: 100vh;
   margin: 0 auto;
   font-weight: normal;
   background-color: #ffffff;
 }
 
-main{
-  height:100%;
+main {
+  height: 100%;
 }
-
 
 a,
 .green {
@@ -38,16 +37,131 @@ a,
   }
 }
 
+/** 公共样式 */
 
-.van-nav-bar{
-  background-color: #003263 !important;
+:root {
+  --main-background-color: #f3f3f3;
+  --top-bar-color: #003363;
+  --btn-color1: #003363;
+  --btn-color2: #d77100;
+  --table-header-color: #3c5d85;
+  --table-border-color: #dde2e3;
+  --form-label-color: #003363;
+  --form-input-border-color: #dbe3e3;
+
+  --table-body-back-color2: #b6ceeb;
+  --table-body-border-color2: #4971a0;
+
+  --form-label-font-size: 25px;
+  --form-value-font-size: 25px;
+  --table-header-font-size: 22px;
+  --table-data-font-size: 20px;
 }
 
-.van-nav-bar__title{
-  color:white !important
+main {
+  background-color: var(--main-background-color);
 }
 
+.container {
+  padding: 15px;
+  height: calc(100vh - var(--van-nav-bar-height));
+}
 
-.van-cell{
-  margin-top: 15px;
+.van-nav-bar {
+  background-color: var(--top-bar-color) !important;
+}
+
+.van-nav-bar__title {
+  color: white !important;
+}
+
+.van-icon-arrow-left {
+  color: #ffffff !important;
+  font-size: 25px !important;
+}
+
+/**按钮*/
+.btn-area {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 20px;
+}
+
+.btn-area div {
+  border-radius: 25px;
+  cursor: pointer;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  white-space: nowrap;
+  justify-content: center;
+}
+
+.btn-area div img {
+  top: 10px;
+  position: relative;
+}
+
+/**-----------------vant 表单-------------------------*/
+
+.van-cell-group {
+  margin: 0px !important;
+  background-color: transparent !important;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.van-field {
+  height: 65px;
+  font-size: var(--form-label-font-size) !important;
+  display: flex;
+  align-items: center;
+}
+
+.van-field__label {
+  display: flex;
+  align-items: center;
+  width: 105px !important;
+}
+.van-field__value {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/**---------------element plus--------------------------- */
+
+thead .el-table__cell {
+  background-color: var(--table-header-color) !important;
+  font-size: var(--table-header-font-size);
+}
+
+thead .el-table__cell > .cell {
+  color: #ffffff;
+}
+
+tbody .el-table__cell {
+  font-size: var(--table-data-font-size);
+}
+
+tbody .el-table__cell > .cell {
+  color: #000000;
+}
+
+.el-table__header-wrapper {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.el-table__cell > .cell {
+  text-align: center;
+}
+
+/***/
+
+.van-popup {
+  background: rgba(0, 0, 0, 0.7) !important;
 }

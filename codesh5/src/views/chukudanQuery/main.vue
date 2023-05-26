@@ -7,124 +7,162 @@
       @click-left="onClickLeft"
     />
 
-    <van-form @submit="onSubmit">
-      <van-cell-group inset>
-        <van-field
-          v-model="startDate"
-          is-link
-          readonly
-          name="startDate"
-          label="开始日期"
-          placeholder="点击选择时间"
-          @click="showPicker = true"
-        />
-        <van-popup v-model:show="showPicker" position="bottom">
-          <van-date-picker @confirm="onConfirm" @cancel="showPicker = false" />
-        </van-popup>
-
-        <van-field
-          v-model="endDate"
-          is-link
-          readonly
-          name="endDate"
-          label="结束日期"
-          placeholder="点击选择时间"
-          @click="showPicker2 = true"
-        />
-        <van-popup v-model:show="showPicker2" position="bottom">
-          <van-date-picker
-            @confirm="onConfirm2"
-            @cancel="showPicker2 = false"
+    <div class="container">
+      <van-form @submit="onSubmit" ref="formRef">
+        <van-cell-group inset>
+          <van-field
+            v-model="startTime"
+            is-link
+            readonly
+            name="startTime"
+            label="开始日期"
+            placeholder="点击选择时间"
+            :rules="[{ required: true, message: '请选择' }]"
+            @click="showPicker = true"
           />
-        </van-popup>
+          <van-popup v-model:show="showPicker" position="bottom">
+            <van-date-picker
+              @confirm="onConfirm"
+              @cancel="showPicker = false"
+            />
+          </van-popup>
 
-        <van-field
-          v-model="orderNo"
-          name="orderNo"
-          label="发货单号"
-          placeholder="填写单号"
-          :rules="[{ required: true, message: '请填写单号' }]"
-        />
-
-        <van-field
-          v-model="storeNo"
-          is-link
-          readonly
-          name="storeNo"
-          label="选择器"
-          placeholder="点击选择库区"
-          @click="showPicker3 = true"
-        />
-        <van-popup v-model:show="showPicker3" position="bottom">
-          <van-picker
-            :columns="storeNoOptions"
-            @confirm="onConfirm3"
-            @cancel="showPicker3 = false"
+          <van-field
+            v-model="endTime"
+            is-link
+            readonly
+            name="endTime"
+            label="结束日期"
+            placeholder="点击选择时间"
+            @click="showPicker2 = true"
+            :rules="[{ required: true, message: '请选择' }]"
           />
-        </van-popup>
-      </van-cell-group>
-      <div style="margin: 16px">
-        <div class="btn">
-          <van-button round block type="primary" @click="onClickLeft">
-            返回
-          </van-button>
+          <van-popup v-model:show="showPicker2" position="bottom">
+            <van-date-picker
+              @confirm="onConfirm2"
+              @cancel="showPicker2 = false"
+            />
+          </van-popup>
 
-          <van-button round block type="primary" native-type="submit">
-            查询
-          </van-button>
+          <van-field
+            v-model="billNo"
+            name="billNo"
+            label="发货单号"
+            placeholder="填写单号"
+          />
+
+          <van-field
+            v-model="storagePlace"
+            is-link
+            readonly
+            name="storagePlace"
+            label="库区"
+            placeholder="点击选择库区"
+            @click="showPicker3 = true"
+          />
+          <van-popup v-model:show="showPicker3" position="bottom">
+            <van-picker
+              :columns="storagePlaceOptions"
+              @confirm="onConfirm3"
+              @cancel="showPicker3 = false"
+            />
+          </van-popup>
+        </van-cell-group>
+        <div class="btn-area">
+          <div>
+            <img
+              src="@/assets/image/btn_fanhui1.png"
+              alt=""
+              @click="onClickLeft"
+            />
+            <div>返回</div>
+          </div>
+          <div>
+            <img
+              src="@/assets/image/btn_chaxun1.png"
+              alt=""
+              type="primary"
+              @click="onSearch"
+            />
+            <div>查询</div>
+          </div>
         </div>
-      </div>
-    </van-form>
+      </van-form>
+    </div>
   </main>
 </template>
 
 <script>
-  import { ref } from 'vue'
+  import { ref, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
+  import * as chukudanApi from '@/api/chukudan'
+
+  let formRef = ''
   export default {
+    mounted() {
+      formRef = this.$refs['formRef']
+    },
+
     setup() {
-      const startDate = ref('')
-      const endDate = ref('')
-      const orderNo = ref('')
-      const storeNo = ref('')
+      const startTime = ref('')
+      const endTime = ref('')
+      const billNo = ref('')
+      const storagePlace = ref('')
       const showPicker = ref(false)
       const showPicker2 = ref(false)
       const showPicker3 = ref(false)
+      const storagePlaceOptions = ref([])
 
       const router = useRouter()
 
       const onConfirm = ({ selectedValues }) => {
-        startDate.value = selectedValues.join('/')
+        startTime.value = selectedValues.join('/')
         showPicker.value = false
       }
       const onConfirm2 = ({ selectedValues }) => {
-        endDate.value = selectedValues.join('/')
+        endTime.value = selectedValues.join('/')
         showPicker2.value = false
       }
 
-      const storeNoOptions = [
-        { text: '1403', value: '1403' },
-        { text: '1404', value: '1404' },
-        { text: '1423', value: '1423' },
-      ]
-
       const onConfirm3 = ({ selectedOptions }) => {
-        storeNo.value = selectedOptions[0]?.text
+        storagePlace.value = selectedOptions[0]?.text
         showPicker3.value = false
       }
 
       const onClickLeft = () => history.back()
 
+      const onSearch = () => {
+        formRef.submit()
+      }
+
       const onSubmit = (values) => {
+        values.startTime
+          ? (values.startTime =
+              values.startTime.replaceAll('/', '-') + ' 00:00:00')
+          : ''
+        values.endTime
+          ? (values.endTime = values.endTime.replaceAll('/', '-') + ' 23:59:59')
+          : ''
         router.push({ name: 'chukudanResultQuery', query: values })
       }
 
+      onMounted(() => {
+        chukudanApi.getWarehouse().then((res) => {
+          res.data.value.map((e) => {
+            storagePlaceOptions.value.push({
+              text: e.name,
+              value: e.code,
+            })
+          })
+        })
+      })
+
       return {
-        startDate,
-        endDate,
-        orderNo,
-        storeNo,
-        storeNoOptions,
+        startTime,
+        endTime,
+        billNo,
+        storagePlace,
+        storagePlaceOptions,
         showPicker,
         showPicker2,
         showPicker3,
@@ -132,6 +170,7 @@
         onConfirm,
         onConfirm2,
         onConfirm3,
+        onSearch,
         onSubmit,
       }
     },
@@ -139,24 +178,57 @@
 </script>
 
 <style scoped>
-  .btn {
-    display: flex;
-    justify-content: space-around;
+  /** */
+
+  .btn-area > div {
+    font-size: 30px;
+    width: 45%;
+    max-height: 150px;
   }
 
-  .van-button {
-    width: 150px;
-    height: 150px;
-    border-radius: 25px;
-    font-size: 35px;
-    cursor: pointer;
+  .btn-area img {
+    width: 90px;
   }
-  .van-button:nth-child(2) {
-    margin-top: 17%;
-    background-color: #003363;
+
+  .btn-area > div:nth-child(2) {
+    background-color: var(--btn-color1);
   }
-  .van-button:nth-child(1) {
-    margin-top: 17%;
-    background-color: #d77100;
+  .btn-area > div:nth-child(1) {
+    background-color: var(--btn-color2);
   }
+
+  /**vant form */
+
+  ::v-deep(.van-form) {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* ::v-deep(.van-cell-group) {
+    margin: 0px;
+    background-color: transparent;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  ::v-deep(.van-field) {
+    height: 65px;
+    font-size: var(--form-label-font-size);
+    display: flex;
+    align-items: center;
+  }
+
+  ::v-deep(.van-field__label) {
+    display: flex;
+    align-items: center;
+    width: 105px;
+  }
+  ::v-deep(.van-field__value) {
+    display: flex;
+    align-items: center;
+  } */
 </style>

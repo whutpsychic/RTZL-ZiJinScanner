@@ -6,38 +6,56 @@
       left-arrow
       @click-left="onClickLeft"
     />
-
-    <div class="table-content">
+    <div class="table-content container">
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
-        <el-table-column prop="id" label="发货单号" />
-        <el-table-column prop="name" label="收货单号" />
-        <el-table-column prop="address" label="计划重量" />
-        <el-table-column prop="address" label="已发数量" />
-        <el-table-column prop="address" label="发货单日期" />
-        <el-table-column prop="address" label="计划日期" />
-        <el-table-column prop="address" label="订单号" />
-        <el-table-column prop="address" label="序号" />
-        <el-table-column prop="address" label="产品编码" />
-        <el-table-column prop="address" label="产品名称" />
-        <el-table-column prop="address" label="批次号" />
-        <el-table-column prop="address" label="计量单位" />
-        <el-table-column prop="address" label="库房名称" />
+        <el-table-column prop="billNo" label="发货单号" width="130px" />
+        <el-table-column prop="receiveUnit" label="收货单位" width="130px" />
+        <el-table-column prop="planNum" label="计划重量" width="130px" />
+        <el-table-column prop="actualNum" label="已发数量" width="130px" />
+        <el-table-column prop="deliveryDate" label="发货单日期" width="150px" />
+        <el-table-column prop="jihuariqi" label="计划日期" width="130px" />
+        <el-table-column prop="dingdanhao" label="订单号" width="130px" />
+        <el-table-column prop="xuhao" label="序号" width="130px" />
+        <el-table-column prop="materialCode" label="产品编码" width="130px" />
+        <el-table-column
+          prop="materialDescribe"
+          label="产品名称"
+          width="130px"
+        />
+        <!-- <el-table-column prop="picihao" label="批次号" width="130px" /> -->
+        <el-table-column prop="unit" label="计量单位" width="130px" />
+        <el-table-column prop="storagePlace" label="库房名称" width="130px" />
 
-        <el-table-column prop="address" label="运输区分" />
-        <el-table-column prop="address" label="车号" />
-        <el-table-column prop="address" label="计划类型" />
+        <el-table-column prop="yuanshuqufen" label="运输区分" width="130px" />
+        <el-table-column prop="chehao" label="车号" width="130px" />
+        <!-- <el-table-column prop="jihualeixing" label="计划类型" width="130px" /> -->
       </el-table>
-      <div style="margin: 16px">
-        <div class="btn-area">
-          <van-button round block type="primary" @click="onClickLeft">
-            返回
-          </van-button>
-          <van-button round block type="primary" @click="onRefresh">
-            刷新
-          </van-button>
-          <van-button round block type="primary" @click="showDetail">
-            查询
-          </van-button>
+      <div class="btn-area">
+        <div>
+          <img
+            src="@/assets/image/btn_fanhui2.png"
+            alt=""
+            @click="onClickLeft"
+          />
+          <div>返回</div>
+        </div>
+        <div>
+          <img
+            src="@/assets/image/btn_shuaxin2.png"
+            alt=""
+            type="primary"
+            @click="queryData"
+          />
+          <div>刷新</div>
+        </div>
+        <div>
+          <img
+            src="@/assets/image/btn_chaxun2.png"
+            alt=""
+            type="primary"
+            @click="showDetail"
+          />
+          <div>查看</div>
         </div>
       </div>
     </div>
@@ -45,57 +63,59 @@
 </template>
 
 <script>
-  import { ref } from 'vue'
-  import { onMounted } from 'vue'
+  import { toRaw } from '@vue/reactivity'
+  import { onMounted, ref } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
+  import { showToast, showLoadingToast, closeToast } from 'vant'
+  import * as chukudanApi from '@/api/chukudan'
   export default {
     setup() {
       const route = useRoute()
       const router = useRouter()
 
-      const onClickLeft = () => history.back()
-      const onRefresh = () => {}
+      const tableData = ref([])
 
-      let selectedId = ''
+      let queryParams = ''
+
+      const onClickLeft = () => history.back()
+
+      let selectedRow = ''
 
       const selectRow = (row, column, event) => {
-        selectedId = row.id
+        selectedRow = toRaw(row)
       }
 
       const showDetail = () => {
-        if (selectedId) {
-          alert(selectedId)
-          router.push({ name: 'chukudanDetails', query: { id: selectedId } })
+        if (selectedRow) {
+          let rowData = encodeURIComponent(JSON.stringify(selectedRow))
+          router.push({
+            name: 'chukudanDetails',
+            query: {
+              rowData,
+            },
+          })
         } else {
-          alert('请选择正确的行')
+          showToast({
+            message: '请选择正确的行！',
+            type: 'fail',
+          })
         }
       }
 
-      const tableData = [
-        {
-          id: '1',
-          name: 'asds',
-          address: '222',
-        },
-        {
-          id: '2',
-          name: 'asd',
-          address: '333',
-        },
-        {
-          id: '3',
-          name: 'asdf',
-          address: '444',
-        },
-        {
-          id: '4',
-          name: 'dsdf',
-          address: '5',
-        },
-      ]
+      const queryData = () => {
+        showLoadingToast({
+          duration: 0,
+          message: '加载中...',
+        })
+        chukudanApi.chukudanQuery(queryParams, 0).then((res) => {
+          closeToast()
+          tableData.value = res.data.value.records
+        })
+      }
 
       onMounted(() => {
-        let queryParams = route.query
+        queryParams = route.query
+        queryData()
       })
 
       return {
@@ -103,63 +123,47 @@
         selectRow,
         tableData,
         showDetail,
-        onRefresh,
+        queryData,
       }
     },
   }
 </script>
 
 <style scoped>
-  .btn {
-    display: flex;
-    justify-content: space-around;
-  }
-
-  /**------------------------------------- */
-
   .table-content {
-    padding: 3%;
-    height: calc(100vh - var(--van-nav-bar-height));
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
-  .table-content > #data-area {
-    height: 80%;
-    max-height: 80%;
-  }
-
-  .table-content > .btn-area {
-    height: 20%;
-    max-height: 20%;
+  #data-area {
+    flex-grow: 1;
   }
 
   .btn-area {
-    display: flex;
-    justify-content: space-around;
+    flex-grow: 0;
   }
 
-  .van-button {
-    width: 30%;
+  /** 按钮样式 */
+
+  .btn-area div {
     border-radius: 25px;
-    font-size: 25px;
-    cursor: pointer;
-  }
-  .van-button:nth-child(2) {
-    background-color: #003363;
-  }
-  .van-button:nth-child(1) {
-    background-color: #d77100;
-  }
-  .van-button:nth-child(3) {
-    background-color: #d77100;
-  }
-  /**------------------------------------------ */
-
-  :deep(thead .el-table__cell) {
-    background-color: #3c5d85;
+    font-size: 23px;
+    width: 30%;
+    min-height: 50px;
   }
 
-  :deep(thead .el-table__cell > .cell) {
-    text-align: center;
-    color: #ffffff;
+  .btn-area img {
+    width: 60px;
+  }
+
+  .btn-area > div:nth-child(2) {
+    background-color: var(--btn-color2);
+  }
+  .btn-area > div:nth-child(1) {
+    background-color: var(--btn-color1);
+  }
+  .btn-area > div:nth-child(3) {
+    background-color: var(--btn-color1);
   }
 </style>
