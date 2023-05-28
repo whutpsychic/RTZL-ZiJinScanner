@@ -102,7 +102,6 @@
 
       onMounted(() => {
         let rowData = ''
-        debugger
         if (store.state.chukudan) {
           rowData = store.state.chukudan
           formData.billNo = rowData.billNo

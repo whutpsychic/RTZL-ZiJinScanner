@@ -9,10 +9,22 @@
 
     <div class="table-content container">
       <div class="search-area">
-        <van-cell-group inset>
-          <van-field v-model="batchNo" label="批次号" placeholder="四位" />
-          <van-field v-model="code" label="编号" placeholder="三位" />
-        </van-cell-group>
+        <van-form @submit="onSubmit" id="form-area" ref="formRef">
+          <van-cell-group inset>
+            <!-- <van-field
+              v-model="batchNo"
+              label="批次号"
+              placeholder=""
+              :rules="[{ required: true, message: '请输入' }]"
+            /> -->
+            <van-field
+              v-model="code"
+              label="编号"
+              placeholder=""
+              :rules="[{ required: true, message: '请输入' }]"
+            />
+          </van-cell-group>
+        </van-form>
         <div class="btn-area btn-area1">
           <div>
             <img
@@ -26,25 +38,15 @@
         </div>
       </div>
 
-      <van-field v-model="tiaoxingma" label="条形码" placeholder="" />
+      <van-field v-model="barcode" label="条形码" placeholder="" />
 
       <div class="btn-area">
-        <div>
-          <img
-            src="@/assets/image/btn_queren.png"
-            alt=""
-            type="primary"
-            @click="onSearch"
-          />
+        <div @click="onConfirm">
+          <img src="@/assets/image/btn_queren.png" alt="" type="primary" />
           <div>确认</div>
         </div>
-        <div>
-          <img
-            src="@/assets/image/btn_tichu.png"
-            alt=""
-            type="primary"
-            @click="onSearch"
-          />
+        <div @click="onClickLeft">
+          <img src="@/assets/image/btn_tichu.png" alt="" type="primary" />
           <div>取消</div>
         </div>
       </div>
@@ -55,25 +57,20 @@
 <script>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import { reactive } from 'vue'
   import * as chukudanApi from '@/api/chukudan'
+  import { showToast, showLoadingToast, closeToast, showFailToast } from 'vant'
+  let formRef = ''
   export default {
+    mounted() {
+      formRef = this.$refs['formRef']
+    },
+
     setup() {
       const router = useRouter()
 
       const batchNo = ref('')
-      const tiaoxingma = ref('')
+      const barcode = ref('')
       const code = ref('')
-
-      let tableData1 = ref([
-        { riqi: 1, baohao: 2, yiweima: 3, zhongliang: 4 },
-        { riqi: 1, baohao: 2, yiweima: 3, zhongliang: 4 },
-        { riqi: 1, baohao: 2, yiweima: 3, zhongliang: 4 },
-      ])
-      let tableData2 = ref([
-        { yingjian: 1, yijian: 2, queshao: 3 },
-        { yingjian: '', yijian: 2, queshao: '' },
-      ])
 
       const onClickLeft = () => history.back()
 
@@ -82,25 +79,51 @@
       }
 
       const onSearch = () => {
+        formRef.submit()
+      }
+
+      const onConfirm = () => {
+        let checkRes = true //chukudanApi.checkBarcodeIfqualified(barcode)
+        if (checkRes) {
+          router.push({
+            path: '/jianpeiScannedResult',
+            query: { barcode: barcode.value },
+          })
+        } else {
+          showFailToast('条形码不符合规范')
+        }
+      }
+
+      const onSubmit = () => {
+        showLoadingToast({
+          duration: 0,
+          message: '加载中...',
+        })
+
         chukudanApi
           .getBarCode({
-            batchNo: batchNo.value,
+            //batchNo: batchNo.value,
             code: code.value,
           })
           .then((res) => {
-            debugger
+            closeToast()
+            if (res.data.value) {
+              barcode.value = res.data.value
+            } else {
+              barcode.value = ''
+            }
           })
       }
 
       return {
         onClickLeft,
-        tableData1,
-        tableData2,
         onHandle,
         batchNo,
         code,
-        tiaoxingma,
+        barcode,
         onSearch,
+        onSubmit,
+        onConfirm,
       }
     },
   }

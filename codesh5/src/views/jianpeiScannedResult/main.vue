@@ -14,10 +14,9 @@
         id="data-area1"
         @row-click="selectRow"
       >
-        <el-table-column prop="riqi" label="日期" />
-        <el-table-column prop="baohao" label="包号" />
-        <el-table-column prop="yiweima" label="一维码" width="110px" />
-        <el-table-column prop="zhongliang" label="重量" />
+        <el-table-column prop="proDate" label="日期" />
+        <el-table-column prop="code" label="一维码" width="110px" />
+        <el-table-column prop="weight" label="重量" />
       </el-table>
 
       <el-table :data="tableData2" border id="data-area2">
@@ -27,30 +26,16 @@
       </el-table>
 
       <div class="btn-area">
-        <div>
-          <img
-            src="@/assets/image/btn_queren.png"
-            alt=""
-            @click="onClickLeft"
-          />
+        <div @click="onConfirm">
+          <img src="@/assets/image/btn_queren.png" alt="" />
           <div>确认</div>
         </div>
-        <div>
-          <img
-            src="@/assets/image/btn_shoudong.png"
-            alt=""
-            type="primary"
-            @click="onHandle"
-          />
+        <div @click="onHandle">
+          <img src="@/assets/image/btn_shoudong.png" alt="" type="primary" />
           <div>手动</div>
         </div>
-        <div>
-          <img
-            src="@/assets/image/btn_tichu.png"
-            alt=""
-            type="primary"
-            @click="showDetail"
-          />
+        <div @click="onDelete">
+          <img src="@/assets/image/btn_tichu.png" alt="" type="primary" />
           <div>剔除</div>
         </div>
       </div>
@@ -59,24 +44,24 @@
 </template>
 
 <script>
-  import { ref } from 'vue'
-  import { useRouter } from 'vue-router'
-  import { reactive } from 'vue'
+  import { ref, onMounted } from 'vue'
+  import { toRaw } from '@vue/reactivity'
+  import { useRouter, useRoute } from 'vue-router'
+  import { showFailToast } from 'vant'
+  import * as chukudanApi from '@/api/chukudan'
+  import { useStore } from 'vuex'
   export default {
     setup() {
       const router = useRouter()
-
-      let tableData1 = ref([
-        { riqi: 1, baohao: 2, yiweima: 3, zhongliang: 4 },
-        { riqi: 1, baohao: 2, yiweima: 3, zhongliang: 4 },
-        { riqi: 1, baohao: 2, yiweima: 3, zhongliang: 4 },
-      ])
+      const route = useRoute()
+      let tableData1 = ref([])
       let tableData2 = ref([
         { yingjian: 1, yijian: 2, queshao: 3 },
         { yingjian: '', yijian: 2, queshao: '' },
       ])
 
       const onClickLeft = () => history.back()
+      const store = useStore()
 
       const onHandle = () => {
         router.push({
@@ -84,11 +69,49 @@
         })
       }
 
+      const onDelete = () => {}
+
+      const onConfirm = () => {
+        let chukudanInfo = store.state.chukudan
+        let chukudanListInfo = store.state.chukudanListInfo
+        let userInfo = store.state.userInfo
+        let pickBill = toRaw(chukudanListInfo)
+        chukudanListInfo.carNo = chukudanInfo.chehao
+
+        pickBill.pickPackage = 100
+        pickBill.pickWeight - 9999
+
+        let pickBillDetailList = toRaw(tableData1.value)
+        chukudanApi
+          .scanConfirm({
+            pickBill,
+            pickBillDetailList,
+          })
+          .then((res) => {
+            debugger
+          })
+      }
+
+      onMounted(() => {
+        let queryParams = route.query
+
+        if (queryParams.barcode) {
+          chukudanApi.checkBarcode(queryParams.barcode).then((res) => {
+            if (res.data.value === true) {
+              showFailToast(res.data.message)
+            } else {
+              tableData1.value.push(res.data.value)
+            }
+          })
+        }
+      })
+
       return {
         onClickLeft,
         tableData1,
         tableData2,
         onHandle,
+        onConfirm,
       }
     },
   }

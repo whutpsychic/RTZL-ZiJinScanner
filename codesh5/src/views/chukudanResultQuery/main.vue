@@ -68,12 +68,14 @@
   import { useRoute, useRouter } from 'vue-router'
   import { showToast, showLoadingToast, closeToast } from 'vant'
   import * as chukudanApi from '@/api/chukudan'
+  import { useStore } from 'vuex'
   export default {
     setup() {
       const route = useRoute()
       const router = useRouter()
 
       const tableData = ref([])
+      const store = useStore()
 
       let queryParams = ''
 
@@ -88,6 +90,8 @@
       const showDetail = () => {
         if (selectedRow) {
           let rowData = encodeURIComponent(JSON.stringify(selectedRow))
+
+          store.commit('setChukudanListInfo', selectedRow)
           router.push({
             name: 'chukudanDetails',
             query: {

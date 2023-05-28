@@ -8,7 +8,7 @@
     />
 
     <div class="table-content container">
-      <van-form @submit="onSubmit" id="form-area">
+      <van-form @submit="onSubmit" id="form-area" ref="formRef">
         <van-cell-group inset>
           <van-field
             v-model="startDate"
@@ -18,6 +18,7 @@
             label="开始日期"
             placeholder="点击选择时间"
             @click="showPicker = true"
+            :rules="[{ required: true, message: '请选择' }]"
           />
           <van-popup v-model:show="showPicker" position="bottom">
             <van-date-picker
@@ -34,6 +35,7 @@
             label="结束日期"
             placeholder="点击选择时间"
             @click="showPicker2 = true"
+            :rules="[{ required: true, message: '请选择' }]"
           />
           <van-popup v-model:show="showPicker2" position="bottom">
             <van-date-picker
@@ -54,26 +56,16 @@
           <van-field v-model="chehao" label="车号" placeholder="请输入车号" />
         </van-cell-group>
         <div class="btn-area">
-          <div>
-            <img src="@/assets/image/btn_chaxun3.png" alt="" @click="onQuery" />
+          <div @click="onQuery">
+            <img src="@/assets/image/btn_chaxun3.png" alt="" />
             <div>查询</div>
           </div>
-          <div>
-            <img
-              src="@/assets/image/btn_queren.png"
-              alt=""
-              type="primary"
-              @click="confirmSelect"
-            />
+          <div @click="confirmSelect">
+            <img src="@/assets/image/btn_queren.png" alt="" />
             <div>确认</div>
           </div>
-          <div>
-            <img
-              src="@/assets/image/btn_shoudong.png"
-              alt=""
-              type="primary"
-              @click="handleConfirmSelect"
-            />
+          <div @click="handleConfirmSelect">
+            <img src="@/assets/image/btn_shoudong.png" alt="" />
             <div>手动确认</div>
           </div>
         </div>
@@ -86,9 +78,14 @@
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { useStore } from 'vuex'
-  import { showSuccessToast, showFailToast, showToast } from 'vant'
+  import { showToast, showLoadingToast, closeToast, showFailToast } from 'vant'
   import * as chukudanApi from '@/api/chukudan'
+  let formRef = ''
   export default {
+    mounted() {
+      formRef = this.$refs['formRef']
+    },
+
     setup() {
       const startDate = ref('')
       const endDate = ref('')
@@ -114,6 +111,15 @@
       const onClickLeft = () => history.back()
 
       const onQuery = () => {
+        formRef.submit()
+      }
+
+      const onSubmit = () => {
+        showLoadingToast({
+          duration: 0,
+          message: '加载中...',
+        })
+
         chukudanApi
           .cheliangQuery(
             {
@@ -123,12 +129,10 @@
             0
           )
           .then((res) => {
-            debugger
+            closeToast()
             tableData.value = res.data.value.records
           })
       }
-
-      const onSubmit = () => {}
 
       let selectedCheHao = ''
       const selectRow = (row, column, event) => {

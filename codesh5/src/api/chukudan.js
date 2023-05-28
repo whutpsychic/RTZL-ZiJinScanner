@@ -56,3 +56,34 @@ export function getWarehouse() {
     },
   })
 }
+
+export function checkBarcode(barcode) {
+  return request({
+    url: `${baseUrl.api_base_url}/pick/pickBill/v1/checkBarcode`,
+    method: 'post',
+    data: {
+      barcode,
+    },
+  })
+}
+
+//检查条码是否符合规范
+export function checkBarcodeIfqualified(barcode) {
+  const standard = new RegExp(
+    /^124010[1-9][0-9]{2}(0[1-9]|1[0-2])((0[1-9])|((1|2)[0-9])|30|31)[0-9]{12}$/
+  )
+  const bool = standard.test(barcode) && barcode.length === 25
+  return bool
+}
+
+//拣配确认
+export function scanConfirm(data) {
+  return request({
+    url: `${baseUrl.api_base_url}/pick/pickBill/v1/scanConfirm`,
+    method: 'post',
+    data: data,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+}
