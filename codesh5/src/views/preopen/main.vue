@@ -43,7 +43,7 @@ export default {
       fc.readLocal("hell")
     },
     update() {
-      fc.appUpdate("https://gitee.com/whutpsychic/RTZL-ZiJinScanner/raw/main/app-releasev0.2.1.apk")
+      fc.appUpdate("https://gitee.com/whutpsychic/RTZL-ZiJinScanner/raw/main/app-release_v0.2.1.apk")
     },
   }
 }
