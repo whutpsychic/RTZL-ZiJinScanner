@@ -87,3 +87,12 @@ export function scanConfirm(data) {
     },
   })
 }
+
+//根据车牌号查询车辆进厂过磅信息
+export function queryVehicleByPlateNo(plateNo) {
+  return request({
+    url: `${baseUrl.api_base_url}/vehicleprebook/weightData/v1/queryVehicleByPlateNo`,
+    method: 'post',
+    data: { plateNo: plateNo },
+  })
+}

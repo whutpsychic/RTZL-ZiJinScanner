@@ -47,21 +47,25 @@
   import { ref, onMounted } from 'vue'
   import { toRaw } from '@vue/reactivity'
   import { useRouter, useRoute } from 'vue-router'
-  import { showFailToast } from 'vant'
+  import { closeToast, showFailToast, showLoadingToast, showToast } from 'vant'
   import * as chukudanApi from '@/api/chukudan'
   import { useStore } from 'vuex'
+  import { pick } from 'vant/lib/utils'
   export default {
     setup() {
       const router = useRouter()
       const route = useRoute()
       let tableData1 = ref([])
       let tableData2 = ref([
-        { yingjian: 1, yijian: 2, queshao: 3 },
-        { yingjian: '', yijian: 2, queshao: '' },
+        { yingjian: 0, yijian: 0, queshao: 0 },
+        { yingjian: '', yijian: 0, queshao: '' },
       ])
 
       const onClickLeft = () => history.back()
       const store = useStore()
+
+      let totalPickBlocks = 0
+      let totalPickWeight = 0
 
       const onHandle = () => {
         router.push({
@@ -69,19 +73,85 @@
         })
       }
 
-      const onDelete = () => {}
+      let selectedRow = ''
+
+      const selectRow = (row, column, event) => {
+        selectedRow = toRaw(row)
+      }
+
+      const onDelete = () => {
+        debugger
+        if (selectedRow) {
+          let filtedData = tableData1.value.filter(
+            (item) => item.barcode != selectedRow.barcode
+          )
+          tableData1.value = filtedData
+          store.commit('setScandList', tableData1.value)
+          selectedRow = ''
+          calcPick(filtedData)
+        } else {
+          showFailToast('请选择要剔除的行！')
+        }
+      }
 
       const onConfirm = () => {
         let chukudanInfo = store.state.chukudan
         let chukudanListInfo = store.state.chukudanListInfo
+        let carInfo = store.state.carInfo
         let userInfo = store.state.userInfo
-        let pickBill = toRaw(chukudanListInfo)
-        chukudanListInfo.carNo = chukudanInfo.chehao
+        let pickBill = {}
 
-        pickBill.pickPackage = 100
-        pickBill.pickWeight - 9999
+        //pickBill.batchNo
+        //pickBill.billNo = chukudanListInfo.billNo //拣配单号
+        pickBill.carNo = carInfo.plateNo //车牌号
+        pickBill.carUnit = carInfo.forwardingUnit //车属单位
+        //createTime 创建时间
+        //deleteFlag  删除标识
+        pickBill.deliveryNo = carInfo.deliveryNo //发货通知单号
 
-        let pickBillDetailList = toRaw(tableData1.value)
+        pickBill.materialCode = chukudanListInfo.materialCode //产品编码
+        pickBill.materialId = chukudanListInfo.materialDescribeId //产品id
+        pickBill.materialName = chukudanListInfo.materialDescribe //产品名称（产品描述）
+
+        //pickDate 拣配时间
+        pickBill.pickPackage = totalPickBlocks //  拣配包数
+        //pickPerson 减配人
+        //pickState 拣配状态
+        pickBill.pickWeight = totalPickWeight // 拣配重量
+        pickBill.receiveUnit = chukudanListInfo.receiveUnit //收货单位
+
+        pickBill.remark = chukudanListInfo.remark //备注
+        pickBill.sendPlanNo = chukudanListInfo.billNo //  发货计划号
+
+        //pickBill.tenantId = chukudanListInfo.tenantId
+        pickBill.type = chukudanListInfo.type //类型
+        pickBill.unit = chukudanListInfo.unit //计量单位
+
+        pickBill.warehouseCode = carInfo.warehouseCode //库房编号
+        pickBill.warehouseName = carInfo.warehouseName //库房名称
+
+        let pickBillDetailList = []
+
+        tableData1.value.forEach((item) => {
+          let pickBillDetail = {}
+          pickBillDetail.barcode = item.barcode //条形码
+          pickBillDetail.batchNo = item.batchNo //批次号
+          //pickBillDetail.billId=item.    //拣配单id
+          //pickBillDetail.billNo  //拣配单号
+          pickBillDetail.blocks = item.blocks //块数
+          pickBillDetail.carNo = carInfo.plateNo //车牌号
+          pickBillDetail.code = item.code //编号
+
+          //judgmentResult  判定结果
+          //remark 备注
+          pickBillDetail.unit = item.unit //计量单位
+          //pickBillDetail.warehouseInId  入库历史id
+          pickBillDetail.weight = item.weight //重量
+
+          pickBillDetailList.push(pickBillDetail)
+        })
+
+        showLoadingToast()
         chukudanApi
           .scanConfirm({
             pickBill,
@@ -89,18 +159,74 @@
           })
           .then((res) => {
             debugger
+            if ((res.data.state = true)) {
+              tableData1.value = []
+              store.commit('setScandList', tableData1.value)
+              showToast({
+                message: '拣配成功!',
+                type: 'success',
+                className: 'toast',
+                overlay: true,
+              })
+            } else {
+              showFailToast(res.data.message)
+            }
           })
+      }
+
+      const calcPick = (pickDataList) => {
+        let chukudanListInfo = store.state.chukudanListInfo
+        tableData2.value[0].yingjian = chukudanListInfo.planNum
+        tableData2.value[0].queshao = chukudanListInfo.planNum
+
+        totalPickBlocks = 0
+        totalPickWeight = 0
+        pickDataList.forEach((item) => {
+          totalPickBlocks += item.blocks
+          totalPickWeight += item.weight
+        })
+        tableData2.value[0].yijian = totalPickWeight
+        tableData2.value[1].yijian = totalPickBlocks
+
+        if (totalPickWeight > 0) {
+          tableData2.value[0].queshao = (
+            tableData2.value[0].yingjian -
+            totalPickWeight / 1000
+          ).toFixed(4)
+        }
+
+        if (tableData2.value[0].queshao < 0) {
+          showFailToast('请求数量过多！')
+        } else {
+          closeToast()
+        }
       }
 
       onMounted(() => {
         let queryParams = route.query
 
+        let scandList = store.state.scandList || []
+        tableData1.value = scandList
+        calcPick(scandList)
+
         if (queryParams.barcode) {
+          for (let i = 0; i < scandList.length; i++) {
+            if (scandList[i].barcode == queryParams.barcode) {
+              showFailToast('该批次已经选择，请勿重复选择！')
+              return
+            }
+          }
+          showLoadingToast('加载中')
+
           chukudanApi.checkBarcode(queryParams.barcode).then((res) => {
             if (res.data.value === true) {
               showFailToast(res.data.message)
             } else {
-              tableData1.value.push(res.data.value)
+              scandList.push(res.data.value)
+              store.commit('setScandList', scandList)
+              tableData1.value = scandList
+
+              calcPick(scandList)
             }
           })
         }
@@ -112,6 +238,8 @@
         tableData2,
         onHandle,
         onConfirm,
+        selectRow,
+        onDelete,
       }
     },
   }

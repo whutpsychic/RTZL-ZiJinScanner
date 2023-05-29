@@ -136,14 +136,12 @@
 
       let selectedCheHao = ''
       const selectRow = (row, column, event) => {
-        selectedCheHao = row.plateNo
+        selectedCheHao = row
       }
 
       const confirmSelect = () => {
         if (selectedCheHao) {
-          let chukudanInfo = store.state.chukudan
-          chukudanInfo.chehao = selectedCheHao
-          store.commit('setChukudan', chukudanInfo)
+          store.commit('setCarInfo', selectedCheHao)
           router.push({
             name: 'chukudanDetails',
           })
@@ -154,10 +152,18 @@
 
       const handleConfirmSelect = () => {
         if (chehao.value) {
-          let chukudanInfo = store.state.chukudan
-          chukudanInfo.chehao = chehao.value
-          store.commit('setChukudan', chukudanInfo)
-          router.push({ name: 'chukudanDetails' })
+          debugger
+          showLoadingToast()
+          chukudanApi.queryVehicleByPlateNo(chehao.value).then((res) => {
+            closeToast()
+            if (!res.data.value) {
+              showFailToast('请输入正确的车号')
+              return
+            } else {
+              store.commit('setCarInfo', res.data.value)
+              router.push({ name: 'chukudanDetails' })
+            }
+          })
         } else {
           showToast({
             message: '请手工录入车号！',

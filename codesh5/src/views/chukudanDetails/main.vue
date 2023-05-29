@@ -110,7 +110,6 @@
           formData.yifashuliang = rowData.yifashuliang
           formData.yingjianshuliang = rowData.yingjianshuliang
           formData.shouhuodanwei = rowData.shouhuodanwei
-          formData.chehao = rowData.chehao
         }
         if (route.query && Object.keys(route.query).length > 0) {
           rowData = JSON.parse(decodeURIComponent(route.query.rowData))
@@ -121,7 +120,10 @@
           formData.yingjianshuliang =
             parseInt(rowData.planNum) - parseInt(rowData.actualNum)
           formData.shouhuodanwei = rowData.receiveUnit
-          formData.chehao = rowData.chehao
+        }
+
+        if (store.state.carInfo) {
+          formData.chehao = store.state.carInfo.plateNo
         }
 
         store.commit('setChukudan', formData)
