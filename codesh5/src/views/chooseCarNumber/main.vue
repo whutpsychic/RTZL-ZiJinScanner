@@ -123,8 +123,11 @@
         chukudanApi
           .cheliangQuery(
             {
-              startTime: startDate.value.replaceAll('-', '-') + ' 00:00:00',
-              endTime: endDate.value.replaceAll('-', '-') + ' 23:59:59',
+              startTime:
+                startDate.value.replace('-', '-').replace('-', '-') +
+                ' 00:00:00',
+              endTime:
+                endDate.value.replace('-', '-').replace('-', '-') + ' 23:59:59',
             },
             0
           )

@@ -111,10 +111,12 @@
       const onSubmit = (values) => {
         values.startTime
           ? (values.startTime =
-              values.startTime.replaceAll('/', '-') + ' 00:00:00')
+              values.startTime.replace('-', '-').replace('-', '-') +
+              ' 00:00:00')
           : ''
         values.endTime
-          ? (values.endTime = values.endTime.replaceAll('/', '-') + ' 23:59:59')
+          ? (values.endTime =
+              values.endTime.replace('-', '-').replace('-', '-') + ' 23:59:59')
           : ''
 
         router.push({ name: 'jianpeidanQueryResult', query: values })

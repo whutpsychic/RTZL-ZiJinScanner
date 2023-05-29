@@ -70,6 +70,7 @@
   import { reactive } from 'vue'
   import { onMounted } from 'vue'
   import { useStore } from 'vuex'
+  import fc from 'flutter-core'
   export default {
     setup() {
       let formData = reactive({
@@ -90,14 +91,26 @@
         router.push({ name: 'chooseCarNumber' })
       }
 
-      const onScan = () => {
+      // 注册扫描后监听返回结果函数
+      fc.await('scanner', (res) => {
         router.push({
           name: 'jianpeiScannedResult',
           query: {
-            billNo: formData.billNo,
-            shouhuodanwei: formData.shouhuodanwei,
+            barcode: res,
           },
         })
+      })
+
+      const onScan = () => {
+        fc.scan()
+
+        // router.push({
+        //   name: 'jianpeiScannedResult',
+        //   query: {
+        //     billNo: formData.billNo,
+        //     shouhuodanwei: formData.shouhuodanwei,
+        //   },
+        // })
       }
 
       onMounted(() => {
