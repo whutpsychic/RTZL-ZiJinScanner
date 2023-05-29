@@ -89,9 +89,12 @@
     justify-content: center;
   }
 
+  .btn-area img {
+    width: 45px;
+  }
   .btn-area div {
     border-radius: 25px;
-    font-size: 25px;
+    font-size: 20px;
     width: 30%;
     min-height: 50px;
   }

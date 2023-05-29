@@ -37,9 +37,9 @@
   }
   .van-button {
     width: 80%;
-    height: 15%;
+    height: 20%;
     border-radius: 25px;
-    font-size: 35px;
+    font-size: 30px;
     cursor: pointer;
   }
   .van-button:nth-child(1) {

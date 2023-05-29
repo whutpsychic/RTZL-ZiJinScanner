@@ -146,6 +146,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    height: auto !important;
   }
 
   .btn-area > div {
@@ -171,11 +172,11 @@
     padding: 10px;
   }
   .prop-value-div div {
-    font-size: 25px;
+    font-size: 18px;
   }
 
   .prop-value-div .label {
-    width: 120px;
+    width: 90px;
     color: var(--form-label-color);
     display: flex;
     align-items: center;

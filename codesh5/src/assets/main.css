@@ -52,8 +52,8 @@ a,
   --table-body-back-color2: #b6ceeb;
   --table-body-border-color2: #4971a0;
 
-  --form-label-font-size: 25px;
-  --form-value-font-size: 25px;
+  --form-label-font-size: 20px;
+  --form-value-font-size: 20px;
   --table-header-font-size: 22px;
   --table-data-font-size: 20px;
 }
@@ -115,7 +115,7 @@ main {
 }
 
 .van-field {
-  height: 65px;
+  height: 50px;
   font-size: var(--form-label-font-size) !important;
   display: flex;
   align-items: center;
@@ -129,6 +129,7 @@ main {
 .van-field__value {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
 }
 

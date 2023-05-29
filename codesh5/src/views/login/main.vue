@@ -103,7 +103,7 @@
   .title {
     height: 100px;
     text-align: center;
-    font-size: 25px;
+    font-size: 20px;
     color: #ffffff;
     display: flex;
     align-items: center;
@@ -120,7 +120,6 @@
   }
 
   .van-cell-group {
-    height: 250px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -132,9 +131,9 @@
   }
 
   ::v-deep(.van-field__control) {
-    height: 65px;
+    height: 50px;
     text-align: center !important;
-    font-size: 25px !important;
+    font-size: 20px !important;
     color: #ffffff;
   }
 
@@ -153,15 +152,13 @@
   .login-btn-area {
     display: flex;
     justify-content: space-evenly;
-    height: 20%;
   }
 
   .login-btn-area .van-button {
-    height: 100%;
     width: 45%;
     border-radius: 25px;
-    font-size: 35px;
-    min-height: 135px;
+    font-size: 30px;
+    min-height: 100px;
   }
 
   .login-btn-area .van-button:nth-child(1) {

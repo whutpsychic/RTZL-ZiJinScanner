@@ -138,13 +138,12 @@
 
 <style scoped>
   .btn-area > div {
-    font-size: 30px;
+    font-size: 25px;
     width: 45%;
-    max-height: 150px;
   }
 
   .btn-area img {
-    width: 90px;
+    width: 70px;
   }
 
   .btn-area > div:nth-child(2) {

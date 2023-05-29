@@ -152,13 +152,13 @@
 
   .btn-area div {
     border-radius: 25px;
-    font-size: 23px;
+    font-size: 20px;
     width: 30%;
     min-height: 50px;
   }
 
   .btn-area img {
-    width: 60px;
+    width: 45px;
   }
 
   .btn-area > div:nth-child(2) {

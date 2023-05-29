@@ -69,21 +69,12 @@
           </van-popup>
         </van-cell-group>
         <div class="btn-area">
-          <div>
-            <img
-              src="@/assets/image/btn_fanhui1.png"
-              alt=""
-              @click="onClickLeft"
-            />
+          <div @click="onClickLeft">
+            <img src="@/assets/image/btn_fanhui1.png" alt="" />
             <div>返回</div>
           </div>
-          <div>
-            <img
-              src="@/assets/image/btn_chaxun1.png"
-              alt=""
-              type="primary"
-              @click="onSearch"
-            />
+          <div @click="onSearch">
+            <img src="@/assets/image/btn_chaxun1.png" alt="" type="primary" />
             <div>查询</div>
           </div>
         </div>
@@ -181,13 +172,12 @@
   /** */
 
   .btn-area > div {
-    font-size: 30px;
+    font-size: 25px;
     width: 45%;
-    max-height: 150px;
   }
 
   .btn-area img {
-    width: 90px;
+    width: 70px;
   }
 
   .btn-area > div:nth-child(2) {
@@ -205,30 +195,4 @@
     flex-direction: column;
     justify-content: space-between;
   }
-
-  /* ::v-deep(.van-cell-group) {
-    margin: 0px;
-    background-color: transparent;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
-
-  ::v-deep(.van-field) {
-    height: 65px;
-    font-size: var(--form-label-font-size);
-    display: flex;
-    align-items: center;
-  }
-
-  ::v-deep(.van-field__label) {
-    display: flex;
-    align-items: center;
-    width: 105px;
-  }
-  ::v-deep(.van-field__value) {
-    display: flex;
-    align-items: center;
-  } */
 </style>
