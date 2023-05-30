@@ -1,6 +1,6 @@
 import axios from 'axios'
 import store from '../store'
-
+import { showToast, showLoadingToast, closeToast, showFailToast } from 'vant'
 const baseUrl = {}
 
 if (process.env.NODE_ENV === 'production') {
@@ -17,19 +17,39 @@ const request = axios.create({
   baseURL: 'http://localhost:8081',
 })
 
+request.defaults.timeout = 10000
+
 request.defaults.headers['Content-Type'] =
   'application/x-www-form-urlencoded; charset=UTF-8'
 
 // request.defaults.headers['Content-Type'] = 'application/json'
 
-request.interceptors.request.use((config) => {
-  if (['/auth'].indexOf(config.url) === -1) {
-    const token = store.state.user.token
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+request.interceptors.request.use(
+  (config) => {
+    if (['/auth'].indexOf(config.url) === -1) {
+      const token = store.state.user.token
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
+    }
+    return config
+  },
+  (error) => {}
+)
+
+request.interceptors.response.use(
+  (config) => {
+    closeToast()
+    return config
+  },
+  (error) => {
+    if (error.code == 'ECONNABORTED' || error.code == 'ERR_NETWORK') {
+      showFailToast({
+        message: '请检查网络是否正常',
+        duration: 1500,
+      })
     }
   }
-  return config
-})
+)
 
 export { request, baseUrl }

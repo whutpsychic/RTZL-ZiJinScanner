@@ -114,6 +114,11 @@ main {
   justify-content: space-evenly;
 }
 
+.van-cell {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+
 .van-field {
   height: 50px;
   font-size: var(--form-label-font-size) !important;

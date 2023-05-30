@@ -127,7 +127,6 @@
       }
 
       const onSubmit = (values) => {
-        alert(values.startTime.replace('/', '-').replace('/', '-'))
         values.startTime
           ? (values.startTime =
               values.startTime.replace('/', '-').replace('/', '-') +

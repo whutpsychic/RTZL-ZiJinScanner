@@ -17,12 +17,7 @@
               placeholder=""
               :rules="[{ required: true, message: '请输入' }]"
             /> -->
-            <van-field
-              v-model="code"
-              label="编号"
-              placeholder=""
-              :rules="[{ required: true, message: '请输入' }]"
-            />
+            <van-field v-model="code" label="编号" placeholder="" />
           </van-cell-group>
         </van-form>
         <div class="btn-area btn-area1">
@@ -72,18 +67,19 @@
       const barcode = ref('')
       const code = ref('')
 
-      const onClickLeft = () => history.back()
-
-      const onHandle = () => {
-        router.push({ name: 'manualUnqualifiedBarcodes' })
-      }
+      const onClickLeft = () => router.push({ name: 'jianpeiScannedResult' })
 
       const onSearch = () => {
+        if (!code.value) {
+          showFailToast('请输入编号')
+          return
+        }
+
         formRef.submit()
       }
 
       const onConfirm = () => {
-        let checkRes = true //chukudanApi.checkBarcodeIfqualified(barcode)
+        let checkRes = chukudanApi.checkBarcodeIfqualified(barcode.value.trim())
         if (checkRes) {
           router.push({
             path: '/jianpeiScannedResult',
@@ -106,10 +102,10 @@
             code: code.value,
           })
           .then((res) => {
-            closeToast()
             if (res.data.value) {
               barcode.value = res.data.value
             } else {
+              showFailToast('未查到条形码，请检查编号是否正确')
               barcode.value = ''
             }
           })
@@ -117,7 +113,6 @@
 
       return {
         onClickLeft,
-        onHandle,
         batchNo,
         code,
         barcode,
@@ -158,5 +153,9 @@
   }
   .btn-area > div:nth-child(1) {
     background-color: var(--btn-color1);
+  }
+
+  ::v-deep(.van-field__label) {
+    width: 70px !important;
   }
 </style>

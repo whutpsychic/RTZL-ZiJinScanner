@@ -70,7 +70,7 @@ export function checkBarcode(barcode) {
 //检查条码是否符合规范
 export function checkBarcodeIfqualified(barcode) {
   const standard = new RegExp(
-    /^124010[1-9][0-9]{2}(0[1-9]|1[0-2])((0[1-9])|((1|2)[0-9])|30|31)[0-9]{12}$/
+    /^245010[1-3][0-9]{2}(0[1-9]|1[0-2])((0[1-9])|((1|2)[0-9])|30|31)[0-9]{12}$/
   )
   const bool = standard.test(barcode) && barcode.length === 25
   return bool

@@ -14,9 +14,14 @@
         id="data-area1"
         @row-click="selectRow"
       >
-        <el-table-column prop="proDate" label="日期" />
-        <el-table-column prop="code" label="一维码" width="110px" />
-        <el-table-column prop="weight" label="重量" />
+        <el-table-column label="日期" width="150px">
+          <template #default="scope">
+            {{ scope.row.proDate.substr(0, 10) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="code" label="一维码" width="210px" />
+        <el-table-column prop="weight" label="重量" width="110px" />
       </el-table>
 
       <el-table :data="tableData2" border id="data-area2">
@@ -80,7 +85,6 @@
       }
 
       const onDelete = () => {
-        debugger
         if (selectedRow) {
           let filtedData = tableData1.value.filter(
             (item) => item.barcode != selectedRow.barcode
@@ -158,7 +162,6 @@
             pickBillDetailList,
           })
           .then((res) => {
-            debugger
             if ((res.data.state = true)) {
               tableData1.value = []
               store.commit('setScandList', tableData1.value)
@@ -197,8 +200,6 @@
 
         if (tableData2.value[0].queshao < 0) {
           showFailToast('请求数量过多！')
-        } else {
-          closeToast()
         }
       }
 
@@ -210,6 +211,14 @@
         calcPick(scandList)
 
         if (queryParams.barcode) {
+          let checkRes = chukudanApi.checkBarcodeIfqualified(
+            queryParams.barcode.trim()
+          )
+          if (!checkRes) {
+            showFailToast('条形码不符合规范')
+            return
+          }
+
           for (let i = 0; i < scandList.length; i++) {
             if (scandList[i].barcode == queryParams.barcode) {
               showFailToast('该批次已经选择，请勿重复选择！')

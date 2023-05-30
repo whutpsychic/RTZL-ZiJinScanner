@@ -18,7 +18,6 @@
             label="开始日期"
             placeholder="点击选择时间"
             @click="showPicker = true"
-            :rules="[{ required: true, message: '请选择' }]"
           />
           <van-popup v-model:show="showPicker" position="bottom">
             <van-date-picker
@@ -35,7 +34,6 @@
             label="结束日期"
             placeholder="点击选择时间"
             @click="showPicker2 = true"
-            :rules="[{ required: true, message: '请选择' }]"
           />
           <van-popup v-model:show="showPicker2" position="bottom">
             <van-date-picker
@@ -79,6 +77,7 @@
 <script>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
+  import { showToast, showLoadingToast, closeToast, showFailToast } from 'vant'
   let formRef = ''
   export default {
     mounted() {
@@ -106,17 +105,26 @@
       const onClickLeft = () => history.back()
 
       const onSearch = () => {
+        if (!startTime.value) {
+          showFailToast('请选择开始时间')
+          return
+        }
+
+        if (!endTime.value) {
+          showFailToast('请选择结束时间')
+          return
+        }
         formRef.submit()
       }
       const onSubmit = (values) => {
         values.startTime
           ? (values.startTime =
-              values.startTime.replace('-', '-').replace('-', '-') +
+              values.startTime.replace('/', '-').replace('/', '-') +
               ' 00:00:00')
           : ''
         values.endTime
           ? (values.endTime =
-              values.endTime.replace('-', '-').replace('-', '-') + ' 23:59:59')
+              values.endTime.replace('/', '-').replace('/', '-') + ' 23:59:59')
           : ''
 
         router.push({ name: 'jianpeidanQueryResult', query: values })

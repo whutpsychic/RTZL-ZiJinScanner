@@ -124,15 +124,14 @@
           .cheliangQuery(
             {
               startTime:
-                startDate.value.replace('-', '-').replace('-', '-') +
+                startDate.value.replace('/', '-').replace('/', '-') +
                 ' 00:00:00',
               endTime:
-                endDate.value.replace('-', '-').replace('-', '-') + ' 23:59:59',
+                endDate.value.replace('/', '-').replace('/', '-') + ' 23:59:59',
             },
             0
           )
           .then((res) => {
-            closeToast()
             tableData.value = res.data.value.records
           })
       }
@@ -155,7 +154,6 @@
 
       const handleConfirmSelect = () => {
         if (chehao.value) {
-          debugger
           showLoadingToast()
           chukudanApi.queryVehicleByPlateNo(chehao.value).then((res) => {
             closeToast()
@@ -204,10 +202,14 @@
 
   #data-area {
     flex-grow: 1;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
   }
 
   /** 按钮样式 */
+
+  .btn-area {
+    padding-top: 0px !important;
+  }
 
   .btn-area div {
     border-radius: 25px;
@@ -231,6 +233,6 @@
   }
   /**输入框 */
   ::v-deep(.van-field) {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
 </style>

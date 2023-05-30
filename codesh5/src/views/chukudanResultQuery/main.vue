@@ -9,10 +9,16 @@
     <div class="table-content container">
       <el-table :data="tableData" border id="data-area" @row-click="selectRow">
         <el-table-column prop="billNo" label="发货单号" width="130px" />
-        <el-table-column prop="receiveUnit" label="收货单位" width="130px" />
+        <el-table-column prop="receiveUnit" label="收货单位" width="200px" />
         <el-table-column prop="planNum" label="计划重量" width="130px" />
         <el-table-column prop="actualNum" label="已发数量" width="130px" />
-        <el-table-column prop="deliveryDate" label="发货单日期" width="150px" />
+
+        <el-table-column label="发货单日期" width="150px">
+          <template #default="scope">
+            {{ scope.row.deliveryDate.substr(0, 10) }}
+          </template>
+        </el-table-column>
+
         <el-table-column prop="jihuariqi" label="计划日期" width="130px" />
         <el-table-column prop="dingdanhao" label="订单号" width="130px" />
         <el-table-column prop="xuhao" label="序号" width="130px" />
@@ -89,14 +95,14 @@
 
       const showDetail = () => {
         if (selectedRow) {
-          let rowData = encodeURIComponent(JSON.stringify(selectedRow))
+          //let rowData = encodeURIComponent(JSON.stringify(selectedRow))
 
           store.commit('setChukudanListInfo', selectedRow)
           router.push({
             name: 'chukudanDetails',
-            query: {
-              rowData,
-            },
+            // query: {
+            //   rowData,
+            // },
           })
         } else {
           showToast({
@@ -112,7 +118,6 @@
           message: '加载中...',
         })
         chukudanApi.chukudanQuery(queryParams, 0).then((res) => {
-          closeToast()
           tableData.value = res.data.value.records
         })
       }

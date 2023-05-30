@@ -15,7 +15,7 @@
 
       <div class="prop-value-div">
         <div class="label">制单日期</div>
-        <div class="value">{{ formData.zhidanriqi }}</div>
+        <div class="value">{{ formData.zhidanriqi.substr(0, 10) }}</div>
       </div>
       <div class="prop-value-div">
         <div class="label">计划数量</div>
@@ -35,9 +35,11 @@
       </div>
       <div class="prop-value-div">
         <div class="label">车号</div>
-        <div class="value" style="width: 40%">{{ formData.chehao }}</div>
-        <div class="showMore" @click="selectCarNo">
-          <img src="@/assets/image/btn_showmore.png" alt="" />
+        <div class="showMoreDiv">
+          <div class="value">{{ formData.chehao }}</div>
+          <div class="showMore" @click="selectCarNo">
+            <img src="@/assets/image/btn_showmore.png" alt="" />
+          </div>
         </div>
       </div>
 
@@ -124,8 +126,9 @@
           formData.yingjianshuliang = rowData.yingjianshuliang
           formData.shouhuodanwei = rowData.shouhuodanwei
         }
-        if (route.query && Object.keys(route.query).length > 0) {
-          rowData = JSON.parse(decodeURIComponent(route.query.rowData))
+        //if (route.query && Object.keys(route.query).length > 0) {
+        if (store.state.chukudanListInfo) {
+          rowData = store.state.chukudanListInfo
           formData.billNo = rowData.billNo
           formData.zhidanriqi = rowData.deliveryDate
           formData.jihuashuliang = rowData.planNum
@@ -163,13 +166,13 @@
   }
 
   .btn-area > div {
-    font-size: 30px;
+    font-size: 25px;
     width: 45%;
     max-height: 150px;
   }
 
   .btn-area img {
-    width: 90px;
+    width: 75px;
   }
 
   .btn-area > div:nth-child(2) {
@@ -182,7 +185,8 @@
   /**--------------------------------------------------- */
   .prop-value-div {
     display: flex;
-    padding: 10px;
+    padding-bottom: 10px;
+    justify-content: space-between;
   }
   .prop-value-div div {
     font-size: 18px;
@@ -204,7 +208,12 @@
     color: #000000;
     padding-left: 15px;
     padding-right: 15px;
-    margin-left: 15px;
+  }
+
+  .showMoreDiv {
+    display: flex;
+    justify-content: space-between;
+    width: 65%;
   }
 
   .showMore {
@@ -217,5 +226,9 @@
     width: 25%;
     margin-left: 10px;
     border-radius: 10px;
+  }
+
+  .showMore img {
+    width: 35px;
   }
 </style>
