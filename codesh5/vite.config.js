@@ -16,7 +16,7 @@ import legacyPlugin from '@vitejs/plugin-legacy';
 export default defineConfig({
   base: './',
   build: {
-    target: 'es2013',
+    targets: ['es2012'],
   },
   plugins: [
     vue(),
