@@ -26,7 +26,7 @@ export default defineConfig({
       resolvers: [VantResolver(), ElementPlusResolver()],
     }),
     legacyPlugin({
-      targets: ['chrome 30'], // 需要兼容的目标列表，可以设置多个
+      targets: ['chrome 52'], // 需要兼容的目标列表，可以设置多个
       additionalLegacyPolyfills: ['regenerator-runtime/runtime'], // 面向IE11时需要此插件
     }),
   ],
