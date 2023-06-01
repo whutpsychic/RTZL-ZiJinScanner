@@ -15,6 +15,9 @@ import legacyPlugin from '@vitejs/plugin-legacy';
 // https://vitejs.dev/config/
 export default defineConfig({
   base: './',
+  build: {
+    target: 'es2015',
+  },
   plugins: [
     vue(),
     vueJsx(),
@@ -35,9 +38,9 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
-  define: {
-    globalThis: {}
-  },
+  // define: {
+  //   globalThis: {}
+  // },
   server: {
     host: '0.0.0.0',
     port: 8081,
