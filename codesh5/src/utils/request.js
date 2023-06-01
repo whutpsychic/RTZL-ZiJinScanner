@@ -24,9 +24,23 @@ request.defaults.headers['Content-Type'] =
 
 // request.defaults.headers['Content-Type'] = 'application/json'
 
+const noAuthFilterArr = [
+  `${baseUrl.auth_base_url}/auth`,
+  `${baseUrl.auth_base_url}/base/tools/v1/getPublicKey`,
+]
+
+function noAuth(url) {
+  for (let i = 0; i < noAuthFilterArr.length; i++) {
+    if (url.indexOf(noAuthFilterArr[i]) > -1) {
+      return true
+    }
+  }
+  return false
+}
+
 request.interceptors.request.use(
   (config) => {
-    if (['/auth'].indexOf(config.url) === -1) {
+    if (!noAuth(config.url)) {
       const token = store.state.user.token
       if (token) {
         config.headers.Authorization = `Bearer ${token}`
