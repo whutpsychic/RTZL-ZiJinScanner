@@ -35,9 +35,9 @@ CN
 
 
 
+### 目标PDA机器：Honeywell    EDA61K
 
-
-
+- 屏幕尺寸：320x485.33
 
 
 

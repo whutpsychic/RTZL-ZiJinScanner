@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.rtzl.zijinscanner">
+    package="com.rtzl.zijinscanner" xmlns:tools="http://schemas.android.com/tools">
     
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -12,13 +12,17 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    
-   <application
+
+    <!-- for honeywell -->
+    <uses-permission android:name="com.honeywell.decode.permission.DECODE" />
+
+   <application tools:replace="android:label"
         android:label="阴极铜拣配"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        >
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -37,13 +41,24 @@
               />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <receiver
+               android:name=".BarcodeReceiver"
+               android:enabled="true"
+               android:exported="false">
+           <intent-filter>
+               <!-- <action android:name="io.radar.sdk.RECEIVED" /> -->
+               <action android:name="io.honeywell.sdk.RTZL" />
+           </intent-filter>
+         </receiver>
     </application>
 </manifest>

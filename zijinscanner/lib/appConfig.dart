@@ -7,7 +7,7 @@ class Configure {
   // 调试模式
   // 会打开一些本不可被修改的设置途径
   // ✔ 摇一摇设置 ip
-  static const bool debugging = true;
+  static const bool debugging = false;
 
   // =================== demo 演示模式 ===================
   // 可调节的设置应该全开
@@ -21,7 +21,7 @@ class Configure {
   // 与任何可调节的设置断绝
   // 连接到正式环境
   // ✔ 云上正式地址
-  static const AppMode appMode = AppMode.demo;
+  static const AppMode appMode = AppMode.prodution;
 }
 
 // 最终控制结果
@@ -59,10 +59,10 @@ class StaticConfig {
   static const String devH5url = "http://192.168.1.33:8081";
   // h5 demo时的外部运行地址
   static const String demoH5url =
-      "https://whutpsychic.gitee.io/rtzl-zijinscanner";
+      "http://whutpsychic.gitee.io/rtzl-zijinscanner";
   // h5 产品运行时的地址
   static const String productionH5url =
-      "https://whutpsychic.gitee.io/rtzl-zijinscanner";
+      "http://whutpsychic.gitee.io/rtzl-zijinscanner";
 
   // 复杂化命名前缀
   static const String preName = "zflutter";
