@@ -4,11 +4,11 @@ import { showToast, showLoadingToast, closeToast, showFailToast } from 'vant'
 const baseUrl = {}
 
 if (process.env.NODE_ENV === 'production') {
-  baseUrl.api_base_url = 'http://139.155.181.145:8022'
+  baseUrl.api_base_url = 'http://58.57.28.230:18091/lmspicking'
   baseUrl.auth_base_url = 'http://192.168.0.213:8031'
   baseUrl.data_base_url = 'http://192.168.0.213:8050'
 } else {
-  baseUrl.api_base_url = 'http://139.155.181.145:8022'
+  baseUrl.api_base_url = 'http://58.57.28.230:18091/lmspicking'
   baseUrl.auth_base_url = 'http://192.168.0.213:8031'
   baseUrl.data_base_url = 'http://192.168.0.213:8050'
 }

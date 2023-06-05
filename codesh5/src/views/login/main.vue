@@ -16,6 +16,7 @@
             v-model="rolename"
             name="rolename"
             placeholder="角色名"
+            disabled
             autocomplete="off"
           />
           <van-field
