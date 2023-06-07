@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-// import Preopen from '../views/preopen/main.vue'
+import Preopen from '../views/preopen/main.vue'
 import LoginView from '../views/login/main.vue'
 import HomeView from '../views/home/main.vue'
 
@@ -8,8 +8,8 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'login',
-      component: LoginView
+      name: 'preopen',
+      component: Preopen
     },
     {
       path: '/home',
