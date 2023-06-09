@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Preopen from '../views/preopen/main.vue'
+import LoginView from '../views/login/main.vue'
 import HomeView from '../views/home/main.vue'
 
 const router = createRouter({
@@ -62,7 +63,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/login/main.vue')
+      component: LoginView
     },
     {
       path: '/manualUnqualifiedBarcodes',

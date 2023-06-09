@@ -54,8 +54,8 @@ a,
 
   --form-label-font-size: 20px;
   --form-value-font-size: 20px;
-  --table-header-font-size: 22px;
-  --table-data-font-size: 20px;
+  --table-header-font-size: 16px;
+  --table-data-font-size: 16px;
 }
 
 main {

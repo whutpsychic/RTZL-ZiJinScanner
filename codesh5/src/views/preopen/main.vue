@@ -25,6 +25,8 @@ export default {
     fc.await("readLocal", (res) => {
       fc.toast(res)
     })
+
+    this.gotoLogin()
   },
   methods: {
     gotoLogin() {
