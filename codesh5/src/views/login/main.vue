@@ -2,7 +2,7 @@
   <main>
     <div class="container">
       <van-form @submit="onSubmit">
-        <div class="title">紫金铜业阴极铜条码管理系统</div>
+        <div class="title">阴极铜条码管理系统</div>
         <van-cell-group inset>
           <van-field
             v-model="username"
