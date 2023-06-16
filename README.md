@@ -15,9 +15,5 @@ flutter create --org com.rtzl zijinscanner -a java
 
 - 屏幕尺寸：320x485.33
 
------
 
-换肤App：
-
-- 江铜国兴扫码 App
 

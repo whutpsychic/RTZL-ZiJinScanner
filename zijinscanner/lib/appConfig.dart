@@ -7,7 +7,7 @@ class Configure {
   // 调试模式
   // 会打开一些本不可被修改的设置途径
   // ✔ 摇一摇设置 ip
-  static const bool debugging = false;
+  static const bool debugging = true;
 
   // =================== demo 演示模式 ===================
   // 可调节的设置应该全开
