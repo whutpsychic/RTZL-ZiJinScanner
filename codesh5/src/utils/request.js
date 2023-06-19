@@ -5,6 +5,7 @@ import appConfig from '@/appConfig.js'
 
 const baseUrl = {}
 
+//生产环境
 if (process.env.NODE_ENV === 'production') {
   baseUrl.api_base_url = 'http://58.57.28.230:18091/lmspicking'
   baseUrl.auth_base_url = appConfig.innerLogin
@@ -12,6 +13,7 @@ if (process.env.NODE_ENV === 'production') {
     : 'http://58.57.28.230:18091/uc'
   baseUrl.data_base_url = 'http://192.168.0.213:8050'
 } else {
+  //开发环境
   baseUrl.api_base_url = 'http://58.57.28.230:18091/lmspicking'
   baseUrl.auth_base_url = appConfig.innerLogin
     ? 'http://192.168.0.213:8031'
