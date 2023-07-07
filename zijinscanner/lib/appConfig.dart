@@ -21,7 +21,7 @@ class Configure {
   // 与任何可调节的设置断绝
   // 连接到正式环境
   // ✔ 云上正式地址
-  static const AppMode appMode = AppMode.demo;
+  static const AppMode appMode = AppMode.prodution;
 }
 
 // 最终控制结果
@@ -56,7 +56,7 @@ class AppConfig {
 // 静态配置存储区
 class StaticConfig {
   // h5 调试时的本地运行地址
-  static const String devH5url = "http://192.168.1.33:8081";
+  static const String devH5url = "http://192.168.1.33:8080";
   // h5 demo时的外部运行地址
   static const String demoH5url =
       "http://whutpsychic.gitee.io/rtzl-zijinscanner";
