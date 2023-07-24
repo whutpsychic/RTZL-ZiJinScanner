@@ -11,9 +11,9 @@ zijinscanner
 flutter create --org com.rtzl zijinscanner -a java
 ```
 
-### 目标PDA机器：Honeywell    EDA61K
+### 目标PDA机器：Honeywell    EDA50KP
 
-- 屏幕尺寸：320x485.33
+- 屏幕尺寸：320x486
 
 
 

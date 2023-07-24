@@ -16,7 +16,10 @@ import io.flutter.plugin.common.MethodChannel;
 
 import java.io.UnsupportedEncodingException;
 
-public class MainActivity extends FlutterActivity {
+import com.honeywell.aidc.BarcodeReader;
+import com.honeywell.aidc.AidcManager;
+import java.util.List;
+public class MainActivity extends FlutterActivity implements BarcodeReader.BarcodeListener, BarcodeReader.TriggerListener, AidcManager.BarcodeDeviceListener{
 
     // 来自 flutter 端调用的下行通道名
     // flutter 主动调用原生方法
@@ -27,8 +30,6 @@ public class MainActivity extends FlutterActivity {
     // 广播名
     public static final String INTENT_ACTION_NAME = "io.honeywell.sdk.RTZL";
 
-    private AidcManager manager;
-    private BarcodeReader barcodeReader;
     private EventChannel.EventSink attachEvent;
 
     @Override
@@ -66,62 +67,177 @@ public class MainActivity extends FlutterActivity {
         );
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        AidcManager.create(MainActivity.this, new AidcManager.CreatedCallback() {
-            @Override
-            public void onCreated(AidcManager aidcManager) {
-                try {
-                    manager = aidcManager;
-                    barcodeReader = manager.createBarcodeReader();
-
-                    barcodeReader.claim();
-                    barcodeReader.addBarcodeListener(barcodeListener);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    // 广播自定义意图
-    public void broadcastIntent() {
-        try {
-            Intent intent = new Intent();
-            intent.setAction(INTENT_ACTION_NAME);
-            intent.setClass(this, Class.forName("com.rtzl.zijinscanner.BarcodeReceiver"));
-            sendBroadcast(intent);
-        } catch (ClassNotFoundException e) {
-            System.out.println(e);
-        }
-    }
-
-    private final BarcodeReader.BarcodeListener barcodeListener = new BarcodeReader.BarcodeListener() {
-        @Override
-        public void onBarcodeEvent(BarcodeReadEvent barcodeReadEvent) {
-            String result = null;
-            try {
-                result = new String(barcodeReadEvent.getBarcodeData().getBytes("ISO-8859-1"), "UTF-8");
-//                BarcodeReceiver.setResult(result);
-//                broadcastIntent();
-                popToFlutter(result);
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public void onFailureEvent(BarcodeFailureEvent barcodeFailureEvent) {
-
-        }
-    };
-
     private void popToFlutter(String result) {
         //需要在主线程中执行传值至flutter
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> attachEvent.success(result));
     }
+    // ------------------------------------------------------------------------
+    public static final String TAG = "example_demo";
 
+    private AidcManager mAidcManager;
+    private BarcodeReader mBarcodeReader;
+    private BarcodeReader mInternalScannerReader;
+    private boolean mKeyPressed = false;
+
+    class MyCreatedCallback implements AidcManager.CreatedCallback {
+        MyCreatedCallback() {
+        }
+
+        @Override
+        public void onCreated(AidcManager aidcManager) {
+            mAidcManager = aidcManager;
+            mAidcManager.addBarcodeDeviceListener(MainActivity.this);
+            initAllBarcodeReaderAndSetDefault();
+        }
+    }
+
+    void initAllBarcodeReaderAndSetDefault() {
+        List<BarcodeReaderInfo> readerList = mAidcManager.listBarcodeDevices();
+        mInternalScannerReader = null;
+
+        for (BarcodeReaderInfo reader : readerList) {
+            if ("dcs.scanner.imager".equals(reader.getName())) {
+                mInternalScannerReader = initBarcodeReader(mInternalScannerReader, reader.getName());
+            }
+        }
+
+        if (mInternalScannerReader != null) {
+            mBarcodeReader = mInternalScannerReader;
+        }
+        else {
+        }
+        if (mBarcodeReader != null) {
+            try {
+                mBarcodeReader.addBarcodeListener(this);
+                mBarcodeReader.addTriggerListener(this);
+            }
+            catch (Throwable e2) {
+                e2.printStackTrace();
+            }
+            try {
+                mBarcodeReader.setProperty(BarcodeReader.PROPERTY_NOTIFICATION_GOOD_READ_ENABLED, true);
+                mBarcodeReader.setProperty(BarcodeReader.PROPERTY_NOTIFICATION_BAD_READ_ENABLED, true);
+
+                mBarcodeReader.setProperty(BarcodeReader.PROPERTY_CODE_39_ENABLED, true);
+                mBarcodeReader.setProperty(BarcodeReader.PROPERTY_EAN_13_ENABLED, true);
+                mBarcodeReader.setProperty(BarcodeReader.PROPERTY_EAN_8_ENABLED, true);
+                mBarcodeReader.setProperty(BarcodeReader.PROPERTY_CODE_39_FULL_ASCII_ENABLED, true);
+                mBarcodeReader.setProperty(BarcodeReader.PROPERTY_CODE_93_ENABLED, true);
+            } catch (UnsupportedPropertyException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    BarcodeReader initBarcodeReader(BarcodeReader mReader, String mReaderName) {
+        if (mReader == null) {
+            if (mReaderName == null) {
+                mReader = mAidcManager.createBarcodeReader();
+            } else {
+                mReader = mAidcManager.createBarcodeReader(mReaderName);
+            }
+            try {
+                mReader.claim();
+            } catch (ScannerUnavailableException e) {
+                e.printStackTrace();
+            }
+            try {
+                mReader.setProperty(BarcodeReader.PROPERTY_TRIGGER_CONTROL_MODE, BarcodeReader.TRIGGER_CONTROL_MODE_CLIENT_CONTROL);
+
+            } catch (UnsupportedPropertyException e2) {
+                e2.printStackTrace();
+            }
+        }
+        return mReader;
+    }
+
+    public void onBarcodeDeviceConnectionEvent(BarcodeDeviceConnectionEvent event) {
+    }
+
+    public void onBarcodeEvent(final BarcodeReadEvent event) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+
+                String barcodeData = new String(event.getBarcodeData().getBytes(event.getCharset()));
+                // System.out.println(" --------------------------------------barcodeData ");
+                // System.out.println(barcodeData);
+                popToFlutter(barcodeData);
+            }
+        });
+    }
+
+    public void onFailureEvent(final BarcodeFailureEvent event) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+            }
+        });
+    }
+
+    public void onTriggerEvent(TriggerStateChangeEvent event) {
+        if (event.getState()) {
+            if (!mKeyPressed) {
+                mKeyPressed = true;
+                doScan(true);
+            }
+        } else {
+            mKeyPressed = false;
+            doScan(false);
+        }
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        AidcManager.create(this, new MyCreatedCallback());
+    }
+
+    protected void onResume() {
+        super.onResume();
+        if (this.mInternalScannerReader != null) {
+            try {
+                this.mInternalScannerReader.claim();
+            } catch (ScannerUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    protected void onPause() {
+        super.onPause();
+
+        if (this.mInternalScannerReader != null) {
+            this.mInternalScannerReader.release();
+        }
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (this.mInternalScannerReader != null) {
+            this.mInternalScannerReader.removeBarcodeListener(this);
+            this.mInternalScannerReader.removeTriggerListener(this);
+            this.mInternalScannerReader.close();
+            this.mInternalScannerReader = null;
+        }
+        if (this.mAidcManager != null) {
+            this.mAidcManager.removeBarcodeDeviceListener(this);
+            this.mAidcManager.close();
+        }
+    }
+
+    void doScan(boolean do_scan) {
+        try {
+            if (do_scan) {
+            } else {
+            }
+            mBarcodeReader.decode(do_scan);
+        } catch (ScannerNotClaimedException e) {
+            e.printStackTrace();
+        } catch (ScannerUnavailableException e2) {
+            e2.printStackTrace();
+        } catch (Exception e3) {
+            e3.printStackTrace();
+        }
+    }
 }

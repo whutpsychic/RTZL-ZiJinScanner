@@ -56,6 +56,7 @@ class AppConfig {
 // 静态配置存储区
 class StaticConfig {
   // h5 调试时的本地运行地址
+  // static const String devH5url = "http://192.168.0.250:8081/#/login";
   static const String devH5url = "http://192.168.1.33:8080";
   // h5 demo时的外部运行地址
   static const String demoH5url =

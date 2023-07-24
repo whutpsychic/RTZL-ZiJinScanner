@@ -75,5 +75,4 @@ flutter {
 
 dependencies {
    implementation fileTree(include: ['*.jar'], dir: 'libs')
-   implementation files('libs/DataCollection.aar')
 }
