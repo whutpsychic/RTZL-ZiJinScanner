@@ -36,15 +36,14 @@ export default defineConfig({
     },
   },
   server: {
-    host: '0.0.0.0',
     port: 8081,
-    open: true,
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://139.155.181.145:8022',
-    //     changeOrigin: true,
-    //     rewrite: (path) => path.replace(/^\/api/, ''),
-    //   }
-    // },
+    host: '0.0.0.0',
+    proxy: {
+      '/zjky_mes': {
+        target: 'http://192.168.0.250:8080/',
+        changeOrigin: true,
+
+      }
+    },
   },
 })

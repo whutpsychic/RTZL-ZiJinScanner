@@ -12,6 +12,12 @@ import Vant from 'vant'
 import 'vant/lib/index.css'
 const app = createApp(App)
 
-app.use(Vant).use(store).use(router)
+import VueECharts from "vue-echarts";
+app.component('v-chart', VueECharts)
 
+app.use(Vant).use(store).use(router)
 app.mount('#app')
+
+
+
+

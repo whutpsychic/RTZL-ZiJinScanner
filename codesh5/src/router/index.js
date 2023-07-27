@@ -1,76 +1,74 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import {createRouter, createWebHashHistory} from 'vue-router'
 import Preopen from '../views/preopen/main.vue'
 import LoginView from '../views/login/main.vue'
 import HomeView from '../views/home/main.vue'
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'preopen',
-      component: Preopen
-    },
-    {
-      path: '/home',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/chooseCarNumber',
-      name: 'chooseCarNumber',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/chooseCarNumber/main.vue')
-    },
-    {
-      path: '/chukudanDetails',
-      name: 'chukudanDetails',
-      component: () => import('../views/chukudanDetails/main.vue')
-    },
-    {
-      path: '/chukudanQuery',
-      name: 'chukudanQuery',
-      component: () => import('../views/chukudanQuery/main.vue')
-    },
-    {
-      path: '/chukudanResultQuery',
-      name: 'chukudanResultQuery',
-      component: () => import('../views/chukudanResultQuery/main.vue')
-    },
+    history: createWebHashHistory(import.meta.env.BASE_URL),
+    routes: [
+        {
+            path: '/preopen',
+            name: 'preopen',
+            component: Preopen
+        },
+        //首页
+        {
+            path: '/home',
+            name: 'home',
+            component: HomeView
+        },
 
-    {
-      path: '/jianpeidanDetails',
-      name: 'jianpeidanDetails',
-      component: () => import('../views/jianpeidanDetails/main.vue')
-    },
-    {
-      path: '/jianpeidanQueryResult',
-      name: 'jianpeidanQueryResult',
-      component: () => import('../views/jianpeidanQueryResult/main.vue')
-    },
-    {
-      path: '/jianpeidantouQuery',
-      name: 'jianpeidantouQuery',
-      component: () => import('../views/jianpeidantouQuery/main.vue')
-    },
-    {
-      path: '/jianpeiScannedResult',
-      name: 'jianpeiScannedResult',
-      component: () => import('../views/jianpeiScannedResult/main.vue')
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: LoginView
-    },
-    {
-      path: '/manualUnqualifiedBarcodes',
-      name: 'manualUnqualifiedBarcodes',
-      component: () => import('../views/manualUnqualifiedBarcodes/main.vue')
-    },
-  ]
+        //我的
+        {
+            path: '/my',
+            name: 'my',
+            component: () => import('../views/my/main.vue')
+        },
+
+
+        //品级判定列表
+        {
+            path: '/gradeDetermination',
+            name: 'gradeDetermination',
+            component: () => import('../views/gradeDetermination/main.vue')
+
+        },
+
+        //判定页面
+        {
+            path: '/decide',
+            name: 'decide',
+            component: () => import('../views/gradeDetermination/decide.vue')
+        },
+
+        //审核列表
+        {
+            path: '/auditingList',
+            name: 'auditingList',
+            component: () => import('../views/auditing/main.vue')
+        },
+
+        //审核页面
+        {
+            path: '/auditingDetails',
+            name: 'auditingDetails',
+            component: () => import('../views/auditing/details.vue')
+        },
+
+
+        //报表统计页面
+        {
+            path: '/reportFormStatistics',
+            name: 'reportFormStatistics',
+            component: () => import('../views/reportFormStatistics/main.vue')
+        },
+
+        {
+            path: '/login',
+            name: 'login',
+            component: LoginView
+        }
+    ]
 })
 
 export default router
