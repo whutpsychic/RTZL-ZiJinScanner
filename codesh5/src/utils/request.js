@@ -10,7 +10,7 @@ const baseUrl = {}
 //生产环境
 if (process.env.NODE_ENV === 'production') {
     //baseUrl.api_base_url = 'http://192.168.0.250:8081/zjky_mes'
-    baseUrl.api_base_url = 'http://e.zijinty.com:8018/zjky_mes'
+    baseUrl.api_base_url = 'http://218.86.88.125:8018/zjky_mes'
 
 } else {
     //开发环境
