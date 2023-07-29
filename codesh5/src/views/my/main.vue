@@ -8,7 +8,7 @@
 
         <div class="top">
             <div>
-                <img class="tar" src="../../assets/image/touxiang.jpeg" alt="">
+                <img class="tar" src="/image/touxiang.jpeg" alt="">
                 <p style="float:left;color:#FFFFFF;margin-left:30px;margin-top:30px">{{displayName}}</p>
             </div>
 

@@ -20,7 +20,7 @@
                      v-for="(item,index) in  listData.yjtJyInformationListData">
                 <template #header>
                     <div class="card-header">
-                        <img src="@/assets/image/delete.png" class="delete" @click="deleteData(item)"/>
+                        <img src="/image/delete.png" class="delete" @click="deleteData(item)"/>
                     </div>
                 </template>
                 <div>
@@ -71,12 +71,12 @@
 
                             <div v-if="listData.yjtJyInformationDetailsData.status=='2'" class="yijianyan"
                                         style="position: absolute;">
-                            <img src="../../assets/image/yijianyan.png">
+                            <img src="/image/yijianyan.png">
                         </div>
 
                             <div v-if="listData.yjtJyInformationDetailsData.status=='0'" class="yijianyan"
                                  style="position: absolute;">
-                                <img src="../../assets/image/shenhezhong.png">
+                                <img src="/image/shenhezhong.png">
                             </div>
 
                         </div>
