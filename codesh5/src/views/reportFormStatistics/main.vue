@@ -63,19 +63,19 @@
             </el-table>
             <div>
                 <p style="text-align: center;margin-top: 5px;font-size: 16px;">品级比例（数量（捆））</p>
-                <v-chart v-if="tableDataQuantity.length>0" style="height: 300px" :option="exteriorOption"/>
+                <v-chart v-if="showEcharts"  style="height: 300px" :option="exteriorOption"/>
                 <van-empty v-else description="暂无数据"/>
             </div>
 
             <div>
                 <p style="text-align: center;margin-top: 5px;font-size: 16px;">合格品类型（数量（捆））</p>
-                <v-chart v-if="tableDataQuantity.length>0" style="height:400px" :option="qualifiedOption"/>
+                <v-chart v-if="showEcharts"  style="height:400px" :option="qualifiedOption"/>
                 <van-empty v-else description="暂无数据"/>
             </div>
 
             <div>
                 <p style="text-align: center;margin-top: 5px;font-size: 16px;">不合格品类型（数量（捆））</p>
-                <v-chart v-if="tableDataQuantity.length>0" style="height:400px" :option="unqualifiedOption"/>
+                <v-chart v-if="showEcharts" style="height:400px" :option="unqualifiedOption"/>
                 <van-empty v-else description="暂无数据"/>
             </div>
 
@@ -94,19 +94,19 @@
 
             <div>
                 <p style="text-align: center;margin-top: 5px;font-size: 16px;">品级比例（重量（KG））</p>
-                <v-chart v-if="tableDataWeight.length>0" style="height:500px;" :option="exteriorOption"/>
+                <v-chart v-if="showEcharts" style="height:500px;" :option="exteriorOption"/>
                 <van-empty v-else description="暂无数据"/>
             </div>
 
             <div>
                 <p style="text-align: center;margin-top: 5px;font-size: 16px;">合格品类型（重量（KG））</p>
-                <v-chart v-if="tableDataWeight.length>0" style="height: 400px" :option="qualifiedOption"/>
+                <v-chart v-if="showEcharts" style="height: 400px" :option="qualifiedOption"/>
                 <van-empty v-else description="暂无数据"/>
             </div>
 
             <div>
                 <p style="text-align: center;margin-top: 5px;font-size: 16px;">不合格品类型（重量（KG））</p>
-                <v-chart v-if="tableDataWeight.length>0" style="height: 400px" :option="unqualifiedOption"/>
+                <v-chart v-if="showEcharts" style="height: 400px" :option="unqualifiedOption"/>
                 <van-empty v-else description="暂无数据"/>
             </div>
 
@@ -133,6 +133,7 @@
         setup() {
             const router = useRouter()
             const active = ref(0)
+            const showEcharts = ref(true)
             const store = useStore()
             const tableDataQuantity = ref([])
             const tableDataWeight = ref([])
@@ -322,6 +323,7 @@
 
             //获取表格统计数据
             function getAppReportFormStatisticsTable() {
+                showEcharts.value=true
                 let objectMap = {}
                 objectMap.startDate = startDate.value
                 objectMap.endDate = endDate.value
@@ -391,6 +393,13 @@
                         tableDataQuantity.value = []
                         tableDataWeight.value = []
                         totalWeight.value = 0
+
+                        exteriorOption.value.series[0].data = []
+                        qualifiedOption.value.xAxis.data = []
+                        qualifiedOption.value.series[0].data = []
+                        unqualifiedOption.value.xAxis.data = []
+                        unqualifiedOption.value.series[0].data = []
+                        showEcharts.value=false
                     }
 
                 }).catch(error => {
@@ -424,6 +433,7 @@
 
 
             return {
+                showEcharts,
                 qualifiedOption,
                 unqualifiedOption,
                 exteriorOption,
