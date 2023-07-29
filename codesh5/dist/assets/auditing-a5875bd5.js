@@ -1,0 +1,1 @@
+import{ay as o,az as r}from"./index-4b55c7d1.js";function e(a){return o({url:`${r.api_base_url}/mobileTerminalApi.do?method=auditorDataQuery`,method:"post",data:a})}function i(a){return o({url:`${r.api_base_url}/mobileTerminalApi.do?method=cathodeCopperAuditor`,method:"post",data:a})}export{e as a,i as c};

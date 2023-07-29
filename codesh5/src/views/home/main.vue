@@ -15,7 +15,7 @@
             </van-grid-item>
 
             <van-grid-item to="/reportFormStatistics">
-                <img  src="image/baobiao.png" style="width: 50%;"/>
+                <img  src="/image/baobiao.png" style="width: 50%;"/>
                 <span style="margin-top: 10px;">报表查询</span>
             </van-grid-item>
 
