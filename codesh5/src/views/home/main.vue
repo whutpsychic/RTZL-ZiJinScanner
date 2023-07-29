@@ -10,17 +10,17 @@
                                                font-size: 18px;
                                                font-weight: bold;">
             <van-grid-item @click="scanCode">
-                <van-image src="/image/pjpd.png" style="width: 50%;"/>
+                <img src="/image/pjpd.png" style="width: 50%;"/>
                 <span style="margin-top: 10px;">品级质检</span>
             </van-grid-item>
 
             <van-grid-item to="/reportFormStatistics">
-                <van-image  src="/image/baobiao.png" style="width: 50%;"/>
+                <img  src="image/baobiao.png" style="width: 50%;"/>
                 <span style="margin-top: 10px;">报表查询</span>
             </van-grid-item>
 
             <van-grid-item @click="auditingClick">
-                <van-image src="/image/shenhe.png" style="width: 50%;"/>
+                <img src="/image/shenhe.png" style="width: 50%;"/>
                 <span style="margin-top: 10px;">品级质检审核</span>
             </van-grid-item>
         </van-grid>

@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === 'production') {
 
 } else {
     //开发环境
-    baseUrl.api_base_url = 'http://192.168.0.250:8081/zjky_mes'
+    baseUrl.api_base_url = 'http://192.168.31.178:8081/zjky_mes'
 }
 
 const request = axios.create({

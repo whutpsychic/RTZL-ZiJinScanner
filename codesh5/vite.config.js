@@ -40,7 +40,7 @@ export default defineConfig({
     host: '0.0.0.0',
     proxy: {
       '/zjky_mes': {
-        target: 'http://192.168.0.250:8080/',
+        target: 'http://192.168.31.178:8080/',
         changeOrigin: true,
 
       }
