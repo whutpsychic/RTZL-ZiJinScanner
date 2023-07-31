@@ -107,7 +107,7 @@
 
             //扫码
             const scanCode = () => {
-                   // fc.scan()
+                fc.scan()
                 // let tbCathodeCopper = {}
                 // tbCathodeCopper.fBarcode = '1240101220616204113122382'
                 // judgementCathodeCopper(tbCathodeCopper).then((result) => {

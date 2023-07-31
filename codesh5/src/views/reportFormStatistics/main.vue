@@ -52,7 +52,7 @@
             </div>
         </div>
 
-        <div v-if="active==0">
+        <div v-show="active==0">
             <p style="margin: 5px;display: block">合计数量（捆）：{{totalQuantity}}</p>
             <el-table :data="tableDataQuantity" style="width: 100%">
                 <el-table-column fixed prop="exteriorName" label="品级"/>
@@ -63,26 +63,26 @@
             </el-table>
             <div>
                 <p style="text-align: center;margin-top: 5px;font-size: 16px;">品级比例（数量（捆））</p>
-                <v-chart v-if="showEcharts"  style="height: 300px" :option="exteriorOption"/>
+                <v-chart v-if="showEcharts" ref="tu1" style="height: 300px;width:100vw" :option="exteriorOption"/>
                 <van-empty v-else description="暂无数据"/>
             </div>
 
             <div>
                 <p style="text-align: center;margin-top: 5px;font-size: 16px;">合格品类型（数量（捆））</p>
-                <v-chart v-if="showEcharts"  style="height:400px" :option="qualifiedOption"/>
+                <v-chart v-if="showEcharts" ref="tu2" style="height:400px;width:100vw" :option="qualifiedOption"/>
                 <van-empty v-else description="暂无数据"/>
             </div>
 
             <div>
                 <p style="text-align: center;margin-top: 5px;font-size: 16px;">不合格品类型（数量（捆））</p>
-                <v-chart v-if="showEcharts" style="height:400px" :option="unqualifiedOption"/>
+                <v-chart v-if="showEcharts" ref="tu3" style="height:400px;width:100vw" :option="unqualifiedOption"/>
                 <van-empty v-else description="暂无数据"/>
             </div>
 
 
         </div>
 
-        <div v-if="active==1">
+        <div v-show="active==1">
             <p style="margin: 5px;display: block">合计重量（KG）：{{totalWeight}}</p>
             <el-table :data="tableDataWeight" style="width: 100%">
                 <el-table-column fixed prop="exteriorName" label="品级"/>
@@ -94,19 +94,19 @@
 
             <div>
                 <p style="text-align: center;margin-top: 5px;font-size: 16px;">品级比例（重量（KG））</p>
-                <v-chart v-if="showEcharts" style="height:500px;" :option="exteriorOption"/>
+                <v-chart v-if="showEcharts" ref="tu4" style="height:300px;width:100vw" :option="exteriorOption"/>
                 <van-empty v-else description="暂无数据"/>
             </div>
 
             <div>
                 <p style="text-align: center;margin-top: 5px;font-size: 16px;">合格品类型（重量（KG））</p>
-                <v-chart v-if="showEcharts" style="height: 400px" :option="qualifiedOption"/>
+                <v-chart v-if="showEcharts" ref="tu5" style="height: 400px;width:100vw" :option="qualifiedOption"/>
                 <van-empty v-else description="暂无数据"/>
             </div>
 
             <div>
                 <p style="text-align: center;margin-top: 5px;font-size: 16px;">不合格品类型（重量（KG））</p>
-                <v-chart v-if="showEcharts" style="height: 400px" :option="unqualifiedOption"/>
+                <v-chart v-if="showEcharts" ref="tu6" style="height: 400px;width:100vw" :option="unqualifiedOption"/>
                 <van-empty v-else description="暂无数据"/>
             </div>
 
@@ -127,7 +127,7 @@
     import {showToast} from "vant";
     import {useStore} from "vuex";
     import "echarts";
-
+    import {onBeforeUnmount} from "@vue/runtime-core";
 
     export default {
         setup() {
@@ -145,6 +145,13 @@
             const checkboxValue = ref('')
             const totalQuantity = ref(0)
             const totalWeight = ref(0)
+
+            const tu1 = ref(null)
+            const tu2 = ref(null)
+            const tu3 = ref(null)
+            const tu4 = ref(null)
+            const tu5 = ref(null)
+            const tu6 = ref(null)
             //阴极铜质检类型
             const tbYjtJyDictList = ref([])
 
@@ -239,9 +246,36 @@
 
             onMounted(() => {
                 getAppReportFormStatisticsTable()
-
             })
 
+
+            onBeforeUnmount(() => {
+
+                if (tu1.value) {
+                    tu1.value.dispose()
+                }
+
+                if (tu2.value) {
+                    tu2.value.dispose()
+                }
+
+                if (tu3.value) {
+                    tu3.value.dispose()
+                }
+
+                if (tu4.value) {
+                    tu4.value.dispose()
+                }
+
+                if (tu5.value) {
+                    tu5.value.dispose()
+                }
+
+                if (tu6.value) {
+                    tu6.value.dispose()
+                }
+
+            })
 
             //按个人查询
             const checkboxClick = () => {
@@ -289,6 +323,7 @@
 
             //切换tab页
             const onClickTab = () => {
+
                 getAppReportFormStatisticsTable()
             }
 
@@ -323,7 +358,7 @@
 
             //获取表格统计数据
             function getAppReportFormStatisticsTable() {
-                showEcharts.value=true
+                showEcharts.value = true
                 let objectMap = {}
                 objectMap.startDate = startDate.value
                 objectMap.endDate = endDate.value
@@ -399,7 +434,7 @@
                         qualifiedOption.value.series[0].data = []
                         unqualifiedOption.value.xAxis.data = []
                         unqualifiedOption.value.series[0].data = []
-                        showEcharts.value=false
+                        showEcharts.value = false
                     }
 
                 }).catch(error => {
@@ -433,6 +468,12 @@
 
 
             return {
+                tu1,
+                tu2,
+                tu3,
+                tu4,
+                tu5,
+                tu6,
                 showEcharts,
                 qualifiedOption,
                 unqualifiedOption,

@@ -123,15 +123,16 @@
     </div>
 
     <div class="empennage">
+
         <van-row>
-            <van-col span="8"></van-col>
-<!--            <van-col span="7">-->
-<!--                <van-button type="success" @click="scanCode">继续扫码</van-button>-->
-<!--            </van-col>-->
-            <van-col span="8">
+            <van-col span="5"></van-col>
+            <van-col span="7">
+                <van-button type="success" @click="scanCode">继续扫码</van-button>
+            </van-col>
+            <van-col span="7">
                 <van-button type="primary" @click="identifyClick('1')">品级鉴定</van-button>
             </van-col>
-            <van-col span="8"></van-col>
+            <van-col span="5"></van-col>
 
         </van-row>
     </div>
