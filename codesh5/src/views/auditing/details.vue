@@ -52,6 +52,12 @@
                     <p>
                         <span style="font-weight: bold">质检人：</span><span>{{listData.yjtJyInformationDetails.checkoutUser}}</span>
                     </p>
+
+                    <p>
+                        <span style="font-weight: bold">改判理由：</span><span>{{listData.yjtJyInformationDetails.alterReason}}</span>
+                    </p>
+
+
                 </div>
 
                 <div v-if="listData.yjtJyInformationDetails.exterior!='0'">
@@ -68,14 +74,14 @@
 
 
                 <van-field v-if="listData.yjtJyInformationDetails.status=='0'"
-                        v-model="auditorContent"
-                        rows="5"
-                        autosize
-                        label="审核内容"
-                        type="textarea"
-                        maxlength="50"
-                        placeholder="请输入审核内容"
-                        show-word-limit
+                           v-model="auditorContent"
+                           rows="5"
+                           autosize
+                           label="审核内容"
+                           type="textarea"
+                           maxlength="50"
+                           placeholder="请输入审核内容"
+                           show-word-limit
                 />
 
 
@@ -111,7 +117,7 @@
         />
 
 
-        <div style="margin-top: 30px"  v-if="listData.yjtJyInformationDetails.status=='0'">
+        <div style="margin-top: 30px" v-if="listData.yjtJyInformationDetails.status=='0'">
             <van-row>
                 <van-col span="5"></van-col>
                 <van-col span="7">
@@ -131,7 +137,7 @@
 </template>
 
 <script>
-    import {useRoute, useRouter} from "vue-router";
+    import {onBeforeRouteLeave, useRoute, useRouter} from "vue-router";
     import {shallowReactive} from "@vue/reactivity";
     import {onMounted, ref} from "vue";
     import {
@@ -142,6 +148,7 @@
         cathodeCopperAuditor
     } from '@/api/auditing'
     import {showConfirmDialog, showToast} from "vant";
+    import {onActivated} from "@vue/runtime-core";
 
     export default {
         setup() {
@@ -149,6 +156,7 @@
             const route = useRoute()
             const showImage = ref(false)
             const auditorContent = ref('')
+            const state = ref(false)
             const listData = shallowReactive({
                 //阴极铜基本信息和判定数据
                 yjtJyInformationDetails: {},
@@ -164,6 +172,18 @@
                 }
 
             })
+
+
+            // onBeforeRouteLeave((to, from, next) => {
+            //     // to.meta.keepAlive = true
+            //     if (state.value){
+            //         to.meta.keepAlive = false
+            //     }
+            //     console.log(to)
+            //     console.log(from)
+            //     next();
+            // })
+
 
 
             //返回上一页
@@ -215,19 +235,21 @@
                         '是否' + text + '这条数据？',
                 })
                     .then(() => {
-                        cathodeCopperAuditor(paramInfo).then((result) => {
-                            if (result.data.status == '0') {
-                                showToast({
-                                    message: result.data.returnMsg,
-                                    type: 'success',
-                                    className: 'particulars-detail-popup',
-                                    overlay: true,
-                                })
-                                router.back()
-                            }
-                        }).catch(error => {
-                            console.log(error)
-                        })
+                        state.value=true
+                        router.back()
+                        // cathodeCopperAuditor(paramInfo).then((result) => {
+                        //     if (result.data.status == '0') {
+                        //         showToast({
+                        //             message: result.data.returnMsg,
+                        //             type: 'success',
+                        //             className: 'particulars-detail-popup',
+                        //             overlay: true,
+                        //         })
+                        //         router.back()
+                        //     }
+                        // }).catch(error => {
+                        //     console.log(error)
+                        // })
                     })
                     .catch((err) => {
                         console.log(err)
@@ -235,15 +257,11 @@
             }
 
 
-
-
-
             //获取阴极铜判定图片
             function getFileQuery(data) {
                 let obj = {}
                 obj.yjtJyInformationDetailsId = data
                 fileQuery(obj).then((result) => {
-                    console.log(result)
                     listData.yjtJyInformationFileList = result.data.data
                 }).catch(error => {
                     console.log(error)
@@ -276,6 +294,7 @@
             }
 
             return {
+                state,
                 listData,
                 showImage,
                 auditorContent,

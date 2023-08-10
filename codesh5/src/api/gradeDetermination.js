@@ -104,3 +104,17 @@ export function fileQuery(data) {
         params: data,
     })
 }
+
+
+
+/***
+ * 获取改判理由
+ *
+ */
+export function alterReasonQuery(data) {
+    return request({
+        url: `${baseUrl.api_base_url}/mobileTerminalApi.do?method=alterReasonQuery`,
+        method: 'post',
+        data: data,
+    })
+}

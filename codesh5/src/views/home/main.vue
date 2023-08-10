@@ -23,6 +23,7 @@
                 <img src="/image/shenhe.png" style="width: 50%;"/>
                 <span style="margin-top: 10px;">品级质检审核</span>
             </van-grid-item>
+
         </van-grid>
     </main>
 
@@ -43,23 +44,25 @@
             const store = useStore()
             const userData = toRaw(store.state.user)
             fc.await('scanner', (res) => {
-                console.log(res)
                 if (res != 'null') {
                     let tbCathodeCopper = {}
                     tbCathodeCopper.fBarcode = res
                     judgementCathodeCopper(tbCathodeCopper).then((result) => {
-                        if (result.data.code != 200) {
-                            showDialog({
-                                title: '提示',
-                                message: result.data.message,
-                            }).then(() => {
+                        if (result.data.code) {
+                            if (result.data.code != 200) {
+                                showDialog({
+                                    title: '提示',
+                                    width: '600',
+                                    message: result.data.message,
+                                }).then(() => {
 
-                            });
-                        } else {
-                            router.push({
-                                path: '/gradeDetermination',
-                                query: {barcode: res, tabState: result.data.data}
-                            })
+                                });
+                            } else {
+                                router.push({
+                                    path: '/gradeDetermination',
+                                    query: {barcode: res, tabState: result.data.data}
+                                })
+                            }
                         }
                     }).catch(error => {
                         console.log(error)
@@ -107,23 +110,30 @@
 
             //扫码
             const scanCode = () => {
-                fc.scan()
+                router.push({
+                    path: '/qualityCheckingRecord',
+
+                })
                 // let tbCathodeCopper = {}
-                // tbCathodeCopper.fBarcode = '1240101220616204113122382'
+                // tbCathodeCopper.fBarcode = '1240101220616204113222560'
                 // judgementCathodeCopper(tbCathodeCopper).then((result) => {
-                //     if (result.data.code != 200) {
-                //         showDialog({
-                //             title: '提示',
-                //             message: result.data.message,
-                //         }).then(() => {
+                //    if (result.data.code){
+                //        if (result.data.code != 200) {
+                //            showDialog({
+                //                title: '提示',
+                //                width: '600',
+                //                message: result.data.message,
+                //            }).then(() => {
                 //
-                //         });
-                //     } else {
-                //         router.push({
-                //             path: '/gradeDetermination',
-                //             query: {barcode: '1240101220616204113122382', tabState: result.data.data}
-                //         })
-                //     }
+                //            });
+                //        } else {
+                //            router.push({
+                //                path: '/gradeDetermination',
+                //                query: {barcode: '1240101220616204113222560', tabState: result.data.data}
+                //            })
+                //        }
+                //    }
+                //
                 //
                 // }).catch(error => {
                 //     console.log(error)

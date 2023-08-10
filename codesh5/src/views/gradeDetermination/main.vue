@@ -15,30 +15,35 @@
 
     <div class="content">
         <div v-show="active==0" style="padding:0px 5px 5px 5px">
-
-            <el-card class="box-card" shadow="always" style="margin-top:5px"
+            <van-collapse v-model="activeName">
+            <el-card class="box-card" shadow="always" style="margin-top:5px;position: relative"
                      v-for="(item,index) in  listData.yjtJyInformationListData">
-                <template #header>
+
                     <div class="card-header">
                         <img src="/image/delete.png" class="delete" @click="deleteData(item)"/>
                     </div>
-                </template>
-                <div>
-                    <p><span style="font-weight: bold">编号：</span><span>{{item.batchnumber}}</span></p>
-                    <p><span
-                            style="font-weight: bold">重量：</span><span>{{parseFloat(item.suttle)}}{{item.unit}}</span>
-                    </p>
-                    <p><span style="font-weight: bold">标准：</span><span>{{item.standard}}</span></p>
-                    <p><span style="font-weight: bold">计量员：</span><span>{{item.suttleperson}}</span>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="font-weight: bold">扫描人：</span><span>{{item.scanUser}}</span></p>
-                    <p><span style="font-weight: bold">生产日期：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",item.proDate)}}
-                    </p>
+
+
+                <div class="demo-collapse">
+                    <el-collapse >
+                        <el-collapse-item :title="item.batchnumber" >
+                            <p><span
+                                    style="font-weight: bold">重量：</span><span>{{parseFloat(item.suttle)}}{{item.unit}}</span>
+                            </p>
+                            <p><span style="font-weight: bold">标准：</span><span>{{item.standard}}</span></p>
+                            <p><span style="font-weight: bold">计量员：</span><span>{{item.suttleperson}}</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span
+                                        style="font-weight: bold">扫描人：</span><span>{{item.scanUser}}</span></p>
+                            <p><span style="font-weight: bold">生产日期：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",item.proDate)}}
+                            </p>
+                        </el-collapse-item>
+                    </el-collapse>
                 </div>
-                <van-button type="primary" size="small" style="float:right" @click="identifyClick('0',item)">品级鉴定
+
+                <van-button type="primary" size="small" style="position: absolute;right: 60px;top: 30px;" @click="identifyClick('0',item)">品级鉴定
                 </van-button>
             </el-card>
-
+            </van-collapse>
 
         </div>
         <div v-show="active==1">
@@ -70,9 +75,9 @@
                             </p>
 
                             <div v-if="listData.yjtJyInformationDetailsData.status=='2'" class="yijianyan"
-                                        style="position: absolute;">
-                            <img src="/image/yijianyan.png">
-                        </div>
+                                 style="position: absolute;">
+                                <img src="/image/yijianyan.png">
+                            </div>
 
                             <div v-if="listData.yjtJyInformationDetailsData.status=='0'" class="yijianyan"
                                  style="position: absolute;">
@@ -98,17 +103,23 @@
                             <p>
                                 <span style="font-weight: bold">质检人：</span><span>{{listData.yjtJyInformationDetailsData.checkoutUser}}</span>
                             </p>
+
+                            <p v-if="listData.yjtJyInformationDetailsData.alterReason">
+                                <span style="font-weight: bold">改判理由：</span><span>{{listData.yjtJyInformationDetailsData.alterReason}}</span>
+                            </p>
+
+
                         </div>
 
 
                         <div v-if="listData.yjtJyInformationDetailsData.exterior!='0'">
-                            <van-image style="margin:0 2%"  @click="seeImg"
-                                        v-for="(item,index) in  listData.yjtJyInformationFileList"
-                                        width="45%"
-                                        height="8rem"
-                                        fit="cover"
-                                        position="left"
-                                        :src="item"
+                            <van-image style="margin:0 2%" @click="seeImg"
+                                       v-for="(item,index) in  listData.yjtJyInformationFileList"
+                                       width="45%"
+                                       height="8rem"
+                                       fit="cover"
+                                       position="left"
+                                       :src="item"
                             />
 
                         </div>
@@ -125,14 +136,14 @@
     <div class="empennage">
 
         <van-row>
-            <van-col span="5"></van-col>
-            <van-col span="7">
-                <van-button type="success" @click="scanCode">继续扫码</van-button>
-            </van-col>
-            <van-col span="7">
+            <van-col span="8"></van-col>
+            <!--            <van-col span="7">-->
+            <!--                <van-button type="success" @click="scanCode">继续扫码</van-button>-->
+            <!--            </van-col>-->
+            <van-col span="8">
                 <van-button type="primary" @click="identifyClick('1')">品级鉴定</van-button>
             </van-col>
-            <van-col span="5"></van-col>
+            <van-col span="8"></van-col>
 
         </van-row>
     </div>
@@ -176,16 +187,43 @@
             v-model:show="showImage"
             :images="listData.yjtJyInformationFileList"
             :closeable="true"
-            :loop = "false"
+            :loop="false"
             :closeOnPopstate="true"
     />
+
+
+    <el-dialog
+            v-model="centerDialogVisible"
+            title="请选择改判理由"
+            width="90%"
+            align-center
+    >
+        <el-select v-model="alterReason" filterable
+                   clearable allow-create
+                   placeholder="改判理由" style="width: 100%">
+            <el-option
+                    v-for="item in listData.alterReasonList"
+                    :key="item.alterReason"
+                    :label="item.alterReason"
+                    :value="item.alterReason"
+            />
+        </el-select>
+        <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="outstandingAlter" type="primary">提交</el-button>
+        <el-button type="danger" @click="centerDialogVisible = false">
+          退出
+        </el-button>
+      </span>
+        </template>
+    </el-dialog>
 
 
 </template>
 
 <script>
     import fc from "flutter-core";
-    import {judgementCathodeCopper} from '@/api/gradeDetermination'
+    import {judgementCathodeCopper,alterReasonQuery} from '@/api/gradeDetermination'
     import {showConfirmDialog, showDialog, showImagePreview, showToast} from "vant";
     import {onMounted, ref} from 'vue';
     import {useRoute, useRouter} from "vue-router";
@@ -207,26 +245,28 @@
                     let tbCathodeCopper = {}
                     tbCathodeCopper.fBarcode = res
                     judgementCathodeCopper(tbCathodeCopper).then((result) => {
-                        if (result.data.code != 200) {
-                            showDialog({
-                                title: '提示',
-                                message: result.data.message,
-                            }).then(() => {
+                        if (result.data.code) {
+                            if (result.data.code != 200) {
+                                showDialog({
+                                    title: '提示',
+                                    message: result.data.message,
+                                }).then(() => {
 
-                            });
-                        } else {
-                            router.push({
-                                path: '/gradeDetermination',
-                                query: {barcode: res, tabState: result.data.data}
-                            })
-
-                            barcode.value = res
-                            active.value = Number(result.data.data)
-
-                            if (active.value == 0) {
-                                getNotDeterminedData()
+                                });
                             } else {
-                                getAlreadyDeterminedData()
+                                router.push({
+                                    path: '/gradeDetermination',
+                                    query: {barcode: res, tabState: result.data.data}
+                                })
+
+                                barcode.value = res
+                                active.value = Number(result.data.data)
+
+                                if (active.value == 0) {
+                                    getNotDeterminedData()
+                                } else {
+                                    getAlreadyDeterminedData()
+                                }
                             }
                         }
                     }).catch(error => {
@@ -248,8 +288,10 @@
             const router = useRouter()
             const active = ref(0)
             const distinguish = ref('')
-            const buttonShow = ref(false);
-            const showImage=ref(false)
+            const buttonShow = ref(false)
+            const showImage = ref(false)
+            const centerDialogVisible=ref(false)
+            const alterReason=ref('')
             const listData = shallowReactive({
                 //当前扫描人未判定的阴极铜数据
                 yjtJyInformationListData: [],
@@ -269,18 +311,22 @@
                     dictName: '',
                     checkoutDate: '',
                     checkoutUser: '',
-                    exterior:''
+                    exterior: ''
                 },
                 //阴极铜判定图片
                 yjtJyInformationFileList: [],
                 isAuditing: '',
+                //改判理由
+                alterReasonList: [],
+                //优等品改判数据
+                outstandingAlterList:[]
 
             })
             const yjtJyInformation = shallowReactive({
                 data: []
             })
 
-
+            const activeName = ref()
             const barcode = ref(route.query.barcode)
             active.value = Number(route.query.tabState)
 
@@ -290,9 +336,13 @@
                 } else {
                     getAlreadyDeterminedData()
                 }
-
+                getAlterReasonQuery()
             })
 
+            //跳转到首页
+            const onClickLeft = () => {
+                router.push({path: '/home'})
+            }
 
             //切换tab页
             const onClickTab = () => {
@@ -313,48 +363,14 @@
             };
 
 
-            //扫码
-            const scanCode = () => {
-                 fc.scan()
 
-                // let tbCathodeCopper = {}
-                // tbCathodeCopper.fBarcode = '1240101220616033004924406'
-                // judgementCathodeCopper(tbCathodeCopper).then((result) => {
-                //     if (result.data.code != 200) {
-                //         showDialog({
-                //             title: '提示',
-                //             message: result.data.message,
-                //         }).then(() => {
-                //
-                //         });
-                //     } else {
-                //         router.push({
-                //             path: '/gradeDetermination',
-                //             query: {barcode: '1240101220616033004924406', tabState: result.data.data}
-                //         })
-                //
-                //         barcode.value='1240101220616033004924406'
-                //         active.value = Number(result.data.data)
-                //
-                //         if (active.value == 0) {
-                //             getNotDeterminedData()
-                //         } else {
-                //             getAlreadyDeterminedData()
-                //         }
-                //
-                //
-                //     }
 
-                // }).catch(error => {
-                //     console.log(error)
-                // })
-            }
 
 
 
             //点击优等品
             const outstandingClick = () => {
-                let listMap = {data: [], active: '', exterior: '0'}
+                let listMap = {data: [], active: '', exterior: '0',alterReason:''}
                 listMap.active = active.value
                 if (active.value == 0) {
                     //批量判定
@@ -376,11 +392,11 @@
                         })
                     }
                 } else {
-                    if (listData.yjtJyInformationDetailsData.status=='0'){
+                    if (listData.yjtJyInformationDetailsData.status == '0') {
                         buttonShow.value = false
                         showDialog({
                             title: '提示',
-                            width:'600',
+                            width: '600',
                             message: '审核中的数据不允许质检',
                         }).then(() => {
                             // on close
@@ -390,24 +406,39 @@
                     }
 
 
-
                     if (listData.yjtJyInformationDetailsData.exterior == '0') {
                         buttonShow.value = false
                         showDialog({
                             title: '提示',
-                            width:'600',
+                            width: '600',
                             message: '当前质检信息为优等品，不能再质检为优等品',
                         }).then(() => {
                             // on close
                         });
                     } else {
+                        centerDialogVisible.value=true
                         buttonShow.value = false
                         listMap.data.push(listData.yjtJyInformationData)
-                        getExcellentJudgement(listMap)
+                        listData.outstandingAlterList= listMap
                     }
                 }
+            }
 
-            };
+            const outstandingAlter = () =>{
+
+                if (!alterReason.value) {
+                    showToast({
+                        message: '请选择或者输入改判理由',
+                        type: 'fail',
+                        className: 'particulars-detail-popup'
+                    })
+                    return false
+                }
+                centerDialogVisible.value=false
+                listData.outstandingAlterList.alterReason=alterReason.value
+                getExcellentJudgement(listData.outstandingAlterList)
+            }
+
 
             //点击合格
             const qualifiedClick = () => {
@@ -418,7 +449,7 @@
                         buttonShow.value = false
                         showDialog({
                             title: '提示',
-                            width:'600',
+                            width: '600',
                             message: '合格品不支持批量质检，请单个质检',
                         }).then(() => {
                             // on close
@@ -430,11 +461,11 @@
                         })
                     }
                 } else {
-                    if (listData.yjtJyInformationDetailsData.status=='0'){
+                    if (listData.yjtJyInformationDetailsData.status == '0') {
                         buttonShow.value = false
                         showDialog({
                             title: '提示',
-                            width:'600',
+                            width: '600',
                             message: '审核中的数据不允许质检',
                         }).then(() => {
                             // on close
@@ -444,12 +475,11 @@
                     }
 
 
-
                     if (listData.yjtJyInformationDetailsData.exterior == '1') {
                         buttonShow.value = false
                         showDialog({
                             title: '提示',
-                            width:'600',
+                            width: '600',
                             message: '当前质检信息为合格品，不能再质检为合格品',
                         }).then(() => {
                             // on close
@@ -474,7 +504,7 @@
                         buttonShow.value = false
                         showDialog({
                             title: '提示',
-                            width:'600',
+                            width: '600',
                             message: '不合格品不支持批量质检，请单个质检',
                         }).then(() => {
                             // on close
@@ -487,11 +517,11 @@
                         })
                     }
                 } else {
-                    if (listData.yjtJyInformationDetailsData.status=='0'){
+                    if (listData.yjtJyInformationDetailsData.status == '0') {
                         buttonShow.value = false
                         showDialog({
                             title: '提示',
-                            width:'600',
+                            width: '600',
                             message: '审核中的数据不允许质检',
                         }).then(() => {
                             // on close
@@ -505,7 +535,7 @@
                         buttonShow.value = false
                         showDialog({
                             title: '提示',
-                            width:'600',
+                            width: '600',
                             message: '当前质检信息为不合格品，不能再质检为不合格品',
                         }).then(() => {
                             // on close
@@ -573,20 +603,20 @@
                 })
             }
 
-           //图片预览
-            const seeImg= () =>{
-                showImage.value=true
+            //图片预览
+            const seeImg = () => {
+                showImage.value = true
 
             }
 
 
-                //获取阴极铜判定图片
+            //获取阴极铜判定图片
             function getFileQuery(data) {
                 let obj = {}
-                obj.yjtJyInformationDetailsId=data
+                obj.yjtJyInformationDetailsId = data
                 fileQuery(obj).then((result) => {
                     console.log(result)
-                    listData.yjtJyInformationFileList=result.data.data
+                    listData.yjtJyInformationFileList = result.data.data
                 }).catch(error => {
                     console.log(error)
                 })
@@ -609,7 +639,7 @@
                         }
                     }
 
-                    console.log( listData.yjtJyInformationData)
+                    console.log(listData.yjtJyInformationData)
 
                 }).catch(error => {
                     console.log(error)
@@ -619,19 +649,32 @@
 
             //获取当前扫码人未判定的数据
             function getNotDeterminedData() {
-                listData.yjtJyInformationListData=[]
+                listData.yjtJyInformationListData = []
                 notDeterminedData().then((result) => {
                     listData.yjtJyInformationListData = result.data.data.yjtJyInformationListData
                 }).catch(error => {
                     console.log(error)
                 })
 
-            };
+            }
 
-
-            //跳转到首页
-            const onClickLeft = () => {
-                router.push({path: '/home'})
+            //获取改判理由
+            function getAlterReasonQuery() {
+                let paramInfo = {}
+                let blocks = {}
+                let paramBlock = {}
+                paramBlock.limit = 9999
+                paramBlock.offset = 1
+                paramBlock.blockId = 'paramBlock'
+                paramBlock.data = {}
+                blocks.paramBlock = paramBlock
+                paramInfo.blocks = blocks
+                alterReasonQuery(paramInfo).then((result) => {
+                    listData.alterReasonList = result.data.blocks.resultBlock.data
+                    console.log(listData.alterReasonList)
+                }).catch(error => {
+                    console.log(error)
+                })
             }
 
             //格式化时间
@@ -660,6 +703,9 @@
 
 
             return {
+                alterReason,
+                centerDialogVisible,
+                activeName,
                 active,
                 barcode,
                 listData,
@@ -675,7 +721,7 @@
                 outstandingClick,
                 qualifiedClick,
                 unqualifiedClick,
-                scanCode
+                outstandingAlter
             };
         },
     }
@@ -687,8 +733,6 @@
         margin: 0;
         padding: 0
     }
-
-
 
 
     .header {
@@ -738,6 +782,8 @@
         margin-right: -12px;
 
     }
+
+
 
 
 </style>

@@ -45,15 +45,18 @@ const router = createRouter({
         {
             path: '/auditingList',
             name: 'auditingList',
+            // meta: {
+            //     keepAlive: true
+            // },
             component: () => import('../views/auditing/main.vue')
         },
 
-        //审核页面
-        {
-            path: '/auditingDetails',
-            name: 'auditingDetails',
-            component: () => import('../views/auditing/details.vue')
-        },
+        // //审核页面
+        // {
+        //     path: '/auditingDetails',
+        //     name: 'auditingDetails',
+        //     component: () => import('../views/auditing/details.vue')
+        // },
 
 
         //报表统计页面
@@ -62,6 +65,15 @@ const router = createRouter({
             name: 'reportFormStatistics',
             component: () => import('../views/reportFormStatistics/main.vue')
         },
+
+        //质检记录列表
+
+        {
+            path: '/qualityCheckingRecord',
+            name: 'qualityCheckingRecord',
+            component: () => import('../views/qualityCheckingRecord/main.vue')
+        },
+
 
         {
             path: '/login',
@@ -74,7 +86,18 @@ const router = createRouter({
             path: '/',
             component: LoginView
         }
-    ]
+    ],
+    // scrollBehavior (to, from, savedPosition) {
+    //     if (savedPosition) {
+    //         return savedPosition
+    //     } else {
+    //         return { left: 0, top: 0 }
+    //     }
+    // }
+
+
+
 })
+
 
 export default router

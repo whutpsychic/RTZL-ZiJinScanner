@@ -1,57 +1,56 @@
 <template>
-    <div class="container">
-        <div class="header">
-            <van-nav-bar
-                    title="报表统计"
-                    class="page-nav-bar"
-                    left-arrow
-                    @click-left="onClickLeft"
-            />
+    <div>
+        <van-nav-bar
+                title="报表统计"
+                class="page-nav-bar"
+                left-arrow
+                @click-left="onClickLeft"
+        />
 
-            <van-tabs v-model:active="active" @click-tab="onClickTab">
-                <van-tab title="按数量统计"></van-tab>
-                <van-tab title=" 按重量统计"></van-tab>
-            </van-tabs>
+        <van-tabs v-model:active="active" @click-tab="onClickTab">
+            <van-tab title="按数量统计"></van-tab>
+            <van-tab title=" 按重量统计"></van-tab>
+        </van-tabs>
 
-            <div style="background-color: #FFFFFF">
-                <van-cell-group inset>
-                    <van-field
-                            v-model="startDate"
-                            is-link
-                            name="startDate"
-                            label="开始日期"
-                            placeholder="开始日期"
-                            @click="showPicker = true"
+        <div style="background-color: #FFFFFF; z-index: 999;">
+            <van-cell-group inset>
+                <van-field
+                        v-model="startDate"
+                        is-link
+                        name="startDate"
+                        label="开始日期"
+                        placeholder="开始日期"
+                        @click="showPicker = true"
 
+                />
+                <van-popup v-model:show="showPicker" position="bottom">
+                    <van-date-picker
+                            @confirm="onConfirm"
+                            @cancel="showPicker = false"
                     />
-                    <van-popup v-model:show="showPicker" position="bottom">
-                        <van-date-picker
-                                @confirm="onConfirm"
-                                @cancel="showPicker = false"
-                        />
-                    </van-popup>
+                </van-popup>
 
-                    <van-field
-                            v-model="endDate"
-                            is-link
-                            name="endDate"
-                            label="结束日期"
-                            placeholder="结束日期"
-                            @click="showPicker2 = true"
+                <van-field
+                        v-model="endDate"
+                        is-link
+                        name="endDate"
+                        label="结束日期"
+                        placeholder="结束日期"
+                        @click="showPicker2 = true"
+                />
+                <van-popup v-model:show="showPicker2" position="bottom">
+                    <van-date-picker
+                            @confirm="onConfirm2"
+                            @cancel="showPicker2 = false"
                     />
-                    <van-popup v-model:show="showPicker2" position="bottom">
-                        <van-date-picker
-                                @confirm="onConfirm2"
-                                @cancel="showPicker2 = false"
-                        />
-                    </van-popup>
-                    <div style="margin:8px">
-                        <van-checkbox v-model="checkboxValue" shape="square" @click="checkboxClick">按个人查询</van-checkbox>
-                    </div>
-                </van-cell-group>
-            </div>
+                </van-popup>
+                <div style="margin:8px">
+                    <van-checkbox v-model="checkboxValue" shape="square" @click="checkboxClick">按个人查询</van-checkbox>
+                </div>
+            </van-cell-group>
         </div>
-
+    </div>
+    <div id="content" class="content">
         <div v-show="active==0">
             <p style="margin: 5px;display: block">合计数量（捆）：{{totalQuantity}}</p>
             <el-table :data="tableDataQuantity" style="width: 100%">
@@ -81,7 +80,6 @@
 
 
         </div>
-
         <div v-show="active==1">
             <p style="margin: 5px;display: block">合计重量（KG）：{{totalWeight}}</p>
             <el-table :data="tableDataWeight" style="width: 100%">
@@ -112,6 +110,7 @@
 
         </div>
     </div>
+
 </template>
 
 <script>
@@ -323,7 +322,7 @@
 
             //切换tab页
             const onClickTab = () => {
-
+                document.getElementById("content").scrollTop=0
                 getAppReportFormStatisticsTable()
             }
 
@@ -503,18 +502,15 @@
 </script>
 
 <style scoped>
-    .container {
-        position: relative;
-        height: 100%;
-        overflow: scroll;
-        background-repeat: no-repeat;
-        background-size: 100%;
-    }
 
-    .header {
-        position: sticky;
-        top: 0;
-        z-index: 999;
-        overflow: hidden;
+    .content {
+
+        width: 100%;
+        overflow: auto;
+        top: 220px;
+        position: absolute;
+        z-index: 10;
+        bottom: 5px;
+
     }
 </style>

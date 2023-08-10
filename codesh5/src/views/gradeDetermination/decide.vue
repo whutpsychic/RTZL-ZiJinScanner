@@ -1,76 +1,93 @@
 <template>
-    <van-nav-bar
-            title="品级质检"
-            class="page-nav-bar"
-            left-arrow
-            @click-left="onClickLeft"
-    />
-
-
-    <el-card class="box-card" shadow="always" style="margin-top:5px">
-        <van-divider content-position="left">基本信息</van-divider>
-        <div>
-            <p>
-                <span style="font-weight: bold">编号：</span><span>{{listData.yjtJyInformationData.batchnumber}}</span>
-            </p>
-
-            <p>
-                <span style="font-weight: bold">重量：</span><span>{{parseFloat(listData.yjtJyInformationData.suttle)}}{{listData.yjtJyInformationData.unit}}</span>
-            </p>
-
-            <p>
-                <span style="font-weight: bold">标准：</span><span>{{listData.yjtJyInformationData.standard}}</span>
-            </p>
-
-            <p>
-                <span style="font-weight: bold">计量员：</span><span>{{listData.yjtJyInformationData.suttleperson}}</span>
-                &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: bold">扫描人：</span><span>{{listData.yjtJyInformationData.scanUser}}</span>
-            </p>
-
-            <p>
-                <span style="font-weight: bold">生产日期：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationData.proDate)}}
-            </p>
-
-        </div>
-
-        <div>
-            <van-divider content-position="left"><span style="color: red">*</span>{{typeCodeText}}</van-divider>
-            <van-radio-group v-model="typeCodeChecked" direction="horizontal">
-                <van-radio v-for="(item,index) in  listData.typeCodeList" :name="String(item.id)">{{item.name}}
-                </van-radio>
-            </van-radio-group>
-        </div>
-
-        <div>
-            <van-divider content-position="left"><span style="color: red">*</span> 上传照片</van-divider>
-            <van-uploader
-                    v-model="listData.fileList"
-                    :after-read="onRead"
-                    :before-delete="beforeDelete"
+    <div class="container">
+        <div class="header">
+            <van-nav-bar
+                    title="品级质检"
+                    class="page-nav-bar"
+                    left-arrow
+                    @click-left="onClickLeft"
             />
         </div>
 
-        <div>
-            <van-divider content-position="left">备注</van-divider>
-            <van-cell-group inset>
-                <van-field
-                        v-model="remarks"
-                        rows="1"
-                        autosize
-                        label="备注"
-                        type="textarea"
-                        placeholder="请输入备注"
+
+        <el-card class="box-card" shadow="always" style="margin-top:5px">
+            <van-divider content-position="left">基本信息</van-divider>
+            <div>
+                <p>
+                    <span style="font-weight: bold">编号：</span><span>{{listData.yjtJyInformationData.batchnumber}}</span>
+                </p>
+
+                <p>
+                    <span style="font-weight: bold">重量：</span><span>{{parseFloat(listData.yjtJyInformationData.suttle)}}{{listData.yjtJyInformationData.unit}}</span>
+                </p>
+
+                <p>
+                    <span style="font-weight: bold">标准：</span><span>{{listData.yjtJyInformationData.standard}}</span>
+                </p>
+
+                <p>
+                    <span style="font-weight: bold">计量员：</span><span>{{listData.yjtJyInformationData.suttleperson}}</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: bold">扫描人：</span><span>{{listData.yjtJyInformationData.scanUser}}</span>
+                </p>
+
+                <p>
+                    <span style="font-weight: bold">生产日期：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationData.proDate)}}
+                </p>
+
+            </div>
+
+            <div>
+                <van-divider content-position="left"><span style="color: red">*</span>{{typeCodeText}}</van-divider>
+                <van-radio-group v-model="typeCodeChecked" direction="horizontal">
+                    <van-radio v-for="(item,index) in  listData.typeCodeList" :name="String(item.id)">{{item.name}}
+                    </van-radio>
+                </van-radio-group>
+            </div>
+
+            <div>
+                <van-divider content-position="left"><span style="color: red">*</span> 上传照片</van-divider>
+                <van-uploader
+                        v-model="listData.fileList"
+                        :after-read="onRead"
+                        :before-delete="beforeDelete"
                 />
-            </van-cell-group>
-        </div>
+            </div>
 
-    </el-card>
+            <div v-if="tabIndex==1">
+                <van-divider content-position="left"><span style="color: red">*</span>改判理由</van-divider>
+                <el-select v-model="alterReason" filterable
+                           clearable allow-create
+                           placeholder="改判理由" style="width: 100%">
+                    <el-option
+                            v-for="item in listData.alterReasonList"
+                            :key="item.alterReason"
+                            :label="item.alterReason"
+                            :value="item.alterReason"
+                    />
+                </el-select>
+            </div>
+
+            <div>
+                <van-divider content-position="left">备注</van-divider>
+                <van-cell-group inset>
+                    <van-field
+                            v-model="remarks"
+                            rows="1"
+                            autosize
+                            label="备注"
+                            type="textarea"
+                            placeholder="请输入备注"
+                    />
+                </van-cell-group>
+            </div>
+
+        </el-card>
 
 
-    <van-button type="primary" size="large" style="width: 80%;position: absolute;left: 10%;margin-top: 15px;"
-                @click="conservation">提交
-    </van-button>
-
+        <van-button type="primary" size="large" style="width: 80%;position: absolute;left: 10%;margin-top: 15px;"
+                    @click="conservation">提交
+        </van-button>
+    </div>
 </template>
 
 <script>
@@ -80,8 +97,8 @@
     import {
         typeCodeData,
         excellentJudgement,
-        fileQuery,
-        cathodeCopperImgUpload
+        cathodeCopperImgUpload,
+        alterReasonQuery
     } from '@/api/gradeDetermination'
     import {compressImage} from '@/utils/compressImage.js'
     import {showToast} from "vant";
@@ -93,14 +110,19 @@
             const typeCode = ref('')
             const typeCodeText = ref('')
             const remarks = ref('')
+            const alterReason = ref('')
             const typeCodeChecked = ref('')
             const listData = shallowReactive({
                 //阴极铜基本信息数据
                 yjtJyInformationData: {},
                 //判断类型数据
                 typeCodeList: [],
-                fileList: [], // 回显图片
-                imagePath: [] // 上传图片路径
+                // 回显图片
+                fileList: [],
+                // 上传图片路径
+                imagePath: [],
+                //改判理由
+                alterReasonList: []
             })
 
             listData.yjtJyInformationData = JSON.parse(decodeURIComponent(route.query.yjtJyInformation))
@@ -120,8 +142,8 @@
 
             onMounted(() => {
                 getTypeCodeData(typeCode.value)
+                getAlterReasonQuery()
             })
-
 
 
             //返回上一页
@@ -131,11 +153,9 @@
 
             //图片删除
             const beforeDelete = (file) => {
-
                 listData.imagePath = listData.imagePath.filter(item => {
                     return item.fileName != file.file.name
                 })
-
                 return true
             }
 
@@ -151,15 +171,37 @@
                     return false
                 }
 
-                let listMap = {data: [], active: '', exterior: '',remarks:'', typeCodeChecked:'', fileList: []}
+                if (tabIndex.value==1){
+                    if (!alterReason.value) {
+                        showToast({
+                            message: '请选择或者输入改判理由',
+                            type: 'fail',
+                            className: 'particulars-detail-popup'
+                        })
+
+                        return false
+                    }
+                }
+
+                let listMap = {
+                    data: [],
+                    active: '',
+                    exterior: '',
+                    remarks: '',
+                    alterReason: '',
+                    typeCodeChecked: '',
+                    fileList: []
+                }
                 let obj = []
                 obj.push(listData.yjtJyInformationData)
                 listMap.data = obj
-                listMap.typeCodeChecked=typeCodeChecked.value
+                listMap.typeCodeChecked = typeCodeChecked.value
                 listMap.active = tabIndex.value
                 listMap.exterior = exterior.value
                 listMap.remarks = remarks.value
+                listMap.alterReason = alterReason.value
                 listMap.fileList = listData.imagePath
+
                 excellentJudgement(listMap).then((result) => {
                     if (result.data.code == 200) {
                         showToast({
@@ -195,10 +237,7 @@
                     }).catch(error => {
                         console.log(error)
                     })
-
                 })
-
-
             }
 
 
@@ -216,6 +255,25 @@
                 })
             }
 
+
+            //获取改判理由
+            function getAlterReasonQuery() {
+                let paramInfo = {}
+                let blocks = {}
+                let paramBlock = {}
+                paramBlock.limit = 9999
+                paramBlock.offset = 1
+                paramBlock.blockId = 'paramBlock'
+                paramBlock.data = {}
+                blocks.paramBlock = paramBlock
+                paramInfo.blocks = blocks
+                alterReasonQuery(paramInfo).then((result) => {
+                    listData.alterReasonList = result.data.blocks.resultBlock.data
+                    console.log(listData.alterReasonList)
+                }).catch(error => {
+                    console.log(error)
+                })
+            }
 
             //格式化时间
             const dateFormat = (fmt, date) => {
@@ -242,6 +300,7 @@
             }
 
             return {
+                alterReason,
                 remarks,
                 typeCode,
                 typeCodeText,
@@ -253,12 +312,25 @@
                 dateFormat,
                 onRead,
                 beforeDelete,
-                conservation
+                conservation,
             }
         }
     }
 </script>
 
 <style scoped>
+    .container {
+        position: relative;
+        height: 100%;
+        overflow: scroll;
+        background-repeat: no-repeat;
+        background-size: 100%;
+    }
 
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        overflow: hidden;
+    }
 </style>
