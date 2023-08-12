@@ -8,7 +8,7 @@
                 @click-left="onClickLeft"
         />
         <van-tabs v-model:active="active" @click-tab="onClickTab">
-            <van-tab title="未质检"></van-tab>
+            <van-tab :title="quantity"></van-tab>
             <van-tab title=" 已质检"></van-tab>
         </van-tabs>
     </div>
@@ -40,7 +40,7 @@
                     </el-collapse>
                 </div>
 
-                <van-button type="primary" size="small" style="position: absolute;right: 60px;top: 30px;" @click="identifyClick('0',item)">品级鉴定
+                <van-button type="primary" size="small" style="position: absolute;right: 60px;top: 30px;" @click="identifyClick('0',item)">单个鉴定
                 </van-button>
             </el-card>
             </van-collapse>
@@ -136,14 +136,14 @@
     <div class="empennage">
 
         <van-row>
-            <van-col span="8"></van-col>
+            <van-col span="6"></van-col>
             <!--            <van-col span="7">-->
             <!--                <van-button type="success" @click="scanCode">继续扫码</van-button>-->
             <!--            </van-col>-->
-            <van-col span="8">
-                <van-button type="primary" @click="identifyClick('1')">品级鉴定</van-button>
+            <van-col span="12" style="text-align: center" >
+                <van-button type="primary" @click="identifyClick('1')">{{identifyTitle}}</van-button>
             </van-col>
-            <van-col span="8"></van-col>
+            <van-col span="6"></van-col>
 
         </van-row>
     </div>
@@ -165,7 +165,7 @@
                 <van-col span="3"></van-col>
             </van-row>
 
-            <van-row style="margin-top:15px">
+            <van-row style="margin-top:15px" >
                 <van-col span="3"></van-col>
                 <van-col span="18">
                     <van-button type="warning" size="large" @click="qualifiedClick">合格</van-button>
@@ -173,7 +173,7 @@
                 <van-col span="3"></van-col>
             </van-row>
 
-            <van-row style="margin-top:15px">
+            <van-row style="margin-top:15px" >
                 <van-col span="3"></van-col>
                 <van-col span="18">
                     <van-button type="danger" size="large" @click="unqualifiedClick">不合格</van-button>
@@ -194,7 +194,7 @@
 
     <el-dialog
             v-model="centerDialogVisible"
-            title="请选择改判理由"
+            title="请选择或填写改判理由"
             width="90%"
             align-center
     >
@@ -263,8 +263,10 @@
                                 active.value = Number(result.data.data)
 
                                 if (active.value == 0) {
+                                    identifyTitle.value='批量鉴定（优等品）'
                                     getNotDeterminedData()
                                 } else {
+                                    identifyTitle.value='再次鉴定'
                                     getAlreadyDeterminedData()
                                 }
                             }
@@ -290,7 +292,9 @@
             const distinguish = ref('')
             const buttonShow = ref(false)
             const showImage = ref(false)
+            const identifyTitle=ref('')
             const centerDialogVisible=ref(false)
+            const quantity=ref('未质检(0)')
             const alterReason=ref('')
             const listData = shallowReactive({
                 //当前扫描人未判定的阴极铜数据
@@ -332,8 +336,10 @@
 
             onMounted(() => {
                 if (active.value == 0) {
+                    identifyTitle.value='批量鉴定（优等品）'
                     getNotDeterminedData()
                 } else {
+                    identifyTitle.value='再次鉴定'
                     getAlreadyDeterminedData()
                 }
                 getAlterReasonQuery()
@@ -361,12 +367,6 @@
                 }
                 buttonShow.value = true
             };
-
-
-
-
-
-
 
             //点击优等品
             const outstandingClick = () => {
@@ -428,7 +428,7 @@
 
                 if (!alterReason.value) {
                     showToast({
-                        message: '请选择或者输入改判理由',
+                        message: '请选择或者填写改判理由',
                         type: 'fail',
                         className: 'particulars-detail-popup'
                     })
@@ -438,7 +438,6 @@
                 listData.outstandingAlterList.alterReason=alterReason.value
                 getExcellentJudgement(listData.outstandingAlterList)
             }
-
 
             //点击合格
             const qualifiedClick = () => {
@@ -638,9 +637,6 @@
                             getFileQuery(listData.yjtJyInformationDetailsData.id)
                         }
                     }
-
-                    console.log(listData.yjtJyInformationData)
-
                 }).catch(error => {
                     console.log(error)
                 })
@@ -652,6 +648,7 @@
                 listData.yjtJyInformationListData = []
                 notDeterminedData().then((result) => {
                     listData.yjtJyInformationListData = result.data.data.yjtJyInformationListData
+                    quantity.value='未质检('+result.data.data.quantity+')'
                 }).catch(error => {
                     console.log(error)
                 })
@@ -671,7 +668,6 @@
                 paramInfo.blocks = blocks
                 alterReasonQuery(paramInfo).then((result) => {
                     listData.alterReasonList = result.data.blocks.resultBlock.data
-                    console.log(listData.alterReasonList)
                 }).catch(error => {
                     console.log(error)
                 })
@@ -703,6 +699,8 @@
 
 
             return {
+                identifyTitle,
+                quantity,
                 alterReason,
                 centerDialogVisible,
                 activeName,

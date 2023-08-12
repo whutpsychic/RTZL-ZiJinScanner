@@ -1,7 +1,7 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import Preopen from '../views/preopen/main.vue'
 import LoginView from '../views/login/main.vue'
-import HomeView from '../views/home/main.vue'
+
 
 const router = createRouter({
     history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -15,7 +15,7 @@ const router = createRouter({
         {
             path: '/home',
             name: 'home',
-            component: HomeView
+            component: () => import('../views/home/main.vue')
         },
 
         //我的

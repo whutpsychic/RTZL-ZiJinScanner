@@ -198,3 +198,7 @@ thead .el-table__cell {
 .el-overlay{
   z-index: 1111 !important;
 }
+
+.el-dialog__close{
+  color: #FFFFFF !important;
+}

@@ -174,7 +174,7 @@
                 if (tabIndex.value==1){
                     if (!alterReason.value) {
                         showToast({
-                            message: '请选择或者输入改判理由',
+                            message: '请选择或者填写改判理由',
                             type: 'fail',
                             className: 'particulars-detail-popup'
                         })

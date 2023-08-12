@@ -36,9 +36,17 @@
                         <p><span style="font-weight: bold">编号：</span><span>{{item.batchnumber}}</span></p>
                         <p><span
                                 style="font-weight: bold">重量：</span><span>{{parseFloat(item.suttle)}}{{item.unit}}</span>
+
+                             <span style="margin-left:30px;" v-if="item.exteriorName">
+                                 <span v-if="item.exteriorName=='优等品'"><el-tag>{{item.exteriorName}}</el-tag></span>
+                                 <span  v-if="item.exteriorName=='合格'"><el-tag type='warning'>{{item.exteriorName}}</el-tag></span>
+                                 <span v-if="item.exteriorName=='不合格'"><el-tag type='danger'>{{item.exteriorName}}</el-tag></span>
+                             </span>
                         </p>
                         <van-tag v-if="item.state=='0'" type="primary">未质检</van-tag>
                         <van-tag v-if="item.state=='1'" type="success">已质检</van-tag>
+
+
                     </div>
                 </el-card>
             </div>
