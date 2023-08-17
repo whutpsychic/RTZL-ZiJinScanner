@@ -8,7 +8,7 @@
         <van-grid :gutter="10" :column-num="2" style="margin-top: 20px;
                                                font-size: 18px;
                                                font-weight: bold;">
-            <van-grid-item @click="scanCode" v-if="qualityCheckingRecordRole">
+            <van-grid-item @click="scanCode" v-if="gradeDeterminationRole">
                 <img src="/image/pjpd.png" style="width: 50%;"/>
                 <span style="margin-top: 10px;">品级质检</span>
             </van-grid-item>
@@ -18,10 +18,17 @@
                 <span style="margin-top: 10px;">报表查询</span>
             </van-grid-item>
 
-            <van-grid-item @click="auditingClick" v-if="auditingListRole">
+            <van-grid-item to="/auditingList" v-if="auditingListRole">
                 <img src="/image/shenhe.png" style="width: 50%;"/>
                 <span style="margin-top: 10px;">品级质检审核</span>
             </van-grid-item>
+
+
+            <van-grid-item to="/qualityCheckingRecord" v-if="qualityCheckingRecordRole">
+                <img src="/image/zjjl.png" style="width: 50%;"/>
+                <span style="margin-top: 10px;">质检记录</span>
+            </van-grid-item>
+
 
         </van-grid>
     </main>
@@ -43,6 +50,7 @@
             const router = useRouter()
             const store = useStore()
             const userData = toRaw(store.state.user)
+            const gradeDeterminationRole=ref(false)
             const qualityCheckingRecordRole = ref(false)
             const reportFormStatisticsRole = ref(false)
             const scannerShow=ref(false)
@@ -98,6 +106,7 @@
                 let groupNames = userData.groupNames.split(',')
                 for (let i = 0; i < groupNames.length; i++) {
                     if (groupNames[i] == 'admingroup') {
+                        gradeDeterminationRole.value=true
                         qualityCheckingRecordRole.value = true
                         reportFormStatisticsRole.value = true
                         auditingListRole.value = true
@@ -106,6 +115,7 @@
                     }
 
                     if (groupNames[i] == 'yjtzj_admin') {
+                        gradeDeterminationRole.value=true
                         qualityCheckingRecordRole.value = true
                         reportFormStatisticsRole.value = true
                         auditingListRole.value = true
@@ -114,6 +124,7 @@
                     }
 
                     if (groupNames[i] == 'yjtzj_user') {
+                        gradeDeterminationRole.value=true
                         qualityCheckingRecordRole.value = true
                         reportFormStatisticsRole.value = true
                         scannerShow.value=true
@@ -122,44 +133,12 @@
                 }
             }
 
-            const auditingClick = () => {
-
-                router.push({
-                    path: '/auditingList',
-
-                })
-
-                // let state = true
-                // let groupNames = userData.groupNames.split(',')
-                // for (let i = 0; i < groupNames.length; i++) {
-                //     if (groupNames[i] == 'yjtzlpd') {
-                //         state = false
-                //         break
-                //     }
-                // }
-                //
-                // if (state) {
-                //     router.push({
-                //         path: '/auditingList',
-                //
-                //     })
-                // }else {
-                //     showToast({
-                //         message: '没有权限',
-                //         type: 'fail',
-                //         className: 'particulars-detail-popup'
-                //     })
-                // }
-            }
 
             //扫码
             const scanCode = () => {
-                router.push({
-                    path: '/qualityCheckingRecord',
-
-                })
+                  fc.scan()
                 // let tbCathodeCopper = {}
-                // tbCathodeCopper.fBarcode = '1240101220616033003524362'
+                // tbCathodeCopper.fBarcode = '1240101220616032917924565'
                 // judgementCathodeCopper(tbCathodeCopper).then((result) => {
                 //    if (result.data.code){
                 //        if (result.data.code != 200) {
@@ -173,7 +152,7 @@
                 //        } else {
                 //            router.push({
                 //                path: '/gradeDetermination',
-                //                query: {barcode: '1240101220616033003524362', tabState: result.data.data}
+                //                query: {barcode: '1240101220616032917924565', tabState: result.data.data}
                 //            })
                 //        }
                 //    }
@@ -186,13 +165,13 @@
             }
 
             return {
+                gradeDeterminationRole,
                 scannerShow,
                 qualityCheckingRecordRole,
                 reportFormStatisticsRole,
                 auditingListRole,
                 userData,
                 scanCode,
-                auditingClick,
                 roleJudgement
             }
         }

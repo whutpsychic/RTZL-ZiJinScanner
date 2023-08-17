@@ -269,7 +269,6 @@
                 paramInfo.blocks = blocks
                 alterReasonQuery(paramInfo).then((result) => {
                     listData.alterReasonList = result.data.blocks.resultBlock.data
-                    console.log(listData.alterReasonList)
                 }).catch(error => {
                     console.log(error)
                 })

@@ -15,35 +15,59 @@
 
     <div class="content">
         <div v-show="active==0" style="padding:0px 5px 5px 5px">
-            <van-collapse v-model="activeName">
-            <el-card class="box-card" shadow="always" style="margin-top:5px;position: relative"
+
+            <el-card class="box-card" shadow="always" style="margin-top:5px"
                      v-for="(item,index) in  listData.yjtJyInformationListData">
 
+                <div>
                     <div class="card-header">
                         <img src="/image/delete.png" class="delete" @click="deleteData(item)"/>
                     </div>
 
-
-                <div class="demo-collapse">
-                    <el-collapse >
-                        <el-collapse-item :title="item.batchnumber" >
-                            <p><span
-                                    style="font-weight: bold">重量：</span><span>{{parseFloat(item.suttle)}}{{item.unit}}</span>
-                            </p>
-                            <p><span style="font-weight: bold">标准：</span><span>{{item.standard}}</span></p>
-                            <p><span style="font-weight: bold">计量员：</span><span>{{item.suttleperson}}</span>
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span
-                                        style="font-weight: bold">扫描人：</span><span>{{item.scanUser}}</span></p>
-                            <p><span style="font-weight: bold">生产日期：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",item.proDate)}}
-                            </p>
-                        </el-collapse-item>
-                    </el-collapse>
+                    <p><span style="font-weight: bold">编号：</span><span>{{item.batchnumber}}</span></p>
+                    <p><span
+                            style="font-weight: bold">重量：</span><span>{{parseFloat(item.suttle)}}{{item.unit}}</span>
+                    </p>
+                    <p><span style="font-weight: bold">标准：</span><span>{{item.standard}}</span></p>
+                    <p><span style="font-weight: bold">计量员：</span><span>{{item.suttleperson}}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span
+                                style="font-weight: bold">扫描人：</span><span>{{item.scanUser}}</span></p>
+                    <p><span style="font-weight: bold">生产日期：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",item.proDate)}}
+                    </p>
                 </div>
-
-                <van-button type="primary" size="small" style="position: absolute;right: 60px;top: 30px;" @click="identifyClick('0',item)">单个鉴定
+                <van-button type="primary" size="small" style="float:right" @click="identifyClick('0',item)">单个鉴定
                 </van-button>
             </el-card>
-            </van-collapse>
+
+            <!--            <van-collapse v-model="activeName">-->
+            <!--            <el-card class="box-card" shadow="always" style="margin-top:5px;position: relative"-->
+            <!--                     v-for="(item,index) in  listData.yjtJyInformationListData">-->
+
+            <!--                    <div class="card-header">-->
+            <!--                        <img src="/image/delete.png" class="delete" @click="deleteData(item)"/>-->
+            <!--                    </div>-->
+
+
+            <!--                <div class="demo-collapse">-->
+            <!--                    <el-collapse >-->
+            <!--                        <el-collapse-item :title="item.batchnumber" >-->
+            <!--                            <p><span-->
+            <!--                                    style="font-weight: bold">重量：</span><span>{{parseFloat(item.suttle)}}{{item.unit}}</span>-->
+            <!--                            </p>-->
+            <!--                            <p><span style="font-weight: bold">标准：</span><span>{{item.standard}}</span></p>-->
+            <!--                            <p><span style="font-weight: bold">计量员：</span><span>{{item.suttleperson}}</span>-->
+            <!--                                &nbsp;&nbsp;&nbsp;&nbsp;<span-->
+            <!--                                        style="font-weight: bold">扫描人：</span><span>{{item.scanUser}}</span></p>-->
+            <!--                            <p><span style="font-weight: bold">生产日期：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",item.proDate)}}-->
+            <!--                            </p>-->
+            <!--                        </el-collapse-item>-->
+            <!--                    </el-collapse>-->
+            <!--                </div>-->
+
+            <!--                <van-button type="primary" size="small" style="position: absolute;right: 60px;top: 30px;" @click="identifyClick('0',item)">单个鉴定-->
+            <!--                </van-button>-->
+            <!--            </el-card>-->
+            <!--            </van-collapse>-->
 
         </div>
         <div v-show="active==1">
@@ -71,7 +95,7 @@
                             </p>
 
                             <p>
-                                <span style="font-weight: bold">生产日期：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationData.proDate)}}
+                                <span style="font-weight: bold">生产日期：</span><span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationData.proDate)}}</span>
                             </p>
 
                             <div v-if="listData.yjtJyInformationDetailsData.status=='2'" class="yijianyan"
@@ -136,14 +160,14 @@
     <div class="empennage">
 
         <van-row>
-            <van-col span="6"></van-col>
-            <!--            <van-col span="7">-->
-            <!--                <van-button type="success" @click="scanCode">继续扫码</van-button>-->
-            <!--            </van-col>-->
-            <van-col span="12" style="text-align: center" >
+            <van-col span="2"></van-col>
+                        <van-col span="8">
+                            <van-button type="success" @click="scanCode">继续扫码</van-button>
+                        </van-col>
+            <van-col span="12" style="text-align: center">
                 <van-button type="primary" @click="identifyClick('1')">{{identifyTitle}}</van-button>
             </van-col>
-            <van-col span="6"></van-col>
+            <van-col span="2"></van-col>
 
         </van-row>
     </div>
@@ -165,7 +189,7 @@
                 <van-col span="3"></van-col>
             </van-row>
 
-            <van-row style="margin-top:15px" >
+            <van-row style="margin-top:15px">
                 <van-col span="3"></van-col>
                 <van-col span="18">
                     <van-button type="warning" size="large" @click="qualifiedClick">合格</van-button>
@@ -173,10 +197,30 @@
                 <van-col span="3"></van-col>
             </van-row>
 
-            <van-row style="margin-top:15px" >
+            <van-row style="margin-top:15px">
                 <van-col span="3"></van-col>
                 <van-col span="18">
                     <van-button type="danger" size="large" @click="unqualifiedClick">不合格</van-button>
+                </van-col>
+                <van-col span="3"></van-col>
+            </van-row>
+        </div>
+    </van-popup>
+
+
+    <van-popup
+            v-model:show="buttonShowPL"
+            closeable
+            close-icon="close"
+            position="bottom"
+            :style="{ height: '25%' }"
+    >
+
+        <div style="margin-top:15%">
+            <van-row>
+                <van-col span="3"></van-col>
+                <van-col span="18">
+                    <van-button type="primary" size="large" @click="outstandingClick">优等品</van-button>
                 </van-col>
                 <van-col span="3"></van-col>
             </van-row>
@@ -223,7 +267,7 @@
 
 <script>
     import fc from "flutter-core";
-    import {judgementCathodeCopper,alterReasonQuery} from '@/api/gradeDetermination'
+    import {judgementCathodeCopper, alterReasonQuery} from '@/api/gradeDetermination'
     import {showConfirmDialog, showDialog, showImagePreview, showToast} from "vant";
     import {onMounted, ref} from 'vue';
     import {useRoute, useRouter} from "vue-router";
@@ -263,10 +307,10 @@
                                 active.value = Number(result.data.data)
 
                                 if (active.value == 0) {
-                                    identifyTitle.value='批量鉴定（优等品）'
+                                    identifyTitle.value = '批量鉴定（优等品）'
                                     getNotDeterminedData()
                                 } else {
-                                    identifyTitle.value='再次鉴定'
+                                    identifyTitle.value = '再次鉴定'
                                     getAlreadyDeterminedData()
                                 }
                             }
@@ -291,11 +335,12 @@
             const active = ref(0)
             const distinguish = ref('')
             const buttonShow = ref(false)
+            const buttonShowPL = ref(false)
             const showImage = ref(false)
-            const identifyTitle=ref('')
-            const centerDialogVisible=ref(false)
-            const quantity=ref('未质检(0)')
-            const alterReason=ref('')
+            const identifyTitle = ref('')
+            const centerDialogVisible = ref(false)
+            const quantity = ref('未质检(0)')
+            const alterReason = ref('')
             const listData = shallowReactive({
                 //当前扫描人未判定的阴极铜数据
                 yjtJyInformationListData: [],
@@ -323,7 +368,7 @@
                 //改判理由
                 alterReasonList: [],
                 //优等品改判数据
-                outstandingAlterList:[]
+                outstandingAlterList: []
 
             })
             const yjtJyInformation = shallowReactive({
@@ -336,10 +381,10 @@
 
             onMounted(() => {
                 if (active.value == 0) {
-                    identifyTitle.value='批量鉴定（优等品）'
+                    identifyTitle.value = '批量鉴定（优等品）'
                     getNotDeterminedData()
                 } else {
-                    identifyTitle.value='再次鉴定'
+                    identifyTitle.value = '再次鉴定'
                     getAlreadyDeterminedData()
                 }
                 getAlterReasonQuery()
@@ -353,24 +398,66 @@
             //切换tab页
             const onClickTab = () => {
                 if (active.value == 0) {
+                    identifyTitle.value = '批量鉴定（优等品）'
                     getNotDeterminedData()
                 } else {
+                    identifyTitle.value = '再次鉴定'
                     getAlreadyDeterminedData()
                 }
             };
+
+
+            //扫码
+            const scanCode = () => {
+                fc.scan()
+                // let tbCathodeCopper = {}
+                // tbCathodeCopper.fBarcode = '1240101220616033003524362'
+                // judgementCathodeCopper(tbCathodeCopper).then((result) => {
+                //    if (result.data.code){
+                //        if (result.data.code != 200) {
+                //            showDialog({
+                //                title: '提示',
+                //                width: '600',
+                //                message: result.data.message,
+                //            }).then(() => {
+                //
+                //            });
+                //        } else {
+                //            router.push({
+                //                path: '/gradeDetermination',
+                //                query: {barcode: '1240101220616033003524362', tabState: result.data.data}
+                //            })
+                //        }
+                //    }
+                //
+                //
+                // }).catch(error => {
+                //     console.log(error)
+                // })
+
+            }
 
             //弹出品级鉴定按钮
             const identifyClick = (data, item) => {
                 distinguish.value = data
                 if (data == 0) {
+                    buttonShow.value = true
                     yjtJyInformation.data = item
+                } else {
+                    if (active.value == 0) {
+                        buttonShowPL.value = true
+                    } else {
+                        buttonShow.value = true
+                    }
+
                 }
-                buttonShow.value = true
+
+
             };
 
             //点击优等品
             const outstandingClick = () => {
-                let listMap = {data: [], active: '', exterior: '0',alterReason:''}
+                let listMap = {data: [], active: '', exterior: '0', alterReason: ''}
                 listMap.active = active.value
                 if (active.value == 0) {
                     //批量判定
@@ -382,9 +469,10 @@
                     }
                     if (listMap.data.length > 0) {
                         buttonShow.value = false
+                        buttonShowPL.value = false
                         getExcellentJudgement(listMap)
                     } else {
-                        buttonShow.value = false
+                        buttonShowPL.value = false
                         showToast({
                             message: '当前没有要质检的数据',
                             type: 'fail',
@@ -392,6 +480,17 @@
                         })
                     }
                 } else {
+
+                    if (JSON.stringify(listData.yjtJyInformationData) === '{}'){
+                        buttonShow.value = false
+                        showToast({
+                            message: '当前没有要质检的数据',
+                            type: 'fail',
+                            className: 'particulars-detail-popup'
+                        })
+                        return false
+                    }
+
                     if (listData.yjtJyInformationDetailsData.status == '0') {
                         buttonShow.value = false
                         showDialog({
@@ -416,15 +515,15 @@
                             // on close
                         });
                     } else {
-                        centerDialogVisible.value=true
+                        centerDialogVisible.value = true
                         buttonShow.value = false
                         listMap.data.push(listData.yjtJyInformationData)
-                        listData.outstandingAlterList= listMap
+                        listData.outstandingAlterList = listMap
                     }
                 }
             }
 
-            const outstandingAlter = () =>{
+            const outstandingAlter = () => {
 
                 if (!alterReason.value) {
                     showToast({
@@ -434,8 +533,8 @@
                     })
                     return false
                 }
-                centerDialogVisible.value=false
-                listData.outstandingAlterList.alterReason=alterReason.value
+                centerDialogVisible.value = false
+                listData.outstandingAlterList.alterReason = alterReason.value
                 getExcellentJudgement(listData.outstandingAlterList)
             }
 
@@ -460,6 +559,17 @@
                         })
                     }
                 } else {
+
+                    if (JSON.stringify(listData.yjtJyInformationData) === '{}'){
+                        buttonShow.value = false
+                        showToast({
+                            message: '当前没有要质检的数据',
+                            type: 'fail',
+                            className: 'particulars-detail-popup'
+                        })
+                        return false
+                    }
+
                     if (listData.yjtJyInformationDetailsData.status == '0') {
                         buttonShow.value = false
                         showDialog({
@@ -516,6 +626,16 @@
                         })
                     }
                 } else {
+                    if (JSON.stringify(listData.yjtJyInformationData) === '{}'){
+                        buttonShow.value = false
+                        showToast({
+                            message: '当前没有要质检的数据',
+                            type: 'fail',
+                            className: 'particulars-detail-popup'
+                        })
+                        return false
+                    }
+
                     if (listData.yjtJyInformationDetailsData.status == '0') {
                         buttonShow.value = false
                         showDialog({
@@ -598,6 +718,7 @@
                     }
                 }).catch(error => {
                     buttonShow.value = false
+                    buttonShowPL.value = false
                     console.log(error)
                 })
             }
@@ -648,7 +769,7 @@
                 listData.yjtJyInformationListData = []
                 notDeterminedData().then((result) => {
                     listData.yjtJyInformationListData = result.data.data.yjtJyInformationListData
-                    quantity.value='未质检('+result.data.data.quantity+')'
+                    quantity.value = '未质检(' + result.data.data.quantity + ')'
                 }).catch(error => {
                     console.log(error)
                 })
@@ -699,6 +820,8 @@
 
 
             return {
+                scanCode,
+                buttonShowPL,
                 identifyTitle,
                 quantity,
                 alterReason,
@@ -780,8 +903,6 @@
         margin-right: -12px;
 
     }
-
-
 
 
 </style>
