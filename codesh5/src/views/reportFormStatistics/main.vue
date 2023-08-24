@@ -14,36 +14,41 @@
 
         <div style="background-color: #FFFFFF; z-index: 999;">
             <van-cell-group inset>
-                <van-field
-                        v-model="startDate"
-                        is-link
-                        name="startDate"
-                        label="开始日期"
-                        placeholder="开始日期"
-                        @click="showPicker = true"
+                <!--                <van-field-->
+                <!--                        v-model="startDate"-->
+                <!--                        is-link-->
+                <!--                        name="startDate"-->
+                <!--                        label="开始日期"-->
+                <!--                        placeholder="开始日期"-->
+                <!--                        @click="showPicker = true"-->
 
-                />
-                <van-popup v-model:show="showPicker" position="bottom">
-                    <van-date-picker
-                            @confirm="onConfirm"
-                            @cancel="showPicker = false"
-                    />
-                </van-popup>
+                <!--                />-->
+                <!--                <van-popup v-model:show="showPicker" position="bottom">-->
+                <!--                    <van-date-picker-->
+                <!--                            @confirm="onConfirm"-->
+                <!--                            @cancel="showPicker = false"-->
+                <!--                    />-->
+                <!--                </van-popup>-->
+                <!--                <van-field-->
+                <!--                        v-model="endDate"-->
+                <!--                        is-link-->
+                <!--                        name="endDate"-->
+                <!--                        label="结束日期"-->
+                <!--                        placeholder="结束日期"-->
+                <!--                        @click="showPicker2 = true"-->
+                <!--                />-->
+                <!--                <van-popup v-model:show="showPicker2" position="bottom">-->
+                <!--                    <van-date-picker-->
+                <!--                            @confirm="onConfirm2"-->
+                <!--                            @cancel="showPicker2 = false"-->
+                <!--                    />-->
+                <!--                </van-popup>-->
 
-                <van-field
-                        v-model="endDate"
-                        is-link
-                        name="endDate"
-                        label="结束日期"
-                        placeholder="结束日期"
-                        @click="showPicker2 = true"
-                />
-                <van-popup v-model:show="showPicker2" position="bottom">
-                    <van-date-picker
-                            @confirm="onConfirm2"
-                            @cancel="showPicker2 = false"
-                    />
-                </van-popup>
+
+                <van-cell title="日期区间：" title-style="max-width: 25%" :value="dataText" @click="show = true"/>
+                <van-calendar v-model:show="show" :min-date="minDate" type="range" allow-same-day @confirm="onConfirm"/>
+
+
                 <div style="margin:8px">
                     <van-checkbox v-model="checkboxValue" shape="square" @click="checkboxClick">按个人查询</van-checkbox>
                 </div>
@@ -144,6 +149,8 @@
             const checkboxValue = ref('')
             const totalQuantity = ref(0)
             const totalWeight = ref(0)
+            const show = ref(false)
+            const dataText = ref('')
 
             const tu1 = ref(null)
             const tu2 = ref(null)
@@ -151,9 +158,21 @@
             const tu4 = ref(null)
             const tu5 = ref(null)
             const tu6 = ref(null)
+
+            const formatDate = (date) => `${date.getFullYear()}-${date.getMonth().toString().length == 1 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)}-${date.getDate().toString().length == 1?'0'+date.getDate():date.getDate()}`;
+
+            const onConfirm = (values) => {
+                const [start, end] = values;
+                show.value = false;
+                startDate.value = formatDate(start)
+                endDate.value = formatDate(end)
+                getAppReportFormStatisticsTable()
+                dataText.value = `${formatDate(start)}至${formatDate(end)}`;
+            };
+
+
             //阴极铜质检类型
             const tbYjtJyDictList = ref([])
-
 
             const exteriorOption = ref({
                 tooltip: {
@@ -287,42 +306,10 @@
                 getAppReportFormStatisticsTable()
             }
 
-            //开始日期
-            const onConfirm = ({selectedValues}) => {
-                let startDateString = selectedValues.join('-')
-                if (endDate.value < startDateString) {
-                    showToast({
-                        message: '开始日期不能大于结束日期',
-                        type: 'fail',
-                        className: 'particulars-detail-popup'
-                    })
-                    return false
-                }
-                startDate.value = startDateString
-                showPicker.value = false
-                getAppReportFormStatisticsTable()
-            }
-
-            //结束日期
-            const onConfirm2 = ({selectedValues}) => {
-                let endDateString = selectedValues.join('-')
-                if (endDateString < startDate.value) {
-                    showToast({
-                        message: '开始日期不能大于结束日期',
-                        type: 'fail',
-                        className: 'particulars-detail-popup'
-                    })
-                    return false
-                }
-                endDate.value = endDateString
-                showPicker2.value = false
-                getAppReportFormStatisticsTable()
-            }
-
 
             //切换tab页
             const onClickTab = () => {
-                document.getElementById("content").scrollTop=0
+                document.getElementById("content").scrollTop = 0
                 getAppReportFormStatisticsTable()
             }
 
@@ -463,6 +450,7 @@
                 }
                 startDate.value = fmt
                 endDate.value = fmt
+                dataText.value=startDate.value+'至'+endDate.value
             }
 
 
@@ -473,6 +461,9 @@
                 tu4,
                 tu5,
                 tu6,
+                show,
+                minDate: new Date(2023, 5, 1),
+                dataText,
                 showEcharts,
                 qualifiedOption,
                 unqualifiedOption,
@@ -489,9 +480,8 @@
                 showPicker2,
                 checkoutUserId,
                 checkboxValue,
-                checkboxClick,
                 onConfirm,
-                onConfirm2,
+                checkboxClick,
                 onClickTab,
                 formatter,
                 onClickLeft
@@ -507,7 +497,7 @@
 
         width: 100%;
         overflow: auto;
-        top: 220px;
+        top: 170px;
         position: absolute;
         z-index: 10;
         bottom: 5px;

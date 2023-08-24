@@ -1,6 +1,6 @@
 <template>
 
-    <van-tabbar v-model="active" @change="onChange">
+    <van-tabbar v-model="active" active-color="rgb(0 101 197)" @change="onChange">
         <van-tabbar-item icon="home-o">首页</van-tabbar-item>
         <van-tabbar-item icon="friends-o">我的</van-tabbar-item>
     </van-tabbar>
@@ -17,7 +17,6 @@
         methods: {
             onChange(index) {
                 this.active=index
-                 console.log(this.active)
                 if (index == 0) {
                     this.$router.push({path: '/home'})
                 } else if (index == 1) {

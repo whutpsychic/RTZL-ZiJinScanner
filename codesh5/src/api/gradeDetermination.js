@@ -118,3 +118,19 @@ export function alterReasonQuery(data) {
         data: data,
     })
 }
+
+
+
+/***
+ * 查询阴极铜条码信息
+ *
+ */
+export function tbSmCopperOfflineBarCodeQuery(data) {
+    return request({
+        url: `${baseUrl.api_base_url}/mobileTerminalApi.do?method=tbSmCopperOfflineBarCodeQuery`,
+        method: 'get',
+        params: data,
+    })
+}
+
+

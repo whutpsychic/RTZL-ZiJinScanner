@@ -77,7 +77,7 @@
     .top {
         height: 150px;
         width: 100%;
-        background-image: linear-gradient(to top, #00c6fb 0%, #005bea 100%);
+        background-image: linear-gradient(to top, #127793 0%, #011e4a 100%);
 
     }
 

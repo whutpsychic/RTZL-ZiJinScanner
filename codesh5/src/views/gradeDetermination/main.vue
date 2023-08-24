@@ -6,7 +6,11 @@
                 class="page-nav-bar"
                 left-arrow
                 @click-left="onClickLeft"
-        />
+        >
+            <template #right>
+                <van-icon @click="scanCode" style="color: #FFFFFF" name="scan" size="40"/>
+            </template>
+        </van-nav-bar>
         <van-tabs v-model:active="active" @click-tab="onClickTab">
             <van-tab :title="quantity"></van-tab>
             <van-tab title=" 已质检"></van-tab>
@@ -19,25 +23,19 @@
             <el-card class="box-card" shadow="always" style="margin-top:5px"
                      v-for="(item,index) in  listData.yjtJyInformationListData">
 
-                <div>
-                    <div class="card-header">
-                        <img src="/image/delete.png" class="delete" @click="deleteData(item)"/>
-                    </div>
+                <div class="test">
 
-                    <p><span style="font-weight: bold">编号：</span><span>{{item.batchnumber}}</span></p>
-                    <p><span
-                            style="font-weight: bold">重量：</span><span>{{parseFloat(item.suttle)}}{{item.unit}}</span>
-                    </p>
-                    <p><span style="font-weight: bold">标准：</span><span>{{item.standard}}</span></p>
-                    <p><span style="font-weight: bold">计量员：</span><span>{{item.suttleperson}}</span>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="font-weight: bold">扫描人：</span><span>{{item.scanUser}}</span></p>
-                    <p><span style="font-weight: bold">生产日期：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",item.proDate)}}
-                    </p>
+                        <div @click="details(item)">{{item.batchnumber}}</div>
+                        <van-button size="small" style="margin-left: 30px;background-color: #003363;color:#FFFFFF"
+                                    @click="identifyClick('0',item)">单个鉴定
+                        </van-button>
+
+                    <img src="/image/delete.png" class="delete" @click="deleteData(item)"/>
+
                 </div>
-                <van-button type="primary" size="small" style="float:right" @click="identifyClick('0',item)">单个鉴定
-                </van-button>
+
             </el-card>
+
 
             <!--            <van-collapse v-model="activeName">-->
             <!--            <el-card class="box-card" shadow="always" style="margin-top:5px;position: relative"-->
@@ -161,11 +159,13 @@
 
         <van-row>
             <van-col span="2"></van-col>
-                        <van-col span="8">
-                            <van-button type="success" @click="scanCode">继续扫码</van-button>
-                        </van-col>
+            <van-col span="8">
+                <van-button style="background-color: #003363;color:#FFFFFF" @click="queryTXM">手动录入</van-button>
+            </van-col>
             <van-col span="12" style="text-align: center">
-                <van-button type="primary" @click="identifyClick('1')">{{identifyTitle}}</van-button>
+                <van-button style="background-color: #003363;color:#FFFFFF" @click="identifyClick('1')">
+                    {{identifyTitle}}
+                </van-button>
             </van-col>
             <van-col span="2"></van-col>
 
@@ -263,6 +263,105 @@
     </el-dialog>
 
 
+    <el-dialog
+            v-model="centerDialogVisibleJBXX"
+            title="基本信息"
+            width="96%"
+            align-center
+    >
+
+        <div style="position: relative">
+            <p>
+                <span style="font-weight: bold">编号：</span><span>{{listData.detailsInfo.batchnumber}}</span>
+            </p>
+
+            <p>
+                <span style="font-weight: bold">重量：</span><span>{{parseFloat(listData.detailsInfo.suttle)}}{{listData.detailsInfo.unit}}</span>
+            </p>
+
+            <p>
+                <span style="font-weight: bold">标准：</span><span>{{listData.detailsInfo.standard}}</span>
+            </p>
+
+            <p>
+                <span style="font-weight: bold">计量员：</span><span>{{listData.detailsInfo.suttleperson}}</span>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: bold">扫描人：</span><span>{{listData.detailsInfo.scanUser}}</span>
+            </p>
+
+            <p>
+                <span style="font-weight: bold">生产日期：</span><span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.detailsInfo.proDate)}}</span>
+            </p>
+
+            <P><span style="font-weight: bold">条形码：</span><span>{{listData.detailsInfo.barcode}}</span></P>
+        </div>
+    </el-dialog>
+
+
+    <el-dialog
+            v-model="centerDialogVisibleTXM"
+            title="条形码筛选"
+            width="96%"
+            align-center
+    >
+
+        <van-form @submit="onSubmit">
+            <van-cell-group inset>
+                <van-field
+                        v-model="F_BATCHGROUP"
+                        name="F_BATCHGROUP"
+                        label="批次号"
+                        placeholder="批次号"
+                        :rules="[{ required: true, message: '请填写批次号' }]"
+                />
+                <van-field
+                        v-model="F_BATCHNUMBER"
+                        name="F_BATCHNUMBER"
+                        label="编号"
+                        placeholder="编号"
+                        :rules="[{ required: true, message: '请填写编号' }]"
+                />
+            </van-cell-group>
+            <div style="margin: 16px;">
+                <van-button square icon="search" block type="primary" native-type="submit"
+                            style="background-color: #003363;color:#FFFFFF">
+                    查询
+                </van-button>
+
+                <div style="margin-top: 10px">
+                    <p>条形码</p>
+
+                    <el-select v-model="barCodeSelect"
+                               placeholder="条形码" style="width: 100%;">
+                        <el-option
+                                v-for="item in listData.barCodeSelectList"
+                                :key="item.F_BARCODE"
+                                :label="item.F_BARCODE"
+                                :value="item.F_BARCODE"
+                        />
+                    </el-select>
+                </div>
+
+                <van-row style="margin-top: 15px">
+                    <van-col span="2"></van-col>
+                    <van-col span="10">
+                        <van-button icon="passed" style="background-color: #003363;color:#FFFFFF"
+                                    @click="passedTXMClick">确定
+                        </van-button>
+                    </van-col>
+                    <van-col span="10" style="text-align: center">
+                        <van-button icon="close" style="background-color:red;color:#FFFFFF" @click="closeTXMClick">退出
+                        </van-button>
+                    </van-col>
+                    <van-col span="2"></van-col>
+
+                </van-row>
+
+            </div>
+        </van-form>
+
+    </el-dialog>
+
+
 </template>
 
 <script>
@@ -276,7 +375,8 @@
         cathodeCopperDelete,
         notDeterminedData,
         excellentJudgement,
-        fileQuery
+        fileQuery,
+        tbSmCopperOfflineBarCodeQuery
     } from '@/api/gradeDetermination'
     import {reactive, shallowReactive, toRaw} from "@vue/reactivity";
 
@@ -288,36 +388,7 @@
                 if (res != 'null') {
                     let tbCathodeCopper = {}
                     tbCathodeCopper.fBarcode = res
-                    judgementCathodeCopper(tbCathodeCopper).then((result) => {
-                        if (result.data.code) {
-                            if (result.data.code != 200) {
-                                showDialog({
-                                    title: '提示',
-                                    message: result.data.message,
-                                }).then(() => {
-
-                                });
-                            } else {
-                                router.push({
-                                    path: '/gradeDetermination',
-                                    query: {barcode: res, tabState: result.data.data}
-                                })
-
-                                barcode.value = res
-                                active.value = Number(result.data.data)
-
-                                if (active.value == 0) {
-                                    identifyTitle.value = '批量鉴定（优等品）'
-                                    getNotDeterminedData()
-                                } else {
-                                    identifyTitle.value = '再次鉴定'
-                                    getAlreadyDeterminedData()
-                                }
-                            }
-                        }
-                    }).catch(error => {
-                        console.log(error)
-                    })
+                    getJudgementCathodeCopper(tbCathodeCopper)
 
                 } else {
                     showToast({
@@ -338,7 +409,12 @@
             const buttonShowPL = ref(false)
             const showImage = ref(false)
             const identifyTitle = ref('')
+            const F_BATCHGROUP = ref('')
+            const F_BATCHNUMBER = ref('')
+            const barCodeSelect = ref('')
             const centerDialogVisible = ref(false)
+            const centerDialogVisibleJBXX = ref(false)
+            const centerDialogVisibleTXM = ref(false)
             const quantity = ref('未质检(0)')
             const alterReason = ref('')
             const listData = shallowReactive({
@@ -368,12 +444,16 @@
                 //改判理由
                 alterReasonList: [],
                 //优等品改判数据
-                outstandingAlterList: []
-
+                outstandingAlterList: [],
+                //基本信息
+                detailsInfo: {},
+                //查询的条形码
+                barCodeSelectList: [],
             })
             const yjtJyInformation = shallowReactive({
                 data: []
             })
+
 
             const activeName = ref()
             const barcode = ref(route.query.barcode)
@@ -393,6 +473,65 @@
             //跳转到首页
             const onClickLeft = () => {
                 router.push({path: '/home'})
+            }
+
+
+            const onSubmit = (values) => {
+                barCodeSelect.value = ''
+                let obj = {fBatchgroup: F_BATCHGROUP.value, fBatchnumber: F_BATCHNUMBER.value}
+                tbSmCopperOfflineBarCodeQuery(obj).then((result) => {
+                    listData.barCodeSelectList = result.data.data
+                    if (listData.barCodeSelectList.length > 0) {
+                        showToast({
+                            message: '数据查询成功',
+                            type: 'success',
+                            className: 'particulars-detail-popup',
+                            overlay: true,
+                        })
+                    } else {
+                        showToast({
+                            message: '没有查询到对应的条码数据',
+                            type: 'fail',
+                            className: 'particulars-detail-popup'
+                        })
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
+
+            };
+
+            const details = (item) => {
+                centerDialogVisibleJBXX.value = true
+                listData.detailsInfo = item
+            }
+
+
+            const queryTXM = () => {
+                centerDialogVisibleTXM.value = true
+            }
+
+            const closeTXMClick = () => {
+                centerDialogVisibleTXM.value = false
+
+            }
+
+
+            const passedTXMClick = () => {
+                if (barCodeSelect.value == '') {
+                    showToast({
+                        message: '请选择条形码',
+                        type: 'fail',
+                        className: 'particulars-detail-popup'
+                    })
+                    return false
+                }
+
+                centerDialogVisibleTXM.value = false
+                let tbCathodeCopper = {}
+                tbCathodeCopper.fBarcode = barCodeSelect.value
+                getJudgementCathodeCopper(tbCathodeCopper)
+
             }
 
             //切换tab页
@@ -481,7 +620,7 @@
                     }
                 } else {
 
-                    if (JSON.stringify(listData.yjtJyInformationData) === '{}'){
+                    if (JSON.stringify(listData.yjtJyInformationData) === '{}') {
                         buttonShow.value = false
                         showToast({
                             message: '当前没有要质检的数据',
@@ -560,7 +699,7 @@
                     }
                 } else {
 
-                    if (JSON.stringify(listData.yjtJyInformationData) === '{}'){
+                    if (JSON.stringify(listData.yjtJyInformationData) === '{}') {
                         buttonShow.value = false
                         showToast({
                             message: '当前没有要质检的数据',
@@ -626,7 +765,7 @@
                         })
                     }
                 } else {
-                    if (JSON.stringify(listData.yjtJyInformationData) === '{}'){
+                    if (JSON.stringify(listData.yjtJyInformationData) === '{}') {
                         buttonShow.value = false
                         showToast({
                             message: '当前没有要质检的数据',
@@ -729,13 +868,45 @@
 
             }
 
+            function getJudgementCathodeCopper(tbCathodeCopper) {
+                judgementCathodeCopper(tbCathodeCopper).then((result) => {
+                    if (result.data.code) {
+                        if (result.data.code != 200) {
+                            showDialog({
+                                title: '提示',
+                                message: result.data.message,
+                            }).then(() => {
+
+                            });
+                        } else {
+                            router.push({
+                                path: '/gradeDetermination',
+                                query: {barcode: tbCathodeCopper.fBarcode, tabState: result.data.data}
+                            })
+
+                            barcode.value = tbCathodeCopper.fBarcode
+                            active.value = Number(result.data.data)
+
+                            if (active.value == 0) {
+                                identifyTitle.value = '批量鉴定（优等品）'
+                                getNotDeterminedData()
+                            } else {
+                                identifyTitle.value = '再次鉴定'
+                                getAlreadyDeterminedData()
+                            }
+                        }
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
+            }
+
 
             //获取阴极铜判定图片
             function getFileQuery(data) {
                 let obj = {}
                 obj.yjtJyInformationDetailsId = data
                 fileQuery(obj).then((result) => {
-                    console.log(result)
                     listData.yjtJyInformationFileList = result.data.data
                 }).catch(error => {
                     console.log(error)
@@ -820,11 +991,15 @@
 
 
             return {
-                scanCode,
+                barCodeSelect,
+                F_BATCHGROUP,
+                F_BATCHNUMBER,
                 buttonShowPL,
                 identifyTitle,
                 quantity,
                 alterReason,
+                centerDialogVisibleTXM,
+                centerDialogVisibleJBXX,
                 centerDialogVisible,
                 activeName,
                 active,
@@ -833,6 +1008,12 @@
                 buttonShow,
                 distinguish,
                 showImage,
+                closeTXMClick,
+                passedTXMClick,
+                onSubmit,
+                queryTXM,
+                scanCode,
+                details,
                 seeImg,
                 onClickTab,
                 onClickLeft,
@@ -899,10 +1080,20 @@
         width: 25px;
         height: 25px;
         float: right;
-        margin-top: -12px;
-        margin-right: -12px;
+        margin-top: -2px;
+        margin-right: -1px;
 
     }
 
+    .el-card {
+        --el-card-padding: 4px;
+    }
+
+    .test{
+
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+    }
 
 </style>

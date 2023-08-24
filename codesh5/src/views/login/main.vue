@@ -1,53 +1,66 @@
 <template>
-    <main>
-        <div class="container">
-            <van-form @submit="onSubmit">
-                <div class="title">阴极铜条码管理系统</div>
-                <van-cell-group inset>
-                    <van-field
-                            v-model="inputUser"
-                            name="inputUser"
-                            autocomplete="off"
-                            placeholder="用户名"
-                            :rules="[{ required: true, message: '请填写用户名' }]"
-                    />
 
-                    <van-field
-                            v-model="inputPw"
-                            type="password"
-                            name="inputPw"
-                            placeholder="密码"
-                            autocomplete="off"
-                            :rules="[{ required: true, message: '请填写密码' }]"
-                    />
-                </van-cell-group>
-                <div class="login-btn-area">
-<!--                    <van-button round block type="primary" @click="onClickLeft">-->
-<!--                        取消-->
-<!--                    </van-button>-->
-                    <van-button round block style="background-color: #d77100;color: #FFFFFF" type="primary" native-type="submit">
-                        登录
-                    </van-button>
-                </div>
-            </van-form>
-        </div>
-    </main>
+    <div class="container" :style="{ height: bodyHeight + 'px' }">
+        <van-form @submit="onSubmit">
+            <div class="title">阴极铜条码管理系统</div>
+            <van-cell-group inset style="width: 96%;
+                                            position: relative;
+                                            left: 2%;">
+
+                <van-field
+                        left-icon="friends"
+                        v-model="inputUser"
+                        name="inputUser"
+                        label="用户名"
+                        autocomplete="off"
+                        placeholder="用户名"
+                        :rules="[{ required: true, message: '请填写用户名' }]"
+                />
+
+                <van-field
+                        left-icon="bag"
+                        v-model="inputPw"
+                        type="password"
+                        name="inputPw"
+                        label="密码"
+                        placeholder="密码"
+                        autocomplete="off"
+                        :rules="[{ required: true, message: '请填写密码' }]"
+                />
+
+            </van-cell-group>
+
+
+            <div class="login-btn-area">
+                <!--                    <van-button round block type="primary" @click="onClickLeft">-->
+                <!--                        取消-->
+                <!--                    </van-button>-->
+                <van-button round block style="background-color: #d77100;color: #FFFFFF;margin-top:50px;"
+                            type="primary"
+                            native-type="submit">
+                    登录
+                </van-button>
+            </div>
+        </van-form>
+    </div>
+
 </template>
 
 
 <script>
-    import {ref} from 'vue'
+    import {onMounted, ref} from 'vue'
     import {login, loginVerify} from '@/api/user'
     import {showToast} from 'vant'
     import {useStore} from 'vuex'
     import {useRouter} from 'vue-router'
     import {setToastDefaultOptions} from 'vant'
+
     export default {
         setup() {
 
             const inputUser = ref('')
             const inputPw = ref('')
-
+            const bodyHeight=ref('')
             const store = useStore()
             const router = useRouter()
 
@@ -58,9 +71,15 @@
             //
 
             history.pushState(null, null, document.URL);
-            window.addEventListener("popstate",function(e) {
+            window.addEventListener("popstate", function (e) {
                 history.pushState(null, null, document.URL);
             }, false)
+
+
+            onMounted(() => {
+               bodyHeight.value=document.documentElement.clientHeight
+            })
+
 
 
             setToastDefaultOptions({duration: 500})
@@ -97,6 +116,7 @@
 
 
             return {
+                bodyHeight,
                 inputUser,
                 inputPw,
                 onSubmit,
@@ -109,10 +129,12 @@
 
 <style scoped>
     .container {
-        width: 100%;
-        height: 100%;
         background-image: url('../../assets/image/back-ground.png');
         background-size: 100%;
+        height: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
     }
 
     .title {
@@ -127,42 +149,57 @@
 
     /**=================== */
 
-    .van-form {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
+    /*.van-form {*/
+    /*    height: 100%;*/
+    /*    display: flex;*/
+    /*    flex-direction: column;*/
+    /*    justify-content: space-between;*/
+    /*}*/
 
-    .van-cell-group {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        background-color: rgba(255, 255, 255, 0.3);
-    }
+    /*.van-cell-group {*/
+    /*    display: flex;*/
+    /*    flex-direction: column;*/
+    /*    justify-content: center;*/
+    /*    background-color: rgba(255, 255, 255, 0.3);*/
+    /*}*/
 
-    .van-field {
-        padding: 0px;
-    }
+    /*.van-field {*/
+    /*    padding: 0px;*/
+    /*}*/
 
     ::v-deep(.van-field__control) {
-        height: 50px;
-        text-align: center !important;
-        font-size: 20px !important;
-        color: #ffffff;
+        height: 40px;
+        font-size: 18px !important;
+        color: #000000;
     }
 
-    ::v-deep(.van-cell) {
-        background-color: rgba(255, 255, 255, 0) !important;
-        color: red !important;
+
+    ::v-deep(.van-field__label) {
+        margin-top: 8px !important;
+        font-size: 18px !important;
+        width: 80px !important;
     }
 
-    ::v-deep(.van-field__error-message) {
-        font-size: 15px;
-        text-align: center;
+    ::v-deep(.van-icon) {
+        font-size: 22px !important;
+        margin-top: 8px !important;
     }
 
-    /**============ */
+
+
+
+
+    /*::v-deep(.van-cell) {*/
+    /*    background-color: rgba(255, 255, 255, 0) !important;*/
+    /*    color: red !important;*/
+    /*}*/
+
+    /*::v-deep(.van-field__error-message) {*/
+    /*    font-size: 15px;*/
+    /*    text-align: center;*/
+    /*}*/
+
+    /*!**============ *!*/
 
     .login-btn-area {
         display: flex;

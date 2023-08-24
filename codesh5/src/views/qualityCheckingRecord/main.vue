@@ -5,18 +5,19 @@
                 class="page-nav-bar"
                 left-arrow
                 @click-left="onClickLeft"
-        />
+        >
+            <template #right>
+                <van-icon @click="scanClick" style="color: #FFFFFF" name="scan" size="40" />
+            </template>
+        </van-nav-bar>
 
         <div style="display: flex;background-color: #ffffff;">
-            <van-search style="width: 80%"
+            <van-search style="width: 100%"
                         v-model="searchValue"
                         shape="round"
                         placeholder="请输入编号搜索"
                         @search="onSearch"
             />
-
-            <img style="width:55px;height: 55px" src="/image/saoma.png" @click="scanClick">
-
         </div>
     </div>
 
@@ -53,9 +54,6 @@
 
         </van-list>
     </div>
-
-
-
 
 
     <el-dialog

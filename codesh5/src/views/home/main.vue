@@ -2,7 +2,6 @@
     <main>
         <van-nav-bar
                 title="主菜单"
-                style="background: #1989fa"
         />
 
         <van-grid :gutter="10" :column-num="2" style="margin-top: 20px;
@@ -136,7 +135,7 @@
 
             //扫码
             const scanCode = () => {
-                  fc.scan()
+                  // fc.scan()
                 // let tbCathodeCopper = {}
                 // tbCathodeCopper.fBarcode = '1240101220616032917924565'
                 // judgementCathodeCopper(tbCathodeCopper).then((result) => {
@@ -161,6 +160,11 @@
                 // }).catch(error => {
                 //     console.log(error)
                 // })
+
+                           router.push({
+                               path: '/gradeDetermination',
+                               query: {barcode: '', tabState:'0'}
+                           })
 
             }
 

@@ -188,16 +188,16 @@
 
             <div style="margin-top: 30px" v-if="listData.yjtJyInformationDetails.status=='0'">
                 <van-row>
-                    <van-col span="5"></van-col>
-                    <van-col span="7">
-                        <van-button type="danger" style="width:90%" @click="cathodeCopperAuditorClick('1')">驳回
+                    <van-col span="2"></van-col>
+                    <van-col span="10">
+                        <van-button icon="close" type="danger" style="width:90%" @click="cathodeCopperAuditorClick('1')">驳回
                         </van-button>
                     </van-col>
-                    <van-col span="7">
-                        <van-button type="success" style="width:90%" @click="cathodeCopperAuditorClick('2')">通过
+                    <van-col span="10">
+                        <van-button  icon="passed" type="success" style="width:90%" @click="cathodeCopperAuditorClick('2')">通过
                         </van-button>
                     </van-col>
-                    <van-col span="5"></van-col>
+                    <van-col span="2"></van-col>
 
                 </van-row>
             </div>

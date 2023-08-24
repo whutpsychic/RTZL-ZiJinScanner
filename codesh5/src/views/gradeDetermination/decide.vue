@@ -84,7 +84,7 @@
         </el-card>
 
 
-        <van-button type="primary" size="large" style="width: 80%;position: absolute;left: 10%;margin-top: 15px;"
+        <van-button type="primary" size="large" style="width: 80%;position: absolute;left: 10%;margin-top: 15px;background-color: #003363;color:#FFFFFF"
                     @click="conservation">提交
         </van-button>
     </div>
