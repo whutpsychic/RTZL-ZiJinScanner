@@ -17,6 +17,7 @@ if (process.env.NODE_ENV === 'production') {
 } else {
     //开发环境
     baseUrl.api_base_url = 'http://192.168.0.250:8081/zjky_mes'
+    // baseUrl.api_base_url = 'http://e.zijinty.com:8018/zjky_mes'
 }
 
 const request = axios.create({
@@ -26,6 +27,9 @@ const request = axios.create({
 request.defaults.timeout = 10000
 
 request.defaults.headers['Content-Type'] = 'application/json'
+// request.defaults.headers['Access-Control-Allow-Origin'] = '*'
+// request.defaults.headers['Access-Control-Allow-Methods'] = 'POST,GET,PUT'
+// request.defaults.headers['Access-Control-Allow-Headers'] = 'Content-Type'
 
 // const noAuthFilterArr = [
 //   `${baseUrl.api_base_url}/loginCheck.do`,
