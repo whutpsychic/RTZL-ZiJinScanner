@@ -56,14 +56,16 @@ class AppConfig {
 // 静态配置存储区
 class StaticConfig {
   // h5 调试时的本地运行地址
-  // static const String devH5url = "http://192.168.0.250:8081/#/login";
-  static const String devH5url = "http://192.168.1.33:8080";
+  // static const String devH5url = "http://192.168.0.250:8081";
+  // static const String devH5url = " http://223.99.214.182:8081/#/login";
+  static const String devH5url = "http://192.168.1.33:8081/";
   // h5 demo时的外部运行地址
   static const String demoH5url =
-      "http://whutpsychic.gitee.io/rtzl-zijinscanner";
+      "http://whutpsychic.gitee.io/rtzl-zijinscanner/";
   // h5 产品运行时的地址
   static const String productionH5url =
-      "http://whutpsychic.gitee.io/rtzl-zijinscanner";
+      // "http://whutpsychic.gitee.io/rtzl-zijinscanner/";
+      "http://e.zijinty.com:8018/yjtapp/";
 
   // 复杂化命名前缀
   static const String preName = "zflutter";

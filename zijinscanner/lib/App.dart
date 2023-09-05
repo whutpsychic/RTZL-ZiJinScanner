@@ -1,8 +1,9 @@
 // ignore_for_file: file_names, use_build_context_synchronously
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_webview_pro/webview_flutter.dart';
 import 'package:shake/shake.dart';
+import 'package:connectivity_wrapper/connectivity_wrapper.dart';
+import './UIcomponents/NoNetwork.dart';
 
 import 'appConfig.dart';
 import './utils/main.dart';
@@ -10,6 +11,7 @@ import './service/main.dart';
 
 import 'h5Channels/main.dart';
 import './pages/Ipconfig.dart';
+import './pages/CameraTakingPhoto.dart';
 
 late WebViewController? globalWebViewController;
 
@@ -23,37 +25,19 @@ class App extends StatefulWidget {
 class AppState extends State<App> {
   String _appUrl = "";
 
-  // 注册监听原生通道
-  EventChannel eventChannel = const EventChannel('com.rtzl.zbc/honeywell');
-
-  // 监听到数据后用于处理数据的方法，这个函数是用于处理接收到原生传进来的数据的，可自行定义
-  void _receiveFromeNative(dynamic res) {
-    Utils.runChannelJs(globalWebViewController, "scannerCallback('$res')");
-  }
-
-  // 原生返回错误信息
-  void _fromNativeError(Object error) {
-    print(error);
-  }
-
   @override
   void initState() {
     super.initState();
-    //实现通道的监听，并传入两个带有参数的函数用于监听到数据后 对数据进行处理
-    eventChannel
-        .receiveBroadcastStream()
-        .listen(_receiveFromeNative, onError: _fromNativeError);
-
     if (Configure.debugging) {
       // 监听摇一摇事件
-      ShakeDetector detector = ShakeDetector.autoStart(
+      ShakeDetector.autoStart(
         onPhoneShake: () async {
+          // Do stuff on phone shake
           String? result = await ModalConfirm.show(
               context, "您想要重新配置ip地址吗？", "通过配置 ip 来决定您将要访问的app地址");
           if (result == "true") {
             ipConfig();
           }
-          // Do stuff on phone shake
         },
         minimumShakeCount: 1,
         shakeSlopTimeMS: 500,
@@ -81,6 +65,14 @@ class AppState extends State<App> {
     globalWebViewController?.loadUrl(result);
   }
 
+  // 去拍照取相片
+  void takePhoto() async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const TakingPhoto()),
+    );
+    Utils.runChannelJs(globalWebViewController, "takePhotoCallback('$result')");
+  }
+
   @override
   Widget build(BuildContext context) {
     // Android：当用户使用默认的后退手势时不应该直接跳出App，而是应该拦截此动作并运行 h5 的后退操作
@@ -94,27 +86,31 @@ class AppState extends State<App> {
             },
             child: Scaffold(
               body: SafeArea(
-                top: true,
-                bottom: true,
-                child: WebView(
-                  initialUrl: _appUrl,
-                  javascriptMode: JavascriptMode.unrestricted,
-                  javascriptChannels: <JavascriptChannel>{
-                    // 服务通道
-                    serviceChannel(context),
-                    // 权限通道
-                    permissionChannel(context),
-                    // 安卓原生服务通道
-                    setAndroidChannel(context),
-                  },
-                  onWebViewCreated:
-                      (WebViewController webViewController) async {
-                    // final String appUrl = await AppConfig.getH5url();
-                    globalWebViewController = webViewController;
-                    // webViewController.loadUrl(_appUrl);
-                    webViewController.clearCache();
-                  },
-                  zoomEnabled: false,
+                top: false,
+                bottom: false,
+                child: ConnectivityWidgetWrapper(
+                  disableInteraction: false,
+                  offlineWidget: const NoNetwork(),
+                  child: WebView(
+                    initialUrl: _appUrl,
+                    javascriptMode: JavascriptMode.unrestricted,
+                    javascriptChannels: <JavascriptChannel>{
+                      // 服务通道
+                      serviceChannel(context),
+                      // 权限通道
+                      permissionChannel(context),
+                      // 安卓原生服务通道
+                      setAndroidChannel(context),
+                    },
+                    onWebViewCreated:
+                        (WebViewController webViewController) async {
+                      // final String appUrl = await AppConfig.getH5url();
+                      globalWebViewController = webViewController;
+                      webViewController.loadUrl(_appUrl);
+                      webViewController.clearCache();
+                    },
+                    zoomEnabled: false,
+                  ),
                 ),
               ),
             ),

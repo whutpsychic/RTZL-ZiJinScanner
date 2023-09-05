@@ -1,5 +1,7 @@
 // ignore_for_file: file_names, use_build_context_synchronously
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_webview_pro/webview_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -23,13 +25,13 @@ JavascriptChannel serviceChannel(BuildContext context) => JavascriptChannel(
         if (mainInfo == "backup" || mainInfo == "done") {
           Navigator.of(context).pop();
         }
-        // 去扫码
+        // 去扫二维码
         else if (mainInfo == "scannerQR") {
           String? res = await Scanner.doQRAction(context);
           Utils.runChannelJs(
               globalWebViewController, "scannerCallback('$res')");
         }
-        // 去扫码
+        // 去扫条形码
         else if (mainInfo == "scannerBarcode") {
           String? res = await Scanner.doBarcodeAction(context);
           Utils.runChannelJs(
@@ -51,6 +53,52 @@ JavascriptChannel serviceChannel(BuildContext context) => JavascriptChannel(
         // 去往服务器 IP 设置界面
         else if (mainInfo == "ipConfig") {
           appPageKey.currentState?.ipConfig();
+        }
+        // 检查网络连接
+        else if (mainInfo == "connectivityCheck") {
+          bool res = await NetworkInfo.check();
+          Utils.runChannelJs(
+              globalWebViewController, "connectivityCheckCallback($res)");
+        }
+        // 检查网络连接类型
+        else if (mainInfo == "checkNetworkType") {
+          String res = await NetworkInfo.checkType();
+          Utils.runChannelJs(
+              globalWebViewController, "checkNetworkTypeCallback('$res')");
+        }
+        // 获取当前设备的 safeHeight [top, bottom]
+        else if (mainInfo == "getSafeHeight") {
+          double top = MediaQuery.of(context).padding.top;
+          double bottom = MediaQuery.of(context).padding.bottom;
+          List<double> res = [top, bottom];
+          Utils.runChannelJs(
+              globalWebViewController, "getSafeHeightCallback($res)");
+        }
+        // 设置顶部条为深色风格
+        else if (mainInfo == "setTopbarStyleToDark") {
+          if (Platform.isAndroid) {
+            SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+              statusBarColor: Colors.black, // 设置为黑色
+              systemNavigationBarColor: Colors.black, // 设置为黑色
+            ));
+          } else if (Platform.isIOS) {
+            SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+          }
+        }
+        // 设置顶部条为浅色风格
+        else if (mainInfo == "setTopbarStyleToLight") {
+          if (Platform.isAndroid) {
+            SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent, // 设置为透明
+              systemNavigationBarColor: Colors.transparent, // 设置为透明
+            ));
+          } else if (Platform.isIOS) {
+            SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+          }
+        }
+        // 去拍照并返回照片（base64）
+        else if (mainInfo == "takePhoto") {
+          appPageKey.currentState?.takePhoto();
         }
         // =================== 带参数调用 ===================
         else {
