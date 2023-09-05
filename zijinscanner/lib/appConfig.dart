@@ -7,7 +7,7 @@ class Configure {
   // 调试模式
   // 会打开一些本不可被修改的设置途径
   // ✔ 摇一摇设置 ip
-  static const bool debugging = true;
+  static const bool debugging = false;
 
   // =================== demo 演示模式 ===================
   // 可调节的设置应该全开
@@ -21,7 +21,7 @@ class Configure {
   // 与任何可调节的设置断绝
   // 连接到正式环境
   // ✔ 云上正式地址
-  static const AppMode appMode = AppMode.prodution;
+  static const AppMode appMode = AppMode.dev;
 }
 
 // 最终控制结果
@@ -50,7 +50,7 @@ class AppConfig {
       ? StaticConfig.productionH5url
       : (Configure.appMode == AppMode.demo
           ? StaticConfig.demoH5url
-          : (Configure.appMode == AppMode.dev ? StaticConfig.demoH5url : ""));
+          : (Configure.appMode == AppMode.dev ? StaticConfig.devH5url : ""));
 }
 
 // 静态配置存储区
@@ -58,14 +58,14 @@ class StaticConfig {
   // h5 调试时的本地运行地址
   // static const String devH5url = "http://192.168.0.250:8081";
   // static const String devH5url = " http://223.99.214.182:8081/#/login";
-  static const String devH5url = "http://192.168.1.33:8081/";
+  static const String devH5url = "http://192.168.0.250:8081";
   // h5 demo时的外部运行地址
   static const String demoH5url =
-      "http://whutpsychic.gitee.io/rtzl-zijinscanner/";
+      "http://whutpsychic.gitee.io/rtzl-zijinscanner";
   // h5 产品运行时的地址
   static const String productionH5url =
       // "http://whutpsychic.gitee.io/rtzl-zijinscanner/";
-      "http://e.zijinty.com:8018/yjtapp/";
+      "http://e.zijinty.com:8018/yjtapp";
 
   // 复杂化命名前缀
   static const String preName = "zflutter";
