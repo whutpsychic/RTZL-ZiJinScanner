@@ -4,29 +4,41 @@
                 title="主菜单"
         />
 
-        <van-grid :gutter="10" :column-num="2" style="margin-top: 20px;
+        <van-grid :gutter="5" :column-num="2" style="margin-top: 6px;
                                                font-size: 18px;
                                                font-weight: bold;">
             <van-grid-item @click="scanCode" v-if="gradeDeterminationRole">
-                <img src="/image/pjpd.png" style="width: 50%;"/>
-                <span style="margin-top: 10px;">品级质检</span>
+                <img src="/image/pjpd.png" style="width: 46%;"/>
+                <span style="margin-top: 8px;">品级质检</span>
             </van-grid-item>
 
             <van-grid-item to="/reportFormStatistics" v-if="reportFormStatisticsRole">
-                <img src="/image/baobiao.png" style="width: 50%;"/>
-                <span style="margin-top: 10px;">报表查询</span>
+                <img src="/image/baobiao.png" style="width: 46%;"/>
+                <span style="margin-top: 8px;">报表查询</span>
             </van-grid-item>
 
             <van-grid-item to="/auditingList" v-if="auditingListRole">
-                <img src="/image/shenhe.png" style="width: 50%;"/>
-                <span style="margin-top: 10px;">品级质检审核</span>
+                <img src="/image/shenhe.png" style="width: 46%;"/>
+                <span style="margin-top: 8px;">品级质检审核</span>
             </van-grid-item>
 
 
             <van-grid-item to="/qualityCheckingRecord" v-if="qualityCheckingRecordRole">
-                <img src="/image/zjjl.png" style="width: 50%;"/>
-                <span style="margin-top: 10px;">质检记录</span>
+                <img src="/image/zjjl.png" style="width: 46%;"/>
+                <span style="margin-top: 8px;">质检记录</span>
             </van-grid-item>
+
+
+<!--            <van-grid-item to="/pickWithQuery" v-if="pickWithQueryRecordRole">-->
+<!--                <img src="/image/jianpei.png" style="width: 46%;"/>-->
+<!--                <span style="margin-top: 8px;">拣配</span>-->
+<!--            </van-grid-item>-->
+
+
+<!--            <van-grid-item to="/pickWithRecordQuery" v-if="pickWithRecordQueryRecordRole">-->
+<!--                <img src="/image/jianpeidan.png" style="width: 46%;"/>-->
+<!--                <span style="margin-top: 8px;">查询拣配单</span>-->
+<!--            </van-grid-item>-->
 
 
         </van-grid>
@@ -49,13 +61,15 @@
             const router = useRouter()
             const store = useStore()
             const userData = toRaw(store.state.user)
-            const gradeDeterminationRole=ref(false)
+            const gradeDeterminationRole = ref(false)
             const qualityCheckingRecordRole = ref(false)
             const reportFormStatisticsRole = ref(false)
-            const scannerShow=ref(false)
+            const scannerShow = ref(false)
             const auditingListRole = ref(false)
+            const pickWithQueryRecordRole = ref(false)
+            const pickWithRecordQueryRecordRole = ref(false)
             fc.await('scanner', (res) => {
-                if (scannerShow.value){
+                if (scannerShow.value) {
                     if (res != 'null') {
                         let tbCathodeCopper = {}
                         tbCathodeCopper.fBarcode = res
@@ -105,28 +119,30 @@
                 let groupNames = userData.groupNames.split(',')
                 for (let i = 0; i < groupNames.length; i++) {
                     if (groupNames[i] == 'admingroup') {
-                        gradeDeterminationRole.value=true
+                        gradeDeterminationRole.value = true
                         qualityCheckingRecordRole.value = true
                         reportFormStatisticsRole.value = true
                         auditingListRole.value = true
-                        scannerShow.value=true
+                        scannerShow.value = true
+                        pickWithQueryRecordRole.value = true
+                        pickWithRecordQueryRecordRole.value = true
                         break
                     }
 
                     if (groupNames[i] == 'yjtzj_admin') {
-                        gradeDeterminationRole.value=true
+                        gradeDeterminationRole.value = true
                         qualityCheckingRecordRole.value = true
                         reportFormStatisticsRole.value = true
                         auditingListRole.value = true
-                        scannerShow.value=true
+                        scannerShow.value = true
                         break
                     }
 
                     if (groupNames[i] == 'yjtzj_user') {
-                        gradeDeterminationRole.value=true
+                        gradeDeterminationRole.value = true
                         qualityCheckingRecordRole.value = true
                         reportFormStatisticsRole.value = true
-                        scannerShow.value=true
+                        scannerShow.value = true
                         break
                     }
                 }
@@ -135,7 +151,7 @@
 
             //扫码
             const scanCode = () => {
-                  // fc.scan()
+                // fc.scan()
                 // let tbCathodeCopper = {}
                 // tbCathodeCopper.fBarcode = '1240101220616032917924565'
                 // judgementCathodeCopper(tbCathodeCopper).then((result) => {
@@ -161,14 +177,16 @@
                 //     console.log(error)
                 // })
 
-                           router.push({
-                               path: '/gradeDetermination',
-                               query: {barcode: '', tabState:'0'}
-                           })
+                router.push({
+                    path: '/gradeDetermination',
+                    query: {barcode: '', tabState: '0'}
+                })
 
             }
 
             return {
+                pickWithQueryRecordRole,
+                pickWithRecordQueryRecordRole,
                 gradeDeterminationRole,
                 scannerShow,
                 qualityCheckingRecordRole,

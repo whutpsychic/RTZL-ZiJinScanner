@@ -107,7 +107,7 @@ export function compressImage(file, quality) {
 
 
 // 将base64转为二进制
-function dataURLtoBlob(dataurl) {
+export function dataURLtoBlob(dataurl) {
     let arr = dataurl.split(',')
     let mime = arr[0].match(/:(.*?);/)[1]
     let bstr = atob(arr[1])
@@ -121,7 +121,7 @@ function dataURLtoBlob(dataurl) {
 
 // base64转码（将base64编码转回file文件）
 // eslint-disable-next-line no-unused-vars
-function dataURLtoFile(dataurl) {
+export function dataURLtoFile(dataurl) {
     let arr = dataurl.split(',')
     let mime = arr[0].match(/:(.*?);/)[1]
     let bstr = atob(arr[1])
@@ -130,5 +130,30 @@ function dataURLtoFile(dataurl) {
     while (n--) {
         u8arr[n] = bstr.charCodeAt(n)
     }
-    return new File([u8arr], {type: mime})
+    let sjs = Math.random().toString(36).slice(-8)
+    let gs = mime.split('/')[1]
+    return new File([u8arr], sjs + '.' + gs, {type: mime})
 }
+
+
+//将base64转换为blob
+// export function dataURLtoBlob(dataurl) {
+//     let arr = dataurl.split(','),
+//         mime = arr[0].match(/:(.*?);/)[1],
+//         bstr = atob(arr[1]),
+//         n = bstr.length,
+//         u8arr = new Uint8Array(n);
+//     while (n--) {
+//         u8arr[n] = bstr.charCodeAt(n);
+//     }
+//     return new Blob([u8arr], {type: mime});
+// }
+//
+// //将blob转换为file
+// export function blobToFile(theBlob, fileName) {
+//     theBlob.lastModifiedDate = new Date();
+//     theBlob.name = fileName + '.jpg';
+//     console.log(theBlob)
+//     return theBlob;
+// }
+

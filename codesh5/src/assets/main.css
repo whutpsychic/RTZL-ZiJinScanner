@@ -4,7 +4,7 @@
   height: 100vh;
   margin: 0 auto;
   font-weight: normal;
-  background-color: #ffffff;
+  background-color: #efefef;;
 }
 
 main {
@@ -201,4 +201,9 @@ thead .el-table__cell {
 
 .el-dialog__close{
   color: #FFFFFF !important;
+}
+
+.el-table__body tr.current-row>td{
+  background-color: #69A8EA !important;
+  color: #fff;
 }

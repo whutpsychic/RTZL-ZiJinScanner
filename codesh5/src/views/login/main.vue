@@ -2,7 +2,7 @@
 
     <div class="container" :style="{ height: bodyHeight + 'px' }">
         <van-form @submit="onSubmit">
-            <div class="title">阴极铜条码管理系统</div>
+            <div class="title"  @dblclick="ipconfigClick">阴极铜条码管理系统</div>
             <van-cell-group inset style="width: 96%;
                                             position: relative;
                                             left: 2%;">
@@ -48,6 +48,7 @@
 
 
 <script>
+    import fc from "flutter-core";
     import {onMounted, ref} from 'vue'
     import {login, loginVerify} from '@/api/user'
     import {showToast} from 'vant'
@@ -70,10 +71,10 @@
             // }
             //
 
-            history.pushState(null, null, document.URL);
-            window.addEventListener("popstate", function (e) {
-                history.pushState(null, null, document.URL);
-            }, false)
+            // history.pushState(null, null, document.URL);
+            // window.addEventListener("popstate", function (e) {
+            //     history.pushState(null, null, document.URL);
+            // }, false)
 
 
             onMounted(() => {
@@ -81,8 +82,11 @@
             })
 
 
-
             setToastDefaultOptions({duration: 500})
+
+            const ipconfigClick= () => {
+                fc.ipconfig()
+            }
 
             const onSubmit = (values) => {
                 login(values).then((result) => {
@@ -120,6 +124,7 @@
                 inputUser,
                 inputPw,
                 onSubmit,
+                ipconfigClick
             }
         }
         ,

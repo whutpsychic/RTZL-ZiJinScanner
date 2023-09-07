@@ -1,0 +1,246 @@
+<template>
+    <main>
+        <van-nav-bar
+                title="出库单查询结果"
+                class="page-nav-bar"
+                left-arrow
+                @click-left="onClickLeft"
+        />
+        <div class="table-content container" id="content">
+            <el-table :data="tableData" ref="tableRef"
+                      :style="tableHeight"
+                      highlight-current-row
+                      v-loading="loading"
+                      element-loading-text="数据加载中..."
+                      :element-loading-spinner="svg"
+                      element-loading-svg-view-box="-10, -10, 50, 50"
+                      element-loading-background="rgba(122, 122, 122, 0.8)"
+                      @row-click="selectRow">
+                <el-table-column prop="F_DELIVERYNO" label="发货单号" width="110px"/>
+                <el-table-column prop="F_RECIVE" label="收货单位"/>
+                <el-table-column prop="F_PLANSUTTLE" label="计划重量" width="90px"/>
+
+
+            </el-table>
+            <div class="btn-area">
+                <div>
+                    <img
+                            src="@/assets/image/btn_fanhui2.png"
+                            alt=""
+                            @click="onClickLeft"
+                    />
+                    <div>返回</div>
+                </div>
+                <div>
+                    <img
+                            src="@/assets/image/btn_shuaxin2.png"
+                            alt=""
+                            type="primary"
+                            @click="queryData"
+                    />
+                    <div>刷新</div>
+                </div>
+                <div>
+                    <img
+                            src="@/assets/image/btn_chaxun2.png"
+                            alt=""
+                            type="primary"
+                            @click="showDetail"
+                    />
+                    <div>查看</div>
+                </div>
+            </div>
+        </div>
+    </main>
+</template>
+
+<script>
+    import {reactive, toRaw} from '@vue/reactivity'
+    import {onMounted, ref} from 'vue'
+    import {useRoute, useRouter,onBeforeRouteLeave} from 'vue-router'
+    import {showToast, showLoadingToast, closeToast, showDialog} from 'vant'
+    import {useStore} from 'vuex'
+    import {
+        getPlanMain
+    } from '@/api/pickWith'
+    import {onActivated} from "@vue/runtime-core";
+
+    export default {
+        setup() {
+            const route = useRoute()
+            const router = useRouter()
+            const tableData = ref([])
+            const store = useStore()
+            const tableHeight = ref('')
+            const loading = ref(true)
+            const tableRef = ref(null)
+            const svg = `
+                    <path class="path" d="
+                      M 30 15
+                      L 28 17
+                      M 25.61 25.61
+                      A 15 15, 0, 0, 1, 15 30
+                      A 15 15, 0, 1, 1, 27.99 7.5
+                      L 15 15
+                    " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>`
+
+
+            const changeRouterKeepAlive = (name, keepAlive) => {
+                router.options.routes.map((item) => {
+                    if (item.name === name) {
+                        item.meta.keepAlive = keepAlive;
+                    }
+                });
+            };
+
+            onActivated(() => {
+                //滚动条位置
+                tableRef.value.setScrollTop(toRaw(store.state.pickWithScroll))
+            })
+
+
+            onBeforeRouteLeave((to, from) => {
+                if (to.name == 'pickWithQuery') {
+                    changeRouterKeepAlive(from.name, false);
+                } else {
+                    changeRouterKeepAlive(from.name, true);
+                }
+            })
+
+
+            let queryParams = ''
+
+            const onClickLeft = () => {
+                router.push({path: '/pickWithQuery'})
+            }
+
+            let selectedRow = ''
+
+            const selectRow = (row, column, event) => {
+                selectedRow = toRaw(row)
+            }
+
+
+            const showDetail = () => {
+                if (selectedRow) {
+                    if (selectedRow.F_DELIVERYNO){
+                        let standard = new RegExp(
+                            /^\d{10}$/,
+                        );
+
+                        let bool = standard.test(selectedRow.F_DELIVERYNO)
+                        if (!bool){
+                            showDialog({
+                                title: '提示',
+                                width: '600',
+                                message: '非正常发货单号',
+                            }).then(() => {
+                                // on close
+                            })
+                            return  false
+                        }
+                    }
+                    console.log(selectedRow.F_DELIVERYNO)
+                    let scrollTop = tableRef.value.$refs.bodyWrapper.getElementsByClassName('el-scrollbar__wrap')[0]
+                    store.commit('setPickWithScroll', scrollTop.scrollTop)
+                    store.commit('setChukudanListInfo', selectedRow)
+                    store.commit('setCarInfo', '')
+                    store.commit('setScandList',[])
+                    store.commit('setScandCalculateData', {})
+                    router.push({
+                        name: 'pickWithQueryInfoData',
+                        // query: {
+                        //   rowData,
+                        // },
+                    })
+                } else {
+                    showDialog({
+                        title: '提示',
+                        width: '600',
+                        message: '您尚未选择一条有效数据',
+                    }).then(() => {
+                        // on close
+                    });
+                    return false
+                }
+            }
+
+            const queryData = () => {
+
+                selectedRow=''
+                tableRef.value.setScrollTop(0)
+                loading.value = true
+                getPlanMain(queryParams).then((res) => {
+                    tableData.value = res.data.data
+                    loading.value = false
+                })
+
+            }
+
+            onMounted(() => {
+                let height = document.body.scrollHeight - 170
+                tableHeight.value = 'height:' + height + 'px'
+                queryParams = toRaw(store.state.pickWithQuery)
+                queryData()
+            })
+
+            return {
+                changeRouterKeepAlive,
+                tableRef,
+                svg,
+                loading,
+                tableHeight,
+                onClickLeft,
+                selectRow,
+                tableData,
+                showDetail,
+                queryData,
+            }
+        },
+    }
+</script>
+
+<style scoped>
+
+
+    .table-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    #data-area {
+        flex-grow: 1;
+    }
+
+    .btn-area {
+        flex-grow: 0;
+    }
+
+    /** 按钮样式 */
+
+    .btn-area div {
+        border-radius: 25px;
+        font-size: 20px;
+        width: 30%;
+        min-height: 50px;
+    }
+
+    .btn-area img {
+        width: 45px;
+    }
+
+    .btn-area > div:nth-child(2) {
+        background-color: var(--btn-color2);
+    }
+
+    .btn-area > div:nth-child(1) {
+        background-color: var(--btn-color1);
+    }
+
+    .btn-area > div:nth-child(3) {
+        background-color: var(--btn-color1);
+    }
+
+
+</style>

@@ -141,8 +141,8 @@
             const store = useStore()
             const tableDataQuantity = ref([])
             const tableDataWeight = ref([])
-            const startDate = ref('')
-            const endDate = ref('')
+            const startDate = ref(dateFormat('YYYY-mm-dd', new Date()))
+            const endDate = ref(dateFormat('YYYY-mm-dd', new Date()))
             const showPicker = ref(false)
             const showPicker2 = ref(false)
             const checkoutUserId = ref('')
@@ -159,15 +159,14 @@
             const tu5 = ref(null)
             const tu6 = ref(null)
 
-            const formatDate = (date) => `${date.getFullYear()}-${date.getMonth().toString().length == 1 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)}-${date.getDate().toString().length == 1?'0'+date.getDate():date.getDate()}`;
 
             const onConfirm = (values) => {
                 const [start, end] = values;
                 show.value = false;
-                startDate.value = formatDate(start)
-                endDate.value = formatDate(end)
+                startDate.value = dateFormat('YYYY-mm-dd', start)
+                endDate.value = dateFormat('YYYY-mm-dd', end)
                 getAppReportFormStatisticsTable()
-                dataText.value = `${formatDate(start)}至${formatDate(end)}`;
+                dataText.value = `${startDate.value}至${endDate.value}`
             };
 
 
@@ -259,10 +258,10 @@
 
 
             const listData = shallowReactive({})
-            dateFormat('YYYY-mm-dd', new Date())
             getTbYjtJyDictList()
 
             onMounted(() => {
+                dataText.value = startDate.value + '至' + endDate.value
                 getAppReportFormStatisticsTable()
             })
 
@@ -448,9 +447,8 @@
                     }
 
                 }
-                startDate.value = fmt
-                endDate.value = fmt
-                dataText.value=startDate.value+'至'+endDate.value
+
+                return fmt
             }
 
 

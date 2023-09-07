@@ -10,88 +10,143 @@
         </div>
 
 
-        <el-card class="box-card" shadow="always" style="margin-top:5px">
-            <van-divider content-position="left">基本信息</van-divider>
-            <div>
-                <p>
-                    <span style="font-weight: bold">编号：</span><span>{{listData.yjtJyInformationData.batchnumber}}</span>
-                </p>
+        <div class="content">
+            <el-card class="box-card" shadow="always">
+                <van-divider content-position="left">基本信息</van-divider>
+                <div>
+                    <p>
+                        <span style="font-weight: bold">编号：</span><span>{{listData.yjtJyInformationData.batchnumber}}</span>
+                    </p>
 
-                <p>
-                    <span style="font-weight: bold">重量：</span><span>{{parseFloat(listData.yjtJyInformationData.suttle)}}{{listData.yjtJyInformationData.unit}}</span>
-                </p>
+                    <p>
+                        <span style="font-weight: bold">重量：</span>
+                        <span>{{parseFloat(listData.yjtJyInformationData.suttle)}}{{listData.yjtJyInformationData.unit}}</span>
+                    </p>
 
-                <p>
-                    <span style="font-weight: bold">标准：</span><span>{{listData.yjtJyInformationData.standard}}</span>
-                </p>
+                    <p>
+                        <span style="font-weight: bold">标准：</span><span>{{listData.yjtJyInformationData.standard}}</span>
+                    </p>
 
-                <p>
-                    <span style="font-weight: bold">计量员：</span><span>{{listData.yjtJyInformationData.suttleperson}}</span>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: bold">扫描人：</span><span>{{listData.yjtJyInformationData.scanUser}}</span>
-                </p>
+                    <p>
+                        <span style="font-weight: bold">计量员：</span><span>{{listData.yjtJyInformationData.suttleperson}}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: bold">扫描人：</span><span>{{listData.yjtJyInformationData.scanUser}}</span>
+                    </p>
 
-                <p>
-                    <span style="font-weight: bold">生产日期：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationData.proDate)}}
-                </p>
+                    <p>
+                        <span style="font-weight: bold">生产日期：</span>
+                        <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationData.proDate)}}</span>
+                    </p>
 
-            </div>
+                </div>
 
-            <div>
-                <van-divider content-position="left"><span style="color: red">*</span>{{typeCodeText}}</van-divider>
-                <van-radio-group v-model="typeCodeChecked" direction="horizontal">
-                    <van-radio v-for="(item,index) in  listData.typeCodeList" :name="String(item.id)">{{item.name}}
-                    </van-radio>
-                </van-radio-group>
-            </div>
-
-            <div>
-                <van-divider content-position="left"><span style="color: red">*</span> 上传照片</van-divider>
-                <van-uploader
-                        v-model="listData.fileList"
-                        :after-read="onRead"
-                        :before-delete="beforeDelete"
-                />
-            </div>
-
-            <div v-if="tabIndex==1">
-                <van-divider content-position="left"><span style="color: red">*</span>改判理由</van-divider>
-                <el-select v-model="alterReason" filterable
-                           clearable allow-create
-                           placeholder="改判理由" style="width: 100%">
-                    <el-option
-                            v-for="item in listData.alterReasonList"
-                            :key="item.alterReason"
-                            :label="item.alterReason"
-                            :value="item.alterReason"
-                    />
-                </el-select>
-            </div>
-
-            <div>
-                <van-divider content-position="left">备注</van-divider>
-                <van-cell-group inset>
-                    <van-field
-                            v-model="remarks"
-                            rows="1"
-                            autosize
-                            label="备注"
-                            type="textarea"
-                            placeholder="请输入备注"
-                    />
-                </van-cell-group>
-            </div>
-
-        </el-card>
+                <div>
+                    <van-divider content-position="left"><span style="color: red">*</span>{{typeCodeText}}</van-divider>
+                    <van-radio-group v-model="typeCodeChecked" direction="horizontal">
+                        <van-radio v-for="(item,index) in  listData.typeCodeList" :name="String(item.id)">{{item.name}}
+                        </van-radio>
+                    </van-radio-group>
+                </div>
 
 
-        <van-button type="primary" size="large" style="width: 80%;position: absolute;left: 10%;margin-top: 15px;background-color: #003363;color:#FFFFFF"
-                    @click="conservation">提交
-        </van-button>
+                <div>
+                    <van-divider content-position="left"><span style="color: red">*</span> 质检照片</van-divider>
+                    <div class="van-uploader">
+                        <div class="van-uploader__wrapper">
+                            <div class="van-uploader__preview" v-for="(item,index) in  fileList" :key="item.index">
+                                <div class="van-image van-uploader__preview-image">
+                                    <img class="van-image__img" :src="item.base64Img"
+                                         style="object-fit: cover;" @click="seeImg">
+                                </div>
+                                <div role="button"
+                                     class="van-uploader__preview-delete van-uploader__preview-delete--shadow"
+                                     tabindex="0" aria-label="删除" @click="beforeDelete(item.index,item.base64Img)">
+                                    <i class="van-badge__wrapper van-icon van-icon-cross van-uploader__preview-delete-icon"></i>
+                                </div>
+                            </div>
+
+
+                            <div class="van-uploader__upload" @click="takePhotoZJ">
+                                <i class="van-badge__wrapper van-icon van-icon-photograph van-uploader__upload-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div v-if="tabIndex==0">
+                    <van-divider content-position="left"><span style="color: red">*</span> 标签照片</van-divider>
+                    <div class="van-uploader">
+                        <div class="van-uploader__wrapper">
+                            <div class="van-uploader__preview" v-for="(item,index) in  labelFileList" :key="item.index">
+                                <div class="van-image van-uploader__preview-image">
+                                    <img class="van-image__img" :src="item.base64Img"
+                                         style="object-fit: cover;" @click="seeImgBQ">
+                                </div>
+                                <div role="button"
+                                     class="van-uploader__preview-delete van-uploader__preview-delete--shadow"
+                                     tabindex="0" aria-label="删除" @click="beforeDeleteBQ(item.index,item.base64Img)">
+                                    <i class="van-badge__wrapper van-icon van-icon-cross van-uploader__preview-delete-icon"></i>
+                                </div>
+                            </div>
+
+
+                            <div class="van-uploader__upload" @click="takePhotoBQ" v-if="labelFileList.length!=1">
+                                <i class="van-badge__wrapper van-icon van-icon-photograph van-uploader__upload-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="tabIndex==1">
+                    <van-divider content-position="left"><span style="color: red">*</span>改判理由</van-divider>
+                    <el-select v-model="alterReason" filterable
+                               clearable allow-create
+                               placeholder="改判理由" style="width: 100%">
+                        <el-option
+                                v-for="item in listData.alterReasonList"
+                                :key="item.alterReason"
+                                :label="item.alterReason"
+                                :value="item.alterReason"
+                        />
+                    </el-select>
+                </div>
+
+                <div>
+                    <van-divider content-position="left">备注</van-divider>
+                    <van-cell-group inset>
+                        <van-field
+                                v-model="remarks"
+                                rows="1"
+                                autosize
+                                label="备注"
+                                type="textarea"
+                                placeholder="请输入备注"
+                        />
+                    </van-cell-group>
+                </div>
+
+            </el-card>
+
+            <van-button type="primary" size="large"
+                        style="width: 80%;position: absolute;left: 10%;margin-top: 15px;background-color: #003363;color:#FFFFFF"
+                        @click="conservation">提交
+            </van-button>
+
+            <van-image-preview
+                    v-model:show="showImage"
+                    :images="imgList"
+                    :closeable="true"
+                    :loop="false"
+                    :closeOnPopstate="true"
+            />
+        </div>
     </div>
 </template>
 
 <script>
+    import fc from "flutter-core";
     import {onMounted, ref} from 'vue'
+    import {toRaw} from "@vue/reactivity";
     import {useRoute, useRouter} from "vue-router";
     import {shallowReactive} from "@vue/reactivity";
     import {
@@ -100,7 +155,7 @@
         cathodeCopperImgUpload,
         alterReasonQuery
     } from '@/api/gradeDetermination'
-    import {compressImage} from '@/utils/compressImage.js'
+    import {compressImage, dataURLtoFile} from '@/utils/compressImage.js'
     import {showToast} from "vant";
 
     export default {
@@ -112,15 +167,27 @@
             const remarks = ref('')
             const alterReason = ref('')
             const typeCodeChecked = ref('')
+            const takePhotoState = ref('')
+            // 质检图片
+            const fileList = ref([])
+            const base64ImgList = ref([])
+            // 质检图片路径
+            const imagePath = ref([])
+            //标签图片
+            const labelFileList = ref([])
+            const base64LabelImgList = ref([])
+            // 标签图片路径
+            const labelImagePath = ref([])
+
+            const showImage = ref(false)
+            const showLabelImage = ref(false)
+            const imgList = ref([])
+
             const listData = shallowReactive({
                 //阴极铜基本信息数据
                 yjtJyInformationData: {},
                 //判断类型数据
                 typeCodeList: [],
-                // 回显图片
-                fileList: [],
-                // 上传图片路径
-                imagePath: [],
                 //改判理由
                 alterReasonList: []
             })
@@ -128,6 +195,120 @@
             listData.yjtJyInformationData = JSON.parse(decodeURIComponent(route.query.yjtJyInformation))
             const exterior = ref(JSON.parse(decodeURIComponent(route.query.exterior)))
             const tabIndex = ref(JSON.parse(decodeURIComponent(route.query.tabIndex)))
+
+            // 拍照监听
+            fc.await("takePhoto", (res) => {
+                if (res != 'null') {
+                    if (takePhotoState.value == '0') {
+                        let fileObj = {}
+                        fileObj.index = fileList.value.length + 1
+                        fileObj.base64Img = res
+                        fileList.value.push(fileObj)
+                        base64ImgList.value.push(res)
+                        //上传图片
+                        let data = new FormData();
+                        let path = '/cathodeCopper/' + listData.yjtJyInformationData.batchgroup
+                            + '/' + listData.yjtJyInformationData.batchnumber
+                        data.append('file', dataURLtoFile(res));
+                        data.append('path', path);
+
+
+                        cathodeCopperImgUpload(data).then((result) => {
+                            let obj = {}
+                            obj.fileName = result.data.fileName
+                            obj.fileUrl = result.data.fileUrl
+                            obj.index = fileList.value.length
+                            imagePath.value.push(obj)
+                        }).catch(error => {
+                            console.log(error)
+                        })
+
+                    }
+
+                    if (takePhotoState.value == '1') {
+                        let fileLabelObj = {}
+                        fileLabelObj.index = labelFileList.value.length + 1
+                        fileLabelObj.base64Img = res
+                        labelFileList.value.push(fileLabelObj)
+                        base64LabelImgList.value.push(res)
+
+                        //上传图片
+                        let data = new FormData();
+                        let path = '/cathodeCopperLabel/' + listData.yjtJyInformationData.batchnumber
+                        data.append('file', dataURLtoFile(res));
+                        data.append('path', path);
+
+
+                        cathodeCopperImgUpload(data).then((result) => {
+                            let labelObj = {}
+                            labelObj.fileName = result.data.fileName
+                            labelObj.fileUrl = result.data.fileUrl
+                            labelObj.index = labelFileList.value.length
+                            labelImagePath.value.push(labelObj)
+                        }).catch(error => {
+                            console.log(error)
+                        })
+
+                    }
+
+                }
+            })
+
+            //质检照片拍照
+            const takePhotoZJ = () => {
+                takePhotoState.value = '0'
+                fc.takePhoto();
+            }
+
+            //质检图片删除
+            const beforeDelete = (index, base64Img) => {
+                imagePath.value = imagePath.value.filter(item => {
+                    return item.index != index
+                })
+                fileList.value = fileList.value.filter(item => {
+                    return item.index != index
+                })
+                base64ImgList.value = base64ImgList.value.filter(item => {
+                    return item != base64Img
+                })
+            }
+
+            //质检图片预览
+            const seeImg = () => {
+                imgList.value = base64ImgList.value
+                showImage.value = true
+            }
+
+
+            //标签照片拍照
+            const takePhotoBQ = () => {
+                takePhotoState.value = '1'
+                fc.takePhoto();
+            }
+
+            //标签图片删除
+            const beforeDeleteBQ = (index, base64Img) => {
+                labelImagePath.value = labelImagePath.value.filter(item => {
+                    return item.index != index
+                })
+                labelFileList.value = labelFileList.value.filter(item => {
+                    return item.index != index
+                })
+                base64LabelImgList.value = base64LabelImgList.value.filter(item => {
+                    return item != base64Img
+                })
+
+
+            }
+
+
+            //标签图片预览
+            const seeImgBQ = () => {
+                imgList.value = base64LabelImgList.value
+                showImage.value = true
+            }
+
+
             //合格品
             if (exterior.value == '1') {
                 typeCode.value = 'qualified'
@@ -151,19 +332,13 @@
                 router.back()
             }
 
-            //图片删除
-            const beforeDelete = (file) => {
-                listData.imagePath = listData.imagePath.filter(item => {
-                    return item.fileName != file.file.name
-                })
-                return true
-            }
 
             //保存
             const conservation = () => {
-                if (listData.imagePath.length == 0) {
+
+                if (imagePath.value.length == 0) {
                     showToast({
-                        message: '请上传照片',
+                        message: '请上传质检照片',
                         type: 'fail',
                         className: 'particulars-detail-popup'
                     })
@@ -171,7 +346,20 @@
                     return false
                 }
 
-                if (tabIndex.value==1){
+                if (tabIndex.value == 0) {
+                    if (labelImagePath.value.length == 0) {
+                        showToast({
+                            message: '请上传标签照片',
+                            type: 'fail',
+                            className: 'particulars-detail-popup'
+                        })
+
+                        return false
+                    }
+                }
+
+
+                if (tabIndex.value == 1) {
                     if (!alterReason.value) {
                         showToast({
                             message: '请选择或者填写改判理由',
@@ -190,7 +378,8 @@
                     remarks: '',
                     alterReason: '',
                     typeCodeChecked: '',
-                    fileList: []
+                    fileList: [],
+                    labelFileList: []
                 }
                 let obj = []
                 obj.push(listData.yjtJyInformationData)
@@ -200,7 +389,8 @@
                 listMap.exterior = exterior.value
                 listMap.remarks = remarks.value
                 listMap.alterReason = alterReason.value
-                listMap.fileList = listData.imagePath
+                listMap.fileList = imagePath.value
+                listMap.labelFileList = labelImagePath.value
 
                 excellentJudgement(listMap).then((result) => {
                     if (result.data.code == 200) {
@@ -216,28 +406,6 @@
                     console.log(error)
                 })
 
-            }
-
-
-            //图片压缩并上传
-            const onRead = (file) => {
-                //调用压缩方法
-                compressImage(file.file, '0.9').then(result => {
-                    //上传图片
-                    let data = new FormData();
-                    let path = '/cathodeCopper/' + listData.yjtJyInformationData.batchgroup + '/' + listData.yjtJyInformationData.batchnumber
-                    data.append('file', result.file);
-                    data.append('path', path);
-
-                    let obj = {}
-                    cathodeCopperImgUpload(data).then((result) => {
-                        obj.fileName = result.data.fileName
-                        obj.fileUrl = result.data.fileUrl
-                        listData.imagePath.push(obj)
-                    }).catch(error => {
-                        console.log(error)
-                    })
-                })
             }
 
 
@@ -274,6 +442,7 @@
                 })
             }
 
+
             //格式化时间
             const dateFormat = (fmt, date) => {
                 let ret;
@@ -299,6 +468,15 @@
             }
 
             return {
+                imgList,
+                showImage,
+                showLabelImage,
+                fileList,
+                base64ImgList,
+                imagePath,
+                labelFileList,
+                labelImagePath,
+                takePhotoState,
                 alterReason,
                 remarks,
                 typeCode,
@@ -307,10 +485,14 @@
                 exterior,
                 tabIndex,
                 typeCodeChecked,
+                seeImg,
+                seeImgBQ,
+                takePhotoZJ,
+                takePhotoBQ,
                 onClickLeft,
                 dateFormat,
-                onRead,
                 beforeDelete,
+                beforeDeleteBQ,
                 conservation,
             }
         }
@@ -318,18 +500,24 @@
 </script>
 
 <style scoped>
-    .container {
-        position: relative;
-        height: 100%;
-        overflow: scroll;
-        background-repeat: no-repeat;
-        background-size: 100%;
+    .header {
+
+        width: 100%;
+        height: 46px;
+        line-height: 46px;
+        position: absolute;
+        z-index: 5;
+        top: 0;
     }
 
-    .header {
-        position: sticky;
-        top: 0;
-        z-index: 999;
-        overflow: hidden;
+    .content {
+        width: 100%;
+        overflow: scroll;
+        top: 46px;
+        position: absolute;
+        z-index: 10;
+        bottom: 5px;
+
     }
+
 </style>

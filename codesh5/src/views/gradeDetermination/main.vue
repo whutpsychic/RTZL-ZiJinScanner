@@ -401,6 +401,8 @@
 
             })
 
+
+
             const route = useRoute()
             const router = useRouter()
             const active = ref(0)
@@ -874,6 +876,7 @@
                         if (result.data.code != 200) {
                             showDialog({
                                 title: '提示',
+                                width: '600',
                                 message: result.data.message,
                             }).then(() => {
 

@@ -117,10 +117,10 @@
           duration: 0,
           message: '加载中...',
         })
-        chukudanApi.chukudanQuery(queryParams, 0).then((res) => {
-          tableData.value = res.data.value.records
-        })
-      }
+
+      } chukudanApi.chukudanQuery(queryParams, 0).then((res) => {
+        tableData.value = res.data.value.records
+      })
 
       onMounted(() => {
         queryParams = route.query

@@ -74,6 +74,56 @@ const router = createRouter({
             component: () => import('../views/qualityCheckingRecord/main.vue')
         },
 
+        //拣配查询页面
+        {
+            path: '/pickWithQuery',
+            name: 'pickWithQuery',
+            component: () => import('../views/pickWith/pickWithQuery.vue')
+        },
+
+
+        //出库单查询结果页面
+        {
+            path: '/pickWithQueryListData',
+            name: 'pickWithQueryListData',
+            meta: {
+                keepAlive: true //设置页面是否需要使用缓存
+            },
+            component: () => import('../views/pickWith/pickWithQueryListData.vue')
+        },
+
+        //出库单内容
+        {
+            path: '/pickWithQueryInfoData',
+            name: 'pickWithQueryInfoData',
+            component: () => import('../views/pickWith/pickWithQueryInfoData.vue')
+        },
+
+        //选择车号
+        {
+            path: '/chooseWagonNumber',
+            name: 'chooseWagonNumber',
+            component: () => import('../views/pickWith/chooseWagonNumber.vue')
+        },
+
+
+        //拣配页面
+        {
+            path: '/pickWith',
+            name: 'pickWith',
+            component: () => import('../views/pickWith/pickWith.vue')
+        },
+
+
+
+        //拣配记录查询页面
+        {
+            path: '/pickWithRecordQuery',
+            name: 'pickWithRecordQuery',
+            component: () => import('../views/pickWithRecordQuery/pickWithRecordQuery.vue')
+        },
+
+
 
         {
             path: '/login',
@@ -87,14 +137,14 @@ const router = createRouter({
             component: LoginView
         }
     ],
-    // scrollBehavior (to, from, savedPosition) {
+    // scrollBehavior(to, from, savedPosition) {
+    //     console.log(savedPosition)
     //     if (savedPosition) {
     //         return savedPosition
     //     } else {
-    //         return { left: 0, top: 0 }
+    //         return {left: 0, top: 0}
     //     }
     // }
-
 
 
 })
