@@ -86,8 +86,8 @@ class AppState extends State<App> {
             },
             child: Scaffold(
               body: SafeArea(
-                top: false,
-                bottom: false,
+                top: true,
+                bottom: true,
                 child: ConnectivityWidgetWrapper(
                   disableInteraction: false,
                   offlineWidget: const NoNetwork(),
