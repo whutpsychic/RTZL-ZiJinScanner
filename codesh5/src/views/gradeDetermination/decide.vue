@@ -15,7 +15,8 @@
                 <van-divider content-position="left">基本信息</van-divider>
                 <div>
                     <p>
-                        <span style="font-weight: bold">编号：</span><span>{{listData.yjtJyInformationData.batchnumber}}</span>
+                        <span style="font-weight: bold">编号：</span>
+                        <span>{{listData.yjtJyInformationData.batchnumber}}</span>
                     </p>
 
                     <p>
@@ -24,19 +25,22 @@
                     </p>
 
                     <p>
-                        <span style="font-weight: bold">标准：</span><span>{{listData.yjtJyInformationData.standard}}</span>
+                        <span style="font-weight: bold">标准：</span>
+                        <span>{{listData.yjtJyInformationData.standard}}</span>
                     </p>
 
                     <p>
-                        <span style="font-weight: bold">计量员：</span><span>{{listData.yjtJyInformationData.suttleperson}}</span>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: bold">扫描人：</span><span>{{listData.yjtJyInformationData.scanUser}}</span>
+                        <span style="font-weight: bold">计量员：</span>
+                        <span>{{listData.yjtJyInformationData.suttleperson}}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span style="font-weight: bold">扫描人：</span>
+                        <span>{{listData.yjtJyInformationData.scanUser}}</span>
                     </p>
 
                     <p>
                         <span style="font-weight: bold">生产日期：</span>
                         <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationData.proDate)}}</span>
                     </p>
-
                 </div>
 
                 <div>
@@ -410,7 +414,7 @@
 
 
             //获取阴极铜判定类型
-            function getTypeCodeData(data) {
+            const getTypeCodeData = (data) => {
                 let tbYjtJyDict = {}
                 tbYjtJyDict.typeCode = data
                 typeCodeData(tbYjtJyDict).then((result) => {
@@ -425,7 +429,7 @@
 
 
             //获取改判理由
-            function getAlterReasonQuery() {
+            const getAlterReasonQuery = () => {
                 let paramInfo = {}
                 let blocks = {}
                 let paramBlock = {}
@@ -494,6 +498,8 @@
                 beforeDelete,
                 beforeDeleteBQ,
                 conservation,
+                getTypeCodeData,
+                getAlterReasonQuery,
             }
         }
     }

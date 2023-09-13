@@ -86,9 +86,6 @@ const router = createRouter({
         {
             path: '/pickWithQueryListData',
             name: 'pickWithQueryListData',
-            meta: {
-                keepAlive: true //设置页面是否需要使用缓存
-            },
             component: () => import('../views/pickWith/pickWithQueryListData.vue')
         },
 
@@ -123,7 +120,19 @@ const router = createRouter({
             component: () => import('../views/pickWithRecordQuery/pickWithRecordQuery.vue')
         },
 
+        //拣配记录列表页面
+        {
+            path: '/pickWithRecordListData',
+            name: 'pickWithRecordListData',
+            component: () => import('../views/pickWithRecordQuery/pickWithRecordListData.vue')
+        },
 
+        //拣配记录明细页面
+        {
+            path: '/pickWithRecordInfoData',
+            name: 'pickWithRecordInfoData',
+            component: () => import('../views/pickWithRecordQuery/pickWithRecordInfoData.vue')
+        },
 
         {
             path: '/login',

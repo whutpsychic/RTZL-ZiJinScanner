@@ -1,112 +1,130 @@
 <template>
 
 
-        <div class="header">
-            <van-nav-bar
-                    title="审核列表"
-                    class="page-nav-bar"
-                    left-arrow
-                    @click-left="onClickLeft"
+    <div class="header">
+        <van-nav-bar
+                title="审核列表"
+                class="page-nav-bar"
+                left-arrow
+                @click-left="onClickLeft"
+        />
+
+        <div style="display: flex;background-color: #ffffff;">
+            <van-search style="width: 68%"
+                        v-model="searchValue"
+                        shape="round"
+                        placeholder="请输入编号搜索"
+                        @search="onSearch"
             />
 
-            <div style="display: flex;background-color: #ffffff;">
-                <van-search style="width: 68%"
-                            v-model="searchValue"
-                            shape="round"
-                            placeholder="请输入编号搜索"
-                            @search="onSearch"
+            <el-select v-model="status" clearable placeholder="状态"
+                       style="width: 31%;float: right;margin-top: 0.8rem" @change="statusChange">
+                <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
                 />
+            </el-select>
+        </div>
+    </div>
 
-                <el-select v-model="status" clearable placeholder="状态"
-                           style="width: 31%;float: right;margin-top: 0.8rem" @change="statusChange">
-                    <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                    />
-                </el-select>
+    <div class="content">
+        <van-list
+                v-model:loading="loading"
+                :finished="finished"
+                offset="50"
+                finished-text="没有更多了"
+                @load="onLoad"
+        >
+
+            <div style="padding:0px 5px 5px 5px">
+
+                <el-card class="box-card" shadow="always" style="margin-top:5px" @click="auditingDetails(item)"
+                         v-for="(item,index) in  listData.auditorListData">
+
+                    <div>
+                        <p>
+                            <span style="font-weight: bold">编号：</span>
+                            <span>{{item.batchnumber}}</span>
+                        </p>
+
+                        <p>
+                            <span style="font-weight: bold">重量：</span>
+                            <span>{{parseFloat(item.suttle)}}{{item.unit}}</span>
+                        </p>
+
+                        <p>
+                            <span style="font-weight: bold">标准：</span>
+                            <span>{{item.standard}}</span>
+                        </p>
+
+                        <p>
+                            <span style="font-weight: bold">品级分类：</span>
+                            <span>{{item.exteriorName}}</span>
+                            &nbsp;&nbsp;
+                            <span v-if="item.exterior!='0'" style="font-weight: bold">类型：</span>
+                            <span>{{item.dictName}}</span>
+                        </p>
+
+                        <p>
+                            <van-tag v-if="item.status=='0'" type="primary">未审核</van-tag>
+                            <van-tag v-if="item.status=='1'" type="danger">驳回</van-tag>
+                            <van-tag v-if="item.status=='2'" type="success">审核通过</van-tag>
+
+                        </p>
+
+                        <van-divider style="color:#c8c8c8"></van-divider>
+
+                        <span style="color: #bbbbbb">{{dateFormat("YYYY-mm-dd HH:MM:SS",item.checkoutDate)}}</span>
+                        <span style="float:right;color: #bbbbbb">{{item.checkoutUser}}</span>
+                    </div>
+                </el-card>
+
+
             </div>
-        </div>
 
-        <div class="content">
-            <van-list
-                    v-model:loading="loading"
-                    :finished="finished"
-                    offset="50"
-                    finished-text="没有更多了"
-                    @load="onLoad"
-            >
+        </van-list>
 
-                <div style="padding:0px 5px 5px 5px">
-
-                    <el-card class="box-card" shadow="always" style="margin-top:5px" @click="auditingDetails(item)"
-                             v-for="(item,index) in  listData.auditorListData">
-
-                        <div>
-                            <p><span style="font-weight: bold">编号：</span><span>{{item.batchnumber}}</span></p>
-                            <p><span
-                                    style="font-weight: bold">重量：</span><span>{{parseFloat(item.suttle)}}{{item.unit}}</span>
-                            </p>
-                            <p><span style="font-weight: bold">标准：</span><span>{{item.standard}}</span></p>
-
-                            <p>
-                                <span style="font-weight: bold">品级分类：</span><span>{{item.exteriorName}}</span>
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span v-if="item.exterior!='0'"
-                                                              style="font-weight: bold">类型：</span><span>{{item.dictName}}</span>
-                            </p>
-
-                            <p>
-                                <van-tag v-if="item.status=='0'" type="primary">未审核</van-tag>
-                                <van-tag v-if="item.status=='1'" type="danger">驳回</van-tag>
-                                <van-tag v-if="item.status=='2'" type="success">审核通过</van-tag>
-
-                            </p>
-
-                            <van-divider style="color:#c8c8c8"></van-divider>
-
-                            <span style="color: #bbbbbb">{{dateFormat("YYYY-mm-dd HH:MM:SS",item.checkoutDate)}}</span>
-                            <span style="float:right;color: #bbbbbb">{{item.checkoutUser}}</span>
-                        </div>
-                    </el-card>
-
-
-                </div>
-
-            </van-list>
-
-        </div>
+    </div>
 
     <el-dialog
-               v-model="centerDialogVisible"
-               :destroy-on-close="true"
-               title="审核详情"
-               width="96%"
-               align-center
+            v-model="centerDialogVisible"
+            :destroy-on-close="true"
+            title="审核详情"
+            width="96%"
+            align-center
     >
         <div style="overflow-y: auto;overscroll-behavior-y: contain;" :style="elDialogHeight">
             <div>
                 <van-divider content-position="left">基本信息</van-divider>
                 <div>
                     <p>
-                        <span style="font-weight: bold">编号：</span><span>{{listData.yjtJyInformationDetails.batchnumber}}</span>
+                        <span style="font-weight: bold">编号：</span>
+                        <span>{{listData.yjtJyInformationDetails.batchnumber}}</span>
                     </p>
 
                     <p>
-                        <span style="font-weight: bold">重量：</span><span>{{parseFloat(listData.yjtJyInformationDetails.suttle)}}{{listData.yjtJyInformationDetails.unit}}</span>
+                        <span style="font-weight: bold">重量：</span>
+                        <span>{{parseFloat(listData.yjtJyInformationDetails.suttle)}}{{listData.yjtJyInformationDetails.unit}}</span>
                     </p>
 
                     <p>
-                        <span style="font-weight: bold">标准：</span><span>{{listData.yjtJyInformationDetails.standard}}</span>
+                        <span style="font-weight: bold">标准：</span>
+                        <span>{{listData.yjtJyInformationDetails.standard}}</span>
                     </p>
 
                     <p>
-                        <span style="font-weight: bold">计量员：</span><span>{{listData.yjtJyInformationDetails.suttleperson}}</span>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: bold">扫描人：</span><span>{{listData.yjtJyInformationDetails.scanUser}}</span>
+                        <span style="font-weight: bold">计量员：</span>
+                        <span>{{listData.yjtJyInformationDetails.suttleperson}}</span>
+                        &nbsp;&nbsp;&nbsp;
+                        <span style="font-weight: bold">扫描人：</span>
+                        <span>{{listData.yjtJyInformationDetails.scanUser}}</span>
                     </p>
 
                     <p>
-                        <span style="font-weight: bold">生产日期：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetails.proDate)}}
+                        <span style="font-weight: bold">生产日期：</span>
+                        <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetails.proDate)}}</span>
                     </p>
 
                 </div>
@@ -114,21 +132,26 @@
 
                 <div>
                     <p>
-                        <span style="font-weight: bold">品级分类：</span><span>{{listData.yjtJyInformationDetails.exteriorName}}</span>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span v-if="listData.yjtJyInformationDetails.exterior!='0'"
-                                                      style="font-weight: bold">类型：</span><span>{{listData.yjtJyInformationDetails.dictName}}</span>
+                        <span style="font-weight: bold">品级分类：</span>
+                        <span>{{listData.yjtJyInformationDetails.exteriorName}}</span>
+                        &nbsp;&nbsp;
+                        <span v-if="listData.yjtJyInformationDetails.exterior!='0'" style="font-weight: bold">类型：</span>
+                        <span>{{listData.yjtJyInformationDetails.dictName}}</span>
                     </p>
 
                     <p>
-                        <span style="font-weight: bold">质检时间：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetails.checkoutDate)}}
+                        <span style="font-weight: bold">质检时间：</span>
+                        <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetails.checkoutDate)}}</span>
                     </p>
 
                     <p>
-                        <span style="font-weight: bold">质检人：</span><span>{{listData.yjtJyInformationDetails.checkoutUser}}</span>
+                        <span style="font-weight: bold">质检人：</span>
+                        <span>{{listData.yjtJyInformationDetails.checkoutUser}}</span>
                     </p>
 
                     <p>
-                        <span style="font-weight: bold">改判理由：</span><span>{{listData.yjtJyInformationDetails.alterReason}}</span>
+                        <span style="font-weight: bold">改判理由：</span>
+                        <span>{{listData.yjtJyInformationDetails.alterReason}}</span>
                     </p>
 
 
@@ -163,16 +186,21 @@
                     <van-divider content-position="left">审核信息</van-divider>
 
                     <p>
-                        <span style="font-weight: bold">状态：</span><span>{{listData.yjtJyInformationDetails.status ==='0' ? '未审核' : (listData.yjtJyInformationDetails.status ==='1' ? '驳回' : '通过')}}</span>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: bold">审核人：</span><span>{{listData.yjtJyInformationDetails.auditorUserName}}</span>
+                        <span style="font-weight: bold">状态：</span>
+                        <span>{{listData.yjtJyInformationDetails.status ==='0' ? '未审核' : (listData.yjtJyInformationDetails.status ==='1' ? '驳回' : '通过')}}</span>
+                        &nbsp;&nbsp;&nbsp;
+                        <span style="font-weight: bold">审核人：</span>
+                        <span>{{listData.yjtJyInformationDetails.auditorUserName}}</span>
                     </p>
 
                     <p>
-                        <span style="font-weight: bold">审核时间：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetails.auditorDate)}}
+                        <span style="font-weight: bold">审核时间：</span>
+                        <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetails.auditorDate)}}</span>
                     </p>
 
                     <p>
-                        <span style="font-weight: bold">审核内容：</span><span>{{listData.yjtJyInformationDetails.auditorContent}}</span>
+                        <span style="font-weight: bold">审核内容：</span>
+                        <span>{{listData.yjtJyInformationDetails.auditorContent}}</span>
                     </p>
                 </div>
             </div>
@@ -190,11 +218,13 @@
                 <van-row>
                     <van-col span="2"></van-col>
                     <van-col span="10">
-                        <van-button icon="close" type="danger" style="width:90%" @click="cathodeCopperAuditorClick('1')">驳回
+                        <van-button icon="close" type="danger" style="width:90%"
+                                    @click="cathodeCopperAuditorClick('1')">驳回
                         </van-button>
                     </van-col>
                     <van-col span="10">
-                        <van-button  icon="passed" type="success" style="width:90%" @click="cathodeCopperAuditorClick('2')">通过
+                        <van-button icon="passed" type="success" style="width:90%"
+                                    @click="cathodeCopperAuditorClick('2')">通过
                         </van-button>
                     </van-col>
                     <van-col span="2"></van-col>
@@ -239,7 +269,7 @@
             const searchValue = ref('')
             const showImage = ref(false)
             const auditorContent = ref('')
-            const elDialogHeight= ref('')
+            const elDialogHeight = ref('')
             const state = ref(false)
             const listData = shallowReactive({
                 auditorListData: [],
@@ -323,7 +353,7 @@
 
 
             //获取阴极铜审核数据
-            function getAuditorDataQuery(obj) {
+            const getAuditorDataQuery = (obj) => {
                 let paramInfo = {}
                 let blocks = {}
                 let paramBlock = {}
@@ -341,8 +371,8 @@
                         finished.value = true
                     }
 
-                    let height =document.body.scrollHeight-180
-                    elDialogHeight.value='height:'+height+'px'
+                    let height = document.body.scrollHeight - 180
+                    elDialogHeight.value = 'height:' + height + 'px'
 
                 }).catch(error => {
                     console.log(error)
@@ -436,7 +466,7 @@
 
 
             //获取阴极铜判定图片
-            function getFileQuery(data) {
+            const getFileQuery = (data) => {
                 let obj = {}
                 obj.yjtJyInformationDetailsId = data
                 fileQuery(obj).then((result) => {
@@ -464,6 +494,8 @@
                 listData,
                 onClickLeft,
                 onLoad,
+                getFileQuery,
+                getAuditorDataQuery,
                 statusChange,
                 dateFormat,
                 onSearch,

@@ -1,1 +1,0 @@
-import{_ as r,u as c,b as a,e as s,N as p}from"./index-8b63aa92.js";/* empty css              */const i={setup(){const t=c();return{onClickLeft:()=>{t.push({path:"/home"})}}}};function l(t,e,_,o,f,u){const n=p;return a(),s(n,{title:"查询拣配单头",class:"page-nav-bar","left-arrow":"",onClickLeft:o.onClickLeft},null,8,["onClickLeft"])}const d=r(i,[["render",l]]);export{d as default};

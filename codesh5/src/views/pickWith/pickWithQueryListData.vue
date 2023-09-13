@@ -1,5 +1,5 @@
 <template>
-    <main>
+
         <van-nav-bar
                 title="出库单查询结果"
                 class="page-nav-bar"
@@ -36,7 +36,7 @@
                             src="@/assets/image/btn_shuaxin2.png"
                             alt=""
                             type="primary"
-                            @click="queryData"
+                            @click="renovateClikc"
                     />
                     <div>刷新</div>
                 </div>
@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-    </main>
+
 </template>
 
 <script>
@@ -84,28 +84,6 @@
                       L 15 15
                     " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>`
 
-
-            const changeRouterKeepAlive = (name, keepAlive) => {
-                router.options.routes.map((item) => {
-                    if (item.name === name) {
-                        item.meta.keepAlive = keepAlive;
-                    }
-                });
-            };
-
-            onActivated(() => {
-                //滚动条位置
-                tableRef.value.setScrollTop(toRaw(store.state.pickWithScroll))
-            })
-
-
-            onBeforeRouteLeave((to, from) => {
-                if (to.name == 'pickWithQuery') {
-                    changeRouterKeepAlive(from.name, false);
-                } else {
-                    changeRouterKeepAlive(from.name, true);
-                }
-            })
 
 
             let queryParams = ''
@@ -140,11 +118,10 @@
                             return  false
                         }
                     }
-                    console.log(selectedRow.F_DELIVERYNO)
                     let scrollTop = tableRef.value.$refs.bodyWrapper.getElementsByClassName('el-scrollbar__wrap')[0]
                     store.commit('setPickWithScroll', scrollTop.scrollTop)
                     store.commit('setChukudanListInfo', selectedRow)
-                    store.commit('setCarInfo', '')
+                    store.commit('setCarInfo', {})
                     store.commit('setScandList',[])
                     store.commit('setScandCalculateData', {})
                     router.push({
@@ -165,14 +142,24 @@
                 }
             }
 
+
+            const renovateClikc = () => {
+                store.commit('setPickWithScroll',0) 
+                queryData()
+            }
+
             const queryData = () => {
 
                 selectedRow=''
-                tableRef.value.setScrollTop(0)
                 loading.value = true
                 getPlanMain(queryParams).then((res) => {
                     tableData.value = res.data.data
                     loading.value = false
+                    setTimeout(() => {
+                        //滚动条位置
+                        tableRef.value.setScrollTop(toRaw(store.state.pickWithScroll))
+                    }, 0)
+
                 })
 
             }
@@ -185,14 +172,14 @@
             })
 
             return {
-                changeRouterKeepAlive,
+                tableData,
                 tableRef,
                 svg,
                 loading,
                 tableHeight,
+                renovateClikc,
                 onClickLeft,
                 selectRow,
-                tableData,
                 showDetail,
                 queryData,
             }

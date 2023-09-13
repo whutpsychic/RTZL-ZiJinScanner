@@ -7,7 +7,7 @@
                 @click-left="onClickLeft"
         >
             <template #right>
-                <van-icon @click="scanClick" style="color: #FFFFFF" name="scan" size="40" />
+                <van-icon @click="scanClick" style="color: #FFFFFF" name="scan" size="40"/>
             </template>
         </van-nav-bar>
 
@@ -31,19 +31,31 @@
         >
 
             <div style="padding:0px 5px 5px 5px">
-                <el-card class="box-card" shadow="always" style="margin-top:5px" @click="qualityCheckingRecordDetails(item)"
+                <el-card class="box-card" shadow="always" style="margin-top:5px"
+                         @click="qualityCheckingRecordDetails(item)"
                          v-for="(item,index) in  listData.qualityCheckingList">
                     <div>
-                        <p><span style="font-weight: bold">编号：</span><span>{{item.batchnumber}}</span></p>
-                        <p><span
-                                style="font-weight: bold">重量：</span><span>{{parseFloat(item.suttle)}}{{item.unit}}</span>
+                        <p>
+                            <span style="font-weight: bold">编号：</span>
+                            <span>{{item.batchnumber}}</span>
+                        </p>
 
-                             <span style="margin-left:30px;" v-if="item.exteriorName">
-                                 <span v-if="item.exteriorName=='优等品'"><el-tag>{{item.exteriorName}}</el-tag></span>
-                                 <span  v-if="item.exteriorName=='合格'"><el-tag type='warning'>{{item.exteriorName}}</el-tag></span>
-                                 <span v-if="item.exteriorName=='不合格'"><el-tag type='danger'>{{item.exteriorName}}</el-tag></span>
+                        <p>
+                            <span style="font-weight: bold">重量：</span>
+                            <span>{{parseFloat(item.suttle)}}{{item.unit}}</span>
+                            <span style="margin-left:30px;" v-if="item.exteriorName">
+                                 <span v-if="item.exteriorName=='优等品'">
+                                     <el-tag>{{item.exteriorName}}</el-tag>
+                                 </span>
+                                 <span v-if="item.exteriorName=='合格'">
+                                     <el-tag type='warning'>{{item.exteriorName}}</el-tag>
+                                 </span>
+                                 <span v-if="item.exteriorName=='不合格'">
+                                     <el-tag type='danger'>{{item.exteriorName}}</el-tag>
+                                 </span>
                              </span>
                         </p>
+
                         <van-tag v-if="item.state=='0'" type="primary">未质检</van-tag>
                         <van-tag v-if="item.state=='1'" type="success">已质检</van-tag>
 
@@ -57,29 +69,45 @@
 
 
     <el-dialog
-               v-model="centerDialogVisible"
-               :destroy-on-close="true"
-               title="质检记录详情"
-               width="96%"
-               align-center
+            v-model="centerDialogVisible"
+            :destroy-on-close="true"
+            title="质检记录详情"
+            width="96%"
+            align-center
     >
         <div style="overflow-y: auto; overscroll-behavior-y: contain; height: calc(100vh - 180px);">
 
             <div>
                 <van-divider content-position="left">基本信息</van-divider>
-                <p><span style="font-weight: bold">编号：</span><span>{{listData.yjtJyInformationData.batchnumber}}</span></p>
-                <p><span
-                        style="font-weight: bold">重量：</span><span>{{parseFloat(listData.yjtJyInformationData.suttle)}}{{listData.yjtJyInformationData.unit}}</span>
+                <p>
+                    <span style="font-weight: bold">编号：</span>
+                    <span>{{listData.yjtJyInformationData.batchnumber}}</span>
                 </p>
-                <p><span style="font-weight: bold">标准：</span><span>{{listData.yjtJyInformationData.standard}}</span></p>
-                <p><span style="font-weight: bold">计量员：</span><span>{{listData.yjtJyInformationData.suttleperson}}</span>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span
-                            style="font-weight: bold">扫描人：</span><span>{{listData.yjtJyInformationData.scanUser}}</span></p>
-                <p><span style="font-weight: bold">生产日期：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationData.proDate)}}
+
+                <p>
+                    <span style="font-weight: bold">重量：</span>
+                    <span>{{parseFloat(listData.yjtJyInformationData.suttle)}}{{listData.yjtJyInformationData.unit}}</span>
+                </p>
+
+                <p>
+                    <span style="font-weight: bold">标准：</span>
+                    <span>{{listData.yjtJyInformationData.standard}}</span>
+                </p>
+
+                <p><span style="font-weight: bold">计量员：</span>
+                    <span>{{listData.yjtJyInformationData.suttleperson}}</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span style="font-weight: bold">扫描人：</span>
+                    <span>{{listData.yjtJyInformationData.scanUser}}</span>
+                </p>
+
+                <p>
+                    <span style="font-weight: bold">生产日期：</span>
+                    <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationData.proDate)}}</span>
                 </p>
             </div>
 
-            <div  v-if="listData.yjtJyInformationData.state=='1'">
+            <div v-if="listData.yjtJyInformationData.state=='1'">
                 <van-divider content-position="left">质检信息</van-divider>
                 <div v-for="(item,index) in  listData.yjtJyInformationDecideDataList">
                     <div>
@@ -88,24 +116,28 @@
                             <el-tag v-if="item.details.isNew=='0'" type="success">是</el-tag>
                             <el-tag v-if="item.details.isNew=='1'" type="danger">否</el-tag>
                         </p>
+
                         <p>
-                            <span style="font-weight: bold">品级分类：</span><span>{{item.details.exteriorName}}</span>
-                            &nbsp;&nbsp;&nbsp;&nbsp;<span v-if="item.details.exterior!='0'"
-                                                          style="font-weight: bold">类型：</span><span>{{item.details.dictName}}</span>
+                            <span style="font-weight: bold">品级分类：</span>
+                            <span>{{item.details.exteriorName}}</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span v-if="item.details.exterior!='0'" style="font-weight: bold">类型：</span>
+                            <span>{{item.details.dictName}}</span>
                         </p>
 
                         <p>
-                            <span style="font-weight: bold">质检时间：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",item.details.checkoutDate)}}
+                            <span style="font-weight: bold">质检时间：</span>
+                            <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",item.details.checkoutDate)}}</span>
                         </p>
 
                         <p>
-                            <span style="font-weight: bold">质检人：</span><span>{{item.details.checkoutUser}}</span>
+                            <span style="font-weight: bold">质检人：</span>
+                            <span>{{item.details.checkoutUser}}</span>
                         </p>
 
                         <p v-if="item.details.alterReason">
                             <span style="font-weight: bold">改判理由：</span><span>{{item.details.alterReason}}</span>
                         </p>
-
 
                         <div v-if="item.details.exterior!='0'">
                             <van-image style="margin:0 2%" @click="seeImg(item.fileList)"
@@ -116,9 +148,8 @@
                                        position="left"
                                        :src="file"
                             />
-
                         </div>
-                        <van-divider />
+                        <van-divider/>
                     </div>
                 </div>
             </div>
@@ -149,24 +180,6 @@
 
     export default {
         setup() {
-
-            fc.await('scanner', (res) => {
-                if (res != 'null') {
-                    // window.scrollTo(0,0);
-                    listData.qualityCheckingList = []
-                    offset.value = 1
-                    finished.value = true
-                    getQualityCheckingRecord({batchnumber: '',barcode:res})
-                } else {
-                    showToast({
-                        message: '数据获取失败',
-                        type: 'fail',
-                        className: 'particulars-detail-popup',
-                    })
-                }
-            })
-
-
             const router = useRouter()
             const searchValue = ref('')
             const centerDialogVisible = ref(false)
@@ -175,9 +188,9 @@
                 //阴极铜基本信息数据
                 yjtJyInformationData: {},
                 //阴极铜质检数据
-                yjtJyInformationDecideDataList:[],
+                yjtJyInformationDecideDataList: [],
                 //图片路径
-                filePathList:[],
+                filePathList: [],
             })
             const showImage = ref(false)
 
@@ -185,6 +198,28 @@
             const finished = ref(false)
             const limit = ref(10)
             const offset = ref(0)
+
+
+            fc.await('scanner', (res) => {
+                if (router.currentRoute.value.path=='/qualityCheckingRecord') {
+                    if (res != 'null') {
+                        // window.scrollTo(0,0);
+                        listData.qualityCheckingList = []
+                        offset.value = 1
+                        finished.value = true
+                        getQualityCheckingRecord({batchnumber: '', barcode: res})
+                    } else {
+                        showToast({
+                            message: '数据获取失败',
+                            type: 'fail',
+                            className: 'particulars-detail-popup',
+                        })
+                    }
+                }
+            })
+
+
+
             //跳转到首页
             const onClickLeft = () => {
                 router.push({path: '/home'})
@@ -195,20 +230,20 @@
                 offset.value = 1
                 listData.qualityCheckingList = []
                 finished.value = false
-                getQualityCheckingRecord({batchnumber: searchValue.value,barcode:''})
+                getQualityCheckingRecord({batchnumber: searchValue.value, barcode: ''})
             }
             //搜索
             const onSearch = () => {
                 offset.value = 1
                 listData.qualityCheckingList = []
                 finished.value = false
-                getQualityCheckingRecord({batchnumber: searchValue.value,barcode:''})
+                getQualityCheckingRecord({batchnumber: searchValue.value, barcode: ''})
             }
 
 
             const onLoad = () => {
                 offset.value = offset.value + 1
-                getQualityCheckingRecord({batchnumber: searchValue.value,barcode:''})
+                getQualityCheckingRecord({batchnumber: searchValue.value, barcode: ''})
 
             }
 
@@ -219,22 +254,22 @@
 
             //图片预览
             const seeImg = (fileList) => {
-                listData.filePathList=[]
-                listData.filePathList=fileList
+                listData.filePathList = []
+                listData.filePathList = fileList
                 showImage.value = true
             }
 
             const qualityCheckingRecordDetails = (item) => {
-                listData.yjtJyInformationData=item
-                if (item.state=='1'){
-                    let obj={yjtJyInformationId:item.id,status:'2'}
+                listData.yjtJyInformationData = item
+                if (item.state == '1') {
+                    let obj = {yjtJyInformationId: item.id, status: '2'}
                     getQualityCheckingRecordDecide(obj)
                 }
-                centerDialogVisible.value=true
+                centerDialogVisible.value = true
             }
 
             //获取阴极铜质检数据详情
-            function getQualityCheckingRecordDecide(obj) {
+            const getQualityCheckingRecordDecide = (obj) => {
                 qualityCheckingRecordDecide(obj).then((result) => {
                     listData.yjtJyInformationDecideDataList = result.data.data
                 }).catch(error => {
@@ -244,7 +279,7 @@
 
 
             //获取阴极铜质检数据
-            function getQualityCheckingRecord(obj) {
+            const getQualityCheckingRecord = (obj) => {
                 let paramInfo = {}
                 let blocks = {}
                 let paramBlock = {}
@@ -308,7 +343,9 @@
                 onSearch,
                 qualityCheckingRecordDetails,
                 scanClick,
-                seeImg
+                seeImg,
+                getQualityCheckingRecordDecide,
+                getQualityCheckingRecord
             }
         }
     }

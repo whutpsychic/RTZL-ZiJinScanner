@@ -14,37 +14,6 @@
 
         <div style="background-color: #FFFFFF; z-index: 999;">
             <van-cell-group inset>
-                <!--                <van-field-->
-                <!--                        v-model="startDate"-->
-                <!--                        is-link-->
-                <!--                        name="startDate"-->
-                <!--                        label="开始日期"-->
-                <!--                        placeholder="开始日期"-->
-                <!--                        @click="showPicker = true"-->
-
-                <!--                />-->
-                <!--                <van-popup v-model:show="showPicker" position="bottom">-->
-                <!--                    <van-date-picker-->
-                <!--                            @confirm="onConfirm"-->
-                <!--                            @cancel="showPicker = false"-->
-                <!--                    />-->
-                <!--                </van-popup>-->
-                <!--                <van-field-->
-                <!--                        v-model="endDate"-->
-                <!--                        is-link-->
-                <!--                        name="endDate"-->
-                <!--                        label="结束日期"-->
-                <!--                        placeholder="结束日期"-->
-                <!--                        @click="showPicker2 = true"-->
-                <!--                />-->
-                <!--                <van-popup v-model:show="showPicker2" position="bottom">-->
-                <!--                    <van-date-picker-->
-                <!--                            @confirm="onConfirm2"-->
-                <!--                            @cancel="showPicker2 = false"-->
-                <!--                    />-->
-                <!--                </van-popup>-->
-
-
                 <van-cell title="日期区间：" title-style="max-width: 25%" :value="dataText" @click="show = true"/>
                 <van-calendar v-model:show="show" :min-date="minDate" type="range" allow-same-day @confirm="onConfirm"/>
 
@@ -128,12 +97,17 @@
     import {
         appReportFormStatisticsTable,
     } from '@/api/reportFormStatistics'
-    import {showToast} from "vant";
     import {useStore} from "vuex";
     import "echarts";
     import {onBeforeUnmount} from "@vue/runtime-core";
 
+    let nowDat = new Date();
+    let dateY = parseInt(nowDat.getFullYear() - 1);
+    let dateM = parseInt(nowDat.getMonth());
+    let dateD = parseInt(nowDat.getDate());
+
     export default {
+
         setup() {
             const router = useRouter()
             const active = ref(0)
@@ -141,8 +115,8 @@
             const store = useStore()
             const tableDataQuantity = ref([])
             const tableDataWeight = ref([])
-            const startDate = ref(dateFormat('YYYY-mm-dd', new Date()))
-            const endDate = ref(dateFormat('YYYY-mm-dd', new Date()))
+            const startDate = ref()
+            const endDate = ref()
             const showPicker = ref(false)
             const showPicker2 = ref(false)
             const checkoutUserId = ref('')
@@ -258,11 +232,17 @@
 
 
             const listData = shallowReactive({})
-            getTbYjtJyDictList()
+
 
             onMounted(() => {
+                startDate.value = dateFormat('YYYY-mm-dd', new Date())
+                endDate.value = dateFormat('YYYY-mm-dd', new Date())
                 dataText.value = startDate.value + '至' + endDate.value
-                getAppReportFormStatisticsTable()
+                getTbYjtJyDictList()
+                setTimeout(() => {
+                    getAppReportFormStatisticsTable()
+                }, 0)
+
             })
 
 
@@ -329,7 +309,7 @@
             }
 
             //获取阴极铜质检类型
-            function getTbYjtJyDictList() {
+            const getTbYjtJyDictList = () => {
                 let tbYjtJyDict = {}
                 typeCodeData(tbYjtJyDict).then((result) => {
                     if (result.data.code == 200) {
@@ -342,7 +322,7 @@
             }
 
             //获取表格统计数据
-            function getAppReportFormStatisticsTable() {
+            const getAppReportFormStatisticsTable = () => {
                 showEcharts.value = true
                 let objectMap = {}
                 objectMap.startDate = startDate.value
@@ -428,7 +408,7 @@
             }
 
             //格式化时间
-            function dateFormat(fmt, date) {
+            const dateFormat = (fmt, date) => {
                 let ret;
                 let d = new Date(date);
                 const opt = {
@@ -460,7 +440,7 @@
                 tu5,
                 tu6,
                 show,
-                minDate: new Date(2023, 5, 1),
+                minDate: new Date(dateY, dateM, dateD),
                 dataText,
                 showEcharts,
                 qualifiedOption,
@@ -482,7 +462,10 @@
                 checkboxClick,
                 onClickTab,
                 formatter,
-                onClickLeft
+                onClickLeft,
+                getTbYjtJyDictList,
+                dateFormat,
+                getAppReportFormStatisticsTable
             }
         },
 

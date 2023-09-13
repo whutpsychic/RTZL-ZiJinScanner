@@ -1,11 +1,7 @@
 import axios from 'axios'
-import store from '../store'
-import {showToast, showLoadingToast, closeToast, showFailToast} from 'vant'
-import appConfig from '@/appConfig.js'
-import router from "../router/index.js";
+import {showFailToast} from 'vant'
 
 const baseUrl = {}
-
 
 //生产环境
 if (process.env.NODE_ENV === 'production') {
@@ -46,6 +42,7 @@ request.defaults.headers['Content-Type'] = 'application/json'
 // }
 
 request.interceptors.request.use(
+
     (config) => {
         // console.log("+++++++++++++++++++")
         // console.log(config)
@@ -69,7 +66,7 @@ request.interceptors.response.use(
         if (url.indexOf("loginCheck.do") == -1) {
             //如果重定向的地址为登录地址的话，手机端跳转到登录页面
             if (config.request.responseURL.indexOf("loginCheck.do") != -1) {
-                router.push({path: '/login'})
+                window.location.href='/login'
             }
         }
         return config

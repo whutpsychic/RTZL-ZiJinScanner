@@ -35,38 +35,6 @@
                 </div>
 
             </el-card>
-
-
-            <!--            <van-collapse v-model="activeName">-->
-            <!--            <el-card class="box-card" shadow="always" style="margin-top:5px;position: relative"-->
-            <!--                     v-for="(item,index) in  listData.yjtJyInformationListData">-->
-
-            <!--                    <div class="card-header">-->
-            <!--                        <img src="/image/delete.png" class="delete" @click="deleteData(item)"/>-->
-            <!--                    </div>-->
-
-
-            <!--                <div class="demo-collapse">-->
-            <!--                    <el-collapse >-->
-            <!--                        <el-collapse-item :title="item.batchnumber" >-->
-            <!--                            <p><span-->
-            <!--                                    style="font-weight: bold">重量：</span><span>{{parseFloat(item.suttle)}}{{item.unit}}</span>-->
-            <!--                            </p>-->
-            <!--                            <p><span style="font-weight: bold">标准：</span><span>{{item.standard}}</span></p>-->
-            <!--                            <p><span style="font-weight: bold">计量员：</span><span>{{item.suttleperson}}</span>-->
-            <!--                                &nbsp;&nbsp;&nbsp;&nbsp;<span-->
-            <!--                                        style="font-weight: bold">扫描人：</span><span>{{item.scanUser}}</span></p>-->
-            <!--                            <p><span style="font-weight: bold">生产日期：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",item.proDate)}}-->
-            <!--                            </p>-->
-            <!--                        </el-collapse-item>-->
-            <!--                    </el-collapse>-->
-            <!--                </div>-->
-
-            <!--                <van-button type="primary" size="small" style="position: absolute;right: 60px;top: 30px;" @click="identifyClick('0',item)">单个鉴定-->
-            <!--                </van-button>-->
-            <!--            </el-card>-->
-            <!--            </van-collapse>-->
-
         </div>
         <div v-show="active==1">
             <div v-if="JSON.stringify(listData.yjtJyInformationData) !== '{}'">
@@ -76,24 +44,31 @@
                         <van-divider content-position="left">基本信息</van-divider>
                         <div style="position: relative">
                             <p>
-                                <span style="font-weight: bold">编号：</span><span>{{listData.yjtJyInformationData.batchnumber}}</span>
+                                <span style="font-weight: bold">编号：</span>
+                                <span>{{listData.yjtJyInformationData.batchnumber}}</span>
                             </p>
 
                             <p>
-                                <span style="font-weight: bold">重量：</span><span>{{parseFloat(listData.yjtJyInformationData.suttle)}}{{listData.yjtJyInformationData.unit}}</span>
+                                <span style="font-weight: bold">重量：</span>
+                                <span>{{parseFloat(listData.yjtJyInformationData.suttle)}}{{listData.yjtJyInformationData.unit}}</span>
                             </p>
 
                             <p>
-                                <span style="font-weight: bold">标准：</span><span>{{listData.yjtJyInformationData.standard}}</span>
+                                <span style="font-weight: bold">标准：</span>
+                                <span>{{listData.yjtJyInformationData.standard}}</span>
                             </p>
 
                             <p>
-                                <span style="font-weight: bold">计量员：</span><span>{{listData.yjtJyInformationData.suttleperson}}</span>
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: bold">扫描人：</span><span>{{listData.yjtJyInformationData.scanUser}}</span>
+                                <span style="font-weight: bold">计量员：</span>
+                                <span>{{listData.yjtJyInformationData.suttleperson}}</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <span style="font-weight: bold">扫描人：</span>
+                                <span>{{listData.yjtJyInformationData.scanUser}}</span>
                             </p>
 
                             <p>
-                                <span style="font-weight: bold">生产日期：</span><span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationData.proDate)}}</span>
+                                <span style="font-weight: bold">生产日期：</span>
+                                <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationData.proDate)}}</span>
                             </p>
 
                             <div v-if="listData.yjtJyInformationDetailsData.status=='2'" class="yijianyan"
@@ -113,23 +88,27 @@
 
                         <div>
                             <p>
-                                <span style="font-weight: bold">品级分类：</span><span>{{listData.yjtJyInformationDetailsData.exteriorName}}</span>
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span v-if="listData.yjtJyInformationDetailsData.exterior!='0'"
-                                                              style="font-weight: bold">类型：</span><span>{{listData.yjtJyInformationDetailsData.dictName}}</span>
+                                <span style="font-weight: bold">品级分类：</span>
+                                <span>{{listData.yjtJyInformationDetailsData.exteriorName}}</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <span v-if="listData.yjtJyInformationDetailsData.exterior!='0'" style="font-weight: bold">类型：</span>
+                                <span>{{listData.yjtJyInformationDetailsData.dictName}}</span>
                             </p>
 
                             <p>
-                                <span style="font-weight: bold">质检时间：</span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetailsData.checkoutDate)}}
+                                <span style="font-weight: bold">质检时间：</span>
+                                <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetailsData.checkoutDate)}}</span>
                             </p>
 
                             <p>
-                                <span style="font-weight: bold">质检人：</span><span>{{listData.yjtJyInformationDetailsData.checkoutUser}}</span>
+                                <span style="font-weight: bold">质检人：</span>
+                                <span>{{listData.yjtJyInformationDetailsData.checkoutUser}}</span>
                             </p>
 
                             <p v-if="listData.yjtJyInformationDetailsData.alterReason">
-                                <span style="font-weight: bold">改判理由：</span><span>{{listData.yjtJyInformationDetailsData.alterReason}}</span>
+                                <span style="font-weight: bold">改判理由：</span>
+                                <span>{{listData.yjtJyInformationDetailsData.alterReason}}</span>
                             </p>
-
 
                         </div>
 
@@ -143,12 +122,8 @@
                                        position="left"
                                        :src="item"
                             />
-
                         </div>
-
-
                     </el-card>
-
 
                 </div>
             </div>
@@ -384,25 +359,6 @@
 
         setup() {
 
-            fc.await('scanner', (res) => {
-                if (res != 'null') {
-                    let tbCathodeCopper = {}
-                    tbCathodeCopper.fBarcode = res
-                    getJudgementCathodeCopper(tbCathodeCopper)
-
-                } else {
-                    showToast({
-                        message: '数据获取失败',
-                        type: 'fail',
-                        className: 'particulars-detail-popup',
-                    })
-                }
-
-
-            })
-
-
-
             const route = useRoute()
             const router = useRouter()
             const active = ref(0)
@@ -460,6 +416,26 @@
             const activeName = ref()
             const barcode = ref(route.query.barcode)
             active.value = Number(route.query.tabState)
+
+
+            fc.await('scanner', (res) => {
+                if (router.currentRoute.value.path=='/gradeDetermination'){
+                    if (res != 'null') {
+                        let tbCathodeCopper = {}
+                        tbCathodeCopper.fBarcode = res
+                        getJudgementCathodeCopper(tbCathodeCopper)
+
+                    } else {
+                        showToast({
+                            message: '数据获取失败',
+                            type: 'fail',
+                            className: 'particulars-detail-popup',
+                        })
+                    }
+
+                }
+            })
+
 
             onMounted(() => {
                 if (active.value == 0) {
@@ -842,7 +818,7 @@
             };
 
             //判定
-            function getExcellentJudgement(listMap) {
+            const getExcellentJudgement=(listMap)=> {
                 excellentJudgement(listMap).then((result) => {
                     if (result.data.code == 200) {
                         showToast({
@@ -870,7 +846,7 @@
 
             }
 
-            function getJudgementCathodeCopper(tbCathodeCopper) {
+            const getJudgementCathodeCopper = (tbCathodeCopper) => {
                 judgementCathodeCopper(tbCathodeCopper).then((result) => {
                     if (result.data.code) {
                         if (result.data.code != 200) {
@@ -906,7 +882,7 @@
 
 
             //获取阴极铜判定图片
-            function getFileQuery(data) {
+            const getFileQuery = (data) => {
                 let obj = {}
                 obj.yjtJyInformationDetailsId = data
                 fileQuery(obj).then((result) => {
@@ -918,7 +894,7 @@
 
 
             //已判定的数据
-            function getAlreadyDeterminedData() {
+            const getAlreadyDeterminedData = () => {
                 let tbCathodeCopper = {}
                 tbCathodeCopper.fBarcode = barcode.value
                 listData.yjtJyInformationData = {}
@@ -939,7 +915,7 @@
             };
 
             //获取当前扫码人未判定的数据
-            function getNotDeterminedData() {
+            const getNotDeterminedData = () => {
                 listData.yjtJyInformationListData = []
                 notDeterminedData().then((result) => {
                     listData.yjtJyInformationListData = result.data.data.yjtJyInformationListData
@@ -951,7 +927,7 @@
             }
 
             //获取改判理由
-            function getAlterReasonQuery() {
+            const getAlterReasonQuery = () => {
                 let paramInfo = {}
                 let blocks = {}
                 let paramBlock = {}
@@ -1026,7 +1002,13 @@
                 outstandingClick,
                 qualifiedClick,
                 unqualifiedClick,
-                outstandingAlter
+                outstandingAlter,
+                getExcellentJudgement,
+                getJudgementCathodeCopper,
+                getFileQuery,
+                getAlreadyDeterminedData,
+                getNotDeterminedData,
+                getAlterReasonQuery
             };
         },
     }

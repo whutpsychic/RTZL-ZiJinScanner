@@ -128,11 +128,12 @@
     import BigNumber from 'bignumber.js'
     import {ref, onMounted} from 'vue'
     import {shallowReactive, toRaw} from '@vue/reactivity'
-    import {useRouter, useRoute} from 'vue-router'
+    import {useRouter, useRoute, onBeforeRouteLeave} from 'vue-router'
     import {closeToast, showConfirmDialog, showDialog, showFailToast, showLoadingToast, showToast} from 'vant'
     import {
         checkBatchNo,
-        getBarcode
+        getBarcode,
+        scanConfirm
     } from '@/api/pickWith'
     import {useStore} from 'vuex'
     import {pick} from 'vant/lib/utils'
@@ -140,59 +141,6 @@
 
     export default {
         setup() {
-            fc.await('scanner', (res) => {
-                if (res != 'null') {
-                    let barcode = res
-                    let standard = new RegExp(
-                        /^124010[1-9][0-9]{2}(0[1-9]|1[0-2])((0[1-9])|((1|2)[0-9])|30|31)[0-9]{12}$/,
-                    );
-                    let bool = standard.test(barcode) && barcode.length === 25;
-                    if (bool) {
-                        let queryParams = {}
-                        queryParams.fBarcode = barcode
-                        checkBatchNo(queryParams).then((res) => {
-                            if (res.data.data) {
-                                return decode(barcode)
-                                    .then((result) => {
-                                        let date = result.shengchanriqi,
-                                            number = result.kunxuhao,
-                                            barcode = result.barcode,
-                                            weight = result.kunjingzhong
-                                        let databar = {date, number, barcode, weight}
-                                        checkIfExist(toRaw(tableData.value), databar);
-                                    })
-                            } else {
-                                showDialog({
-                                    title: '提示',
-                                    width: '600',
-                                    message: res.data.message,
-                                }).then(() => {
-                                    // on close
-                                })
-                            }
-                        })
-                    } else {
-                        showDialog({
-                            title: '提示',
-                            width: '600',
-                            message: '对不起，此条码不符合规范',
-                        }).then(() => {
-                            // on close
-                        })
-                    }
-
-                } else {
-                    showDialog({
-                        title: '提示',
-                        width: '600',
-                        message: '数据获取失败',
-                    }).then(() => {
-                        // on close
-                    })
-                }
-
-            })
-
             const router = useRouter()
             const route = useRoute()
             const tableData = ref([])
@@ -205,6 +153,7 @@
             const yij2 = ref('0')
             const pz = ref('0')
             const centerDialogVisibleTXM = ref(false)
+            const typeName=ref('')
             const barCodeSelect = ref('')
             const F_BATCHGROUP = ref('')
             const F_BATCHNUMBER = ref('')
@@ -214,14 +163,72 @@
             })
 
 
-            const onClickLeft = () => history.back()
+            console.log(router.currentRoute.value.path)
 
+            fc.await('scanner', (res) => {
+                if (router.currentRoute.value.path=='/pickWith') {
+                    if (res != 'null') {
+                        let barcode = res
+                        let standard = new RegExp(
+                            /^124010[1-9][0-9]{2}(0[1-9]|1[0-2])((0[1-9])|((1|2)[0-9])|30|31)[0-9]{12}$/,
+                        );
+                        let bool = standard.test(barcode) && barcode.length === 25;
+                        if (bool) {
+                            let queryParams = {}
+                            queryParams.fBarcode = barcode
+                            checkBatchNo(queryParams).then((res) => {
+                                if (res.data.data) {
+                                    return decode(barcode)
+                                        .then((result) => {
+                                            let date = result.shengchanriqi,
+                                                number = result.kunxuhao,
+                                                barcode = result.barcode,
+                                                weight = result.kunjingzhong
+                                            let databar = {date, number, barcode, weight}
+                                            checkIfExist(toRaw(tableData.value), databar);
+                                        })
+                                } else {
+                                    showDialog({
+                                        title: '提示',
+                                        width: '600',
+                                        message: res.data.message,
+                                    }).then(() => {
+                                        // on close
+                                    })
+                                }
+                            })
+                        } else {
+                            showDialog({
+                                title: '提示',
+                                width: '600',
+                                message: '对不起，此条码不符合规范',
+                            }).then(() => {
+                                // on close
+                            })
+                        }
+
+                    } else {
+                        showDialog({
+                            title: '提示',
+                            width: '600',
+                            message: '数据获取失败',
+                        }).then(() => {
+                            // on close
+                        })
+                    }
+
+                }
+
+            })
+
+            const onClickLeft = () => {
+                router.push({path: '/pickWithQueryInfoData'})
+            }
 
             const closeTXMClick = () => {
                 centerDialogVisibleTXM.value = false
 
             }
-
 
             const onHandle = () => {
                 centerDialogVisibleTXM.value = true
@@ -236,6 +243,8 @@
             const scanCode = () => {
                 fc.scan()
             }
+
+
 
             onMounted(() => {
                 let chukudanListInfo = toRaw(store.state.chukudanListInfo)
@@ -270,16 +279,46 @@
 
                     return false
                 }
+
                 centerDialogVisibleTXM.value = false
-                return decode(barCodeSelect.value)
-                    .then((result) => {
-                        let date = result.shengchanriqi,
-                            number = result.kunxuhao,
-                            barcode = result.barcode,
-                            weight = result.kunjingzhong
-                        let databar = {date, number, barcode, weight}
-                        checkIfExist(toRaw(tableData.value), databar);
+                let barcode = barCodeSelect.value
+                let standard = new RegExp(
+                    /^124010[1-9][0-9]{2}(0[1-9]|1[0-2])((0[1-9])|((1|2)[0-9])|30|31)[0-9]{12}$/,
+                );
+                let bool = standard.test(barcode) && barcode.length === 25;
+                if (bool) {
+                    let queryParams = {}
+                    queryParams.fBarcode = barcode
+                    checkBatchNo(queryParams).then((res) => {
+                        if (res.data.data) {
+                            return decode(barcode)
+                                .then((result) => {
+                                    let date = result.shengchanriqi,
+                                        number = result.kunxuhao,
+                                        barcode = result.barcode,
+                                        weight = result.kunjingzhong
+                                    let databar = {date, number, barcode, weight}
+                                    checkIfExist(toRaw(tableData.value), databar);
+                                })
+                        } else {
+                            showDialog({
+                                title: '提示',
+                                width: '600',
+                                message: res.data.message,
+                            }).then(() => {
+                                // on close
+                            })
+                        }
                     })
+                } else {
+                    showDialog({
+                        title: '提示',
+                        width: '600',
+                        message: '对不起，此条码不符合规范',
+                    }).then(() => {
+                        // on close
+                    })
+                }
             }
 
 
@@ -324,9 +363,9 @@
                                 (item) => item.barcode != selectedRow.barcode
                             )
                             tableData.value = filtedData
-                            store.commit('setScandList', tableData.value)
+                            typeName.value='edit'
+                            calcPick(filtedData,selectedRow)
                             selectedRow = ''
-                            calcPick(filtedData)
                         })
                         .catch((err) => {
                             console.log(err)
@@ -357,51 +396,87 @@
                 }
 
 
-                let chukudanListInfo = toRaw(store.state.chukudanListInfo)
-                let carInfo = toRaw(store.state.carInfo)
-                let condition = {}
-                //发货单号
-                condition.F_DELIVERYNO = chukudanListInfo.F_DELIVERYNO
-                //已拣总重量
-                condition.strSuttle = yij1.value
-                //车号
-                condition.strTruckNo = carInfo.chehao
-                //秤房
-                condition.weighthousename = carInfo.chengfang
-                //单据号
-                condition.id = carInfo.danjuhao
-                //新增的DataId
-                condition.strDataId = carInfo.DataId
-                //条码数组
-                let str = toRaw(tableData.value).map((item) => {
-                    return item.barcode + ',';
-                })
-                    .join('')
-                condition.strBarcodes =str.substring(0, str.length - 1)
+                showConfirmDialog({
+                    title: '提示',
+                    width: '600',
+                    message: '是否已完成扫描？',
+                }).then(() => {
 
-                console.log(carInfo)
-                console.log(condition)
+                   showLoadingToast({
+                        duration: 0,
+                        forbidClick: true,
+                        message: '拣配中...',
+                    });
 
 
+                    let chukudanListInfo = toRaw(store.state.chukudanListInfo)
+                    let carInfo = toRaw(store.state.carInfo)
+                    let condition = {}
+                    //发货单号
+                    condition.F_DELIVERYNO = chukudanListInfo.F_DELIVERYNO
+                    //已拣总重量
+                    condition.strSuttle = yij1.value
+                    //车号
+                    condition.strTruckNo = carInfo.chehao
+                    //秤房
+                    condition.weighthousename = carInfo.chengfang
+                    //单据号
+                    condition.id = carInfo.danjuhao
+                    //新增的DataId
+                    condition.strDataId = carInfo.DataId
+                    //条码数组
+                    let str = toRaw(tableData.value).map((item) => {
+                        return item.barcode + ',';
+                    })
+                        .join('')
+                    condition.strBarcodes = str.substring(0, str.length - 1)
+                    scanConfirm(condition).then((res) => {
+                        closeToast()
+                        if (res.data.code == '200') {
+                            tableData.value=[]
+                            showDialog({
+                                title: '提示',
+                                width: '600',
+                                message: res.data.message,
+                            }).then(() => {
+                                store.commit('setPickWithScroll',0)
+                                store.commit('setChukudanListInfo', {})
+                                store.commit('setCarInfo', {})
+                                store.commit('setScandList',[])
+                                store.commit('setScandCalculateData', {})
+                                router.push({path: '/pickWithQueryListData'})
+                            })
+                        } else {
+                            showDialog({
+                                title: '提示',
+                                width: '600',
+                                message: res.data.message,
+                            }).then(() => {
+                                // on close
+                            })
+                        }
+                    })
+
+                }).catch((err) => {
+                    closeToast()
+                    console.log(err)
+                });
             }
 
-            const calcPick = (arr) => {
-                if (arr.length > 0) {
-                    for (let i = 0; i < arr.length; i++) {
-                        let obj = arr[i]
-                        yij1.value = new BigNumber(yij1.value).plus(new BigNumber(obj.weight).dividedBy(1000)).toFixed(4)
-                        ques.value = new BigNumber(yingj.value).minus(yij1.value).toFixed(4)
-                        pz.value = new BigNumber(pizhong.value).plus(yij1.value).toFixed(4)
-                        tableData.value = arr
-                        yij2.value = arr.length
-                        itemKey.value = Math.random()
-                    }
+            const calcPick = (arr,obj) => {
+                if (typeName.value == 'add') {
+                    yij1.value = (new BigNumber(yij1.value).plus(new BigNumber(obj.weight).dividedBy(1000).toNumber())).toFixed(4)
                 } else {
-                    yij1.value = '0'
-                    ques.value = yingj.value
-                    yij2.value = '0'
-                    pz.value = new BigNumber(pizhong.value).plus(yij1.value).toFixed(4)
+                    yij1.value = (new BigNumber(yij1.value).minus(new BigNumber(obj.weight).dividedBy(1000).toNumber())).toFixed(4)
                 }
+                ques.value = (new BigNumber(yingj.value).minus(yij1.value)).toFixed(4)
+                pz.value = (new BigNumber(pizhong.value).plus(yij1.value)).toFixed(4)
+
+                yij2.value = arr.length
+                tableData.value = arr
+                itemKey.value = Math.random()
+
+
 
                 let calculateData = {}
                 calculateData.yij1 = yij1.value
@@ -465,7 +540,8 @@
                     let existDatabar = []
                     arr.unshift(obj)
                     existDatabar = arr
-                    calcPick(existDatabar)
+                    typeName.value='add'
+                    calcPick(existDatabar,obj)
                 } else {
                     showDialog({
                         title: '提示',
@@ -478,6 +554,7 @@
             }
 
             return {
+                typeName,
                 barCodeSelect,
                 F_BATCHGROUP,
                 F_BATCHNUMBER,

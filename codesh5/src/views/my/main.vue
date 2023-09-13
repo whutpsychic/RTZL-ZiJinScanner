@@ -1,28 +1,25 @@
 <template>
-    <main>
-        <van-nav-bar
-                title="我的"
-                class="page-nav-bar"
-        />
+
+    <van-nav-bar
+            title="我的"
+            class="page-nav-bar"
+    />
 
 
-        <div class="top">
-            <div>
-                <img class="tar" src="/image/touxiang.jpeg" alt="">
-                <p style="float:left;color:#FFFFFF;margin-left:30px;margin-top:30px">{{displayName}}</p>
-            </div>
-
-        </div>
-
-        <div style="margin-top:10px; clear: both; border-top: 1px solid #e2e2ee;">
-            <van-cell size="large" icon="warning-o" title="退出" is-link @click="dropOut"/>
-        </div>
-
+    <div class="top">
         <div>
+            <img class="tar" src="/image/touxiang.jpeg" alt="">
+            <p style="float:left;color:#FFFFFF;margin-left:30px;margin-top:30px">{{displayName}}</p>
         </div>
 
+    </div>
 
-    </main>
+    <div style="margin-top:10px; clear: both; border-top: 1px solid #e2e2ee;">
+        <van-cell size="large" icon="warning-o" title="退出" is-link @click="dropOut"/>
+    </div>
+
+    <div>
+    </div>
 
 </template>
 

@@ -9,6 +9,10 @@ const SCAND_LIST = 'scandList'
 const PICKWITH_QUERY = 'pickWithQuery'
 const PICKWITH_SCROLL = 'pickWithScroll'
 const SCAND_CALCULATE_DATA='scandCalculateData'
+const PICKWITH_RECORD_QUERY = 'pickWithRecordQuery'
+const PICKWITH_RECORD_SCROLL = 'pickWithRecordScroll'
+
+
 
 const store = createStore({
     state() {
@@ -56,6 +60,18 @@ const store = createStore({
         setPickWithScroll(state, data) {
             state.pickWithScroll = data
             setItem(PICKWITH_SCROLL, state.pickWithScroll)
+        },
+
+
+        setPickWithRecordQuery(state, data) {
+            state.pickWithRecordQuery = data
+            setItem(PICKWITH_RECORD_QUERY, state.pickWithRecordQuery)
+        },
+
+
+        setPickWithRecordScroll(state, data) {
+            state.pickWithRecordScroll = data
+            setItem(PICKWITH_RECORD_SCROLL, state.pickWithRecordScroll)
         },
 
     },

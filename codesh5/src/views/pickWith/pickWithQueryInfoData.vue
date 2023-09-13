@@ -100,18 +100,10 @@
                 router.push({name: 'chooseWagonNumber'})
             }
 
-            // 注册扫描后监听返回结果函数
-            fc.await('scanner', (res) => {
-                router.push({
-                    name: 'jianpeiScannedResult',
-                    query: {
-                        barcode: res,
-                    },
-                })
-            })
 
             const onScan = () => {
-               if (toRaw(store.state.carInfo)==''){
+
+               if (Object.getOwnPropertyNames(toRaw(store.state.carInfo)).length == 0){
                    showDialog({
                        title: '提示',
                        width: '600',

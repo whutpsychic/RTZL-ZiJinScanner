@@ -1,5 +1,4 @@
 <template>
-    <main>
         <van-nav-bar
                 title="主菜单"
         />
@@ -29,29 +28,22 @@
             </van-grid-item>
 
 
-<!--            <van-grid-item to="/pickWithQuery" v-if="pickWithQueryRecordRole">-->
-<!--                <img src="/image/jianpei.png" style="width: 46%;"/>-->
-<!--                <span style="margin-top: 8px;">拣配</span>-->
-<!--            </van-grid-item>-->
+            <van-grid-item to="/pickWithQuery" v-if="pickWithQueryRecordRole">
+                <img src="/image/jianpei.png" style="width: 46%;"/>
+                <span style="margin-top: 8px;">拣配</span>
+            </van-grid-item>
 
 
-<!--            <van-grid-item to="/pickWithRecordQuery" v-if="pickWithRecordQueryRecordRole">-->
-<!--                <img src="/image/jianpeidan.png" style="width: 46%;"/>-->
-<!--                <span style="margin-top: 8px;">查询拣配单</span>-->
-<!--            </van-grid-item>-->
-
-
+            <van-grid-item to="/pickWithRecordQuery" v-if="pickWithRecordQueryRecordRole">
+                <img src="/image/jianpeidan.png" style="width: 46%;"/>
+                <span style="margin-top: 8px;">查询拣配单</span>
+            </van-grid-item>
         </van-grid>
-    </main>
-
-
 </template>
 
 <script>
-    import fc from "flutter-core";
+
     import {useRouter} from "vue-router";
-    import {showDialog, showToast} from "vant";
-    import {judgementCathodeCopper} from '@/api/gradeDetermination'
     import {toRaw} from "@vue/reactivity";
     import {useStore} from "vuex";
     import {onMounted, ref} from "vue";
@@ -64,45 +56,10 @@
             const gradeDeterminationRole = ref(false)
             const qualityCheckingRecordRole = ref(false)
             const reportFormStatisticsRole = ref(false)
-            const scannerShow = ref(false)
             const auditingListRole = ref(false)
             const pickWithQueryRecordRole = ref(false)
             const pickWithRecordQueryRecordRole = ref(false)
-            fc.await('scanner', (res) => {
-                if (scannerShow.value) {
-                    if (res != 'null') {
-                        let tbCathodeCopper = {}
-                        tbCathodeCopper.fBarcode = res
-                        judgementCathodeCopper(tbCathodeCopper).then((result) => {
-                            if (result.data.code) {
-                                if (result.data.code != 200) {
-                                    showDialog({
-                                        title: '提示',
-                                        width: '600',
-                                        message: result.data.message,
-                                    }).then(() => {
 
-                                    });
-                                } else {
-                                    router.push({
-                                        path: '/gradeDetermination',
-                                        query: {barcode: res, tabState: result.data.data}
-                                    })
-                                }
-                            }
-                        }).catch(error => {
-                            console.log(error)
-                        })
-
-                    } else {
-                        showToast({
-                            message: '数据获取失败',
-                            type: 'fail',
-                            className: 'particulars-detail-popup',
-                        })
-                    }
-                }
-            })
 
             history.pushState(null, null, document.URL);
             window.addEventListener("popstate", function (e) {
@@ -115,7 +72,7 @@
 
 
             //角色判断
-            function roleJudgement() {
+            const roleJudgement=() => {
                 let groupNames = userData.groupNames.split(',')
                 for (let i = 0; i < groupNames.length; i++) {
                     if (groupNames[i] == 'admingroup') {
@@ -123,7 +80,6 @@
                         qualityCheckingRecordRole.value = true
                         reportFormStatisticsRole.value = true
                         auditingListRole.value = true
-                        scannerShow.value = true
                         pickWithQueryRecordRole.value = true
                         pickWithRecordQueryRecordRole.value = true
                         break
@@ -134,15 +90,20 @@
                         qualityCheckingRecordRole.value = true
                         reportFormStatisticsRole.value = true
                         auditingListRole.value = true
-                        scannerShow.value = true
                         break
                     }
 
                     if (groupNames[i] == 'yjtzj_user') {
                         gradeDeterminationRole.value = true
                         qualityCheckingRecordRole.value = true
-                        reportFormStatisticsRole.value = true
-                        scannerShow.value = true
+                        reportFormStatisticsRole.value = tru
+                        break
+                    }
+
+
+                    if (groupNames[i] == 'yjtjp_app') {
+                        pickWithQueryRecordRole.value = true
+                        pickWithRecordQueryRecordRole.value = true
                         break
                     }
                 }
@@ -151,32 +112,6 @@
 
             //扫码
             const scanCode = () => {
-                // fc.scan()
-                // let tbCathodeCopper = {}
-                // tbCathodeCopper.fBarcode = '1240101220616032917924565'
-                // judgementCathodeCopper(tbCathodeCopper).then((result) => {
-                //    if (result.data.code){
-                //        if (result.data.code != 200) {
-                //            showDialog({
-                //                title: '提示',
-                //                width: '600',
-                //                message: result.data.message,
-                //            }).then(() => {
-                //
-                //            });
-                //        } else {
-                //            router.push({
-                //                path: '/gradeDetermination',
-                //                query: {barcode: '1240101220616032917924565', tabState: result.data.data}
-                //            })
-                //        }
-                //    }
-                //
-                //
-                // }).catch(error => {
-                //     console.log(error)
-                // })
-
                 router.push({
                     path: '/gradeDetermination',
                     query: {barcode: '', tabState: '0'}
@@ -188,7 +123,6 @@
                 pickWithQueryRecordRole,
                 pickWithRecordQueryRecordRole,
                 gradeDeterminationRole,
-                scannerShow,
                 qualityCheckingRecordRole,
                 reportFormStatisticsRole,
                 auditingListRole,

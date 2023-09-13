@@ -1,5 +1,5 @@
 <template>
-    <main>
+
         <van-nav-bar
                 title="选择车号"
                 class="page-nav-bar"
@@ -55,7 +55,6 @@
                 </div>
             </div>
         </div>
-    </main>
 </template>
 
 <script>
@@ -69,6 +68,11 @@
     import {onMounted} from "@vue/runtime-core";
     import {toRaw} from "@vue/reactivity";
 
+    let nowDat = new Date();
+    let dateY = parseInt(nowDat.getFullYear() - 1);
+    let dateM = parseInt(nowDat.getMonth());
+    let dateD = parseInt(nowDat.getDate());
+
     let formRef = ''
     export default {
         mounted() {
@@ -77,8 +81,8 @@
 
         setup() {
             const dataText = ref('')
-            const startDate = ref(dateFormat('YYYY-mm-dd', new Date((new Date).getTime() - 24 * 60 * 60 * 1000)))
-            const endDate = ref(dateFormat('YYYY-mm-dd', new Date()))
+            const startDate = ref('')
+            const endDate = ref('')
             const chehao = ref('')
             const store = useStore()
             const show = ref(false)
@@ -99,10 +103,14 @@
 
 
             onMounted(() => {
+                startDate.value = dateFormat('YYYY-mm-dd', new Date((new Date).getTime() - 24 * 60 * 60 * 1000))
+                endDate.value = dateFormat('YYYY-mm-dd', new Date())
                 let height = document.body.scrollHeight - 260
                 tableHeight.value = 'height:' + height + 'px'
                 dataText.value = startDate.value + '至' + endDate.value
-                queryData()
+                setTimeout(() => {
+                    queryData()
+                }, 0)
             })
 
 
@@ -118,7 +126,9 @@
                 dataText.value = `${startDate.value}至${endDate.value}`;
             }
 
-            const onClickLeft = () => history.back()
+            const onClickLeft = () => {
+                router.push({path: '/pickWithQueryInfoData'})
+            }
 
             const onQuery = () => {
                 formRef.submit()
@@ -165,6 +175,7 @@
                         danjuhao: '',
                         chengfang: '',
                         pizhong: 0,
+                        DataId:'',
                     }
                     store.commit('setCarInfo', obj)
                     store.commit('setScandList',[])
@@ -198,7 +209,7 @@
             }
 
             //格式化时间
-            function dateFormat(fmt, date) {
+            const dateFormat=(fmt, date) =>  {
                 let ret;
                 let d = new Date(date);
                 const opt = {
@@ -224,7 +235,7 @@
 
             return {
                 deDate: [new Date((new Date).getTime() - 24 * 60 * 60 * 1000), new Date()],
-                minDate: new Date(2021, 5, 1),
+                minDate: new Date(dateY, dateM, dateD),
                 show,
                 dataText,
                 startDate,

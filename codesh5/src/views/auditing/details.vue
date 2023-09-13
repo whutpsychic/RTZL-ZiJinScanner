@@ -258,7 +258,7 @@
 
 
             //获取阴极铜判定图片
-            function getFileQuery(data) {
+            const getFileQuery=(data) => {
                 let obj = {}
                 obj.yjtJyInformationDetailsId = data
                 fileQuery(obj).then((result) => {
@@ -301,6 +301,7 @@
                 seeImg,
                 onClickLeft,
                 dateFormat,
+                getFileQuery,
                 cathodeCopperAuditorClick
             }
 

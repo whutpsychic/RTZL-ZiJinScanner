@@ -65,9 +65,14 @@
     import {toRaw} from "@vue/reactivity";
     import {onMounted} from "@vue/runtime-core";
 
+    let nowDat = new Date();
+    let dateY = parseInt(nowDat.getFullYear() - 1);
+    let dateM = parseInt(nowDat.getMonth());
+    let dateD = parseInt(nowDat.getDate());
+
     let formRef = ''
     export default {
-        namespaced: true,
+
         mounted() {
             formRef = this.$refs['formRef']
         },
@@ -76,8 +81,8 @@
             const store = useStore()
             const router = useRouter()
             const dataText = ref('')
-            const startDate = ref(dateFormat('YYYY-mm-dd', new Date()))
-            const endDate = ref(dateFormat('YYYY-mm-dd', new Date()))
+            const startDate = ref('')
+            const endDate = ref('')
             const show = ref(false)
             const F_DELIVERYNO = ref('')
             const F_STORECODE = ref('1403库区')
@@ -88,33 +93,18 @@
 
 
             onMounted(() => {
+                startDate.value = dateFormat('YYYY-mm-dd', new Date())
+                endDate.value = dateFormat('YYYY-mm-dd', new Date())
                 dataText.value = startDate.value + '至' + endDate.value
 
             })
 
-            //路由拦截
-            // router.beforeEach((to, from, next) => {
-            //     if (to.path == '/home') {
-            //         dataText.value=''
-            //         startDate.value=''
-            //         endDate.value=''
-            //         F_DELIVERYNO.value=''
-            //     }
-            //     next()
-            // })
 
             const onConfirmPicker = ({selectedOptions}) => {
                 showPicker.value = false
                 F_STORECODE.value = selectedOptions[0].value;
             }
 
-            const changeRouterKeepAlive = (name, keepAlive) => {
-                router.options.routes.map((item) => {
-                    if (item.name === name) {
-                        item.meta.keepAlive = keepAlive;
-                    }
-                });
-            };
 
 
             //跳转到首页
@@ -146,6 +136,7 @@
                 obj.strStore = '1403'
 
                 store.commit('setPickWithQuery', obj)
+                store.commit('setPickWithScroll',0)
                 router.push({name: 'pickWithQueryListData',})
 
             }
@@ -159,7 +150,7 @@
             }
 
             //格式化时间
-            function dateFormat(fmt, date) {
+            const dateFormat=(fmt, date) =>  {
                 let ret;
                 let d = new Date(date);
                 const opt = {
@@ -188,9 +179,8 @@
                 F_STORECODE,
                 show,
                 showPicker,
-                minDate: new Date(2022, 5, 1),
+                minDate: new Date(dateY, dateM, dateD),
                 dataText,
-                changeRouterKeepAlive,
                 onSearch,
                 dateFormat,
                 onConfirmPicker,

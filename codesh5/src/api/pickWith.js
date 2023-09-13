@@ -52,3 +52,15 @@ export function getBarcode(data) {
 }
 
 
+/***
+ * 扫描确认_含车号（拣配app）
+ *
+ */
+export function scanConfirm(data) {
+    return request({
+        url: `${baseUrl.api_base_url}/mobileTerminalApi.do?method=scanConfirm`,
+        method: 'post',
+        data: data,
+    })
+}
+
