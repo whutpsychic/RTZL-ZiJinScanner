@@ -39,7 +39,7 @@
         <div class="btn-area">
             <div>
                 <img
-                        src="@/assets/image/btn_queren.png"
+                        src="@/assets/image/btn_fanhui1.png"
                         alt=""
                         @click="onClickLeft"
                 />
@@ -296,8 +296,8 @@
     .btn-area div {
         border-radius: 25px;
         font-size: 20px;
-        width: 30%;
-        min-height: 50px;
+        width: 28%;
+        min-height: 45px;
     }
 
     .btn-area img {
@@ -310,10 +310,12 @@
 
     .btn-area > div:nth-child(1) {
         background-color: var(--btn-color1);
+        margin-left:10px
     }
 
     .btn-area > div:nth-child(3) {
         background-color: var(--btn-color1);
+        margin-right:10px
     }
 
 

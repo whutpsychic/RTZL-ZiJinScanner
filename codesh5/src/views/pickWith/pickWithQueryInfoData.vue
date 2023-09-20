@@ -226,28 +226,31 @@
     }
 
     .prop-value-div .label {
-        width: 90px;
+        width: 70px;
         color: #000000;
         display: flex;
         align-items: center;
-        margin-left: 10px;
+        margin-left: 15px;
     }
 
     .prop-value-div .value {
         border: 1px solid var(--form-input-border-color);
         background-color: white;
-        width: 75%;
-        border-radius: 10px;
+        width: 70%;
+        border-radius: 5px;
         padding: 5px;
         color: #000000;
         padding-left: 15px;
         padding-right: 15px;
+        margin-right: 15px;
     }
 
     .showMoreDiv {
         display: flex;
         justify-content: space-between;
-        width: 65%;
+        height: 38px;
+        width: 70%;
+        margin-right: 15px;
     }
 
     .showMore {

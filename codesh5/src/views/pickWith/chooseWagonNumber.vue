@@ -1,60 +1,60 @@
 <template>
 
-        <van-nav-bar
-                title="选择车号"
-                class="page-nav-bar"
-                left-arrow
-                @click-left="onClickLeft"
-        />
+    <van-nav-bar
+            title="选择车号"
+            class="page-nav-bar"
+            left-arrow
+            @click-left="onClickLeft"
+    />
 
-        <div class="table-content container">
-            <van-form @submit="onSubmit" id="form-area" ref="formRef">
-                <van-cell-group inset>
-                    <van-cell title="选择日期：" title-style="max-width: 25%" :value="dataText" @click="show = true"/>
-                    <van-calendar v-model:show="show" :min-date="minDate" :default-date="deDate"
-                                  type="range" allow-same-day @confirm="onConfirm"/>
-                </van-cell-group>
-            </van-form>
+    <div class="table-content container">
+        <van-form @submit="onSubmit" id="form-area" ref="formRef">
+            <van-cell-group inset>
+                <van-cell title="选择日期：" title-style="max-width: 25%" :value="dataText" @click="show = true"/>
+                <van-calendar v-model:show="show" :min-date="minDate" :default-date="deDate"
+                              type="range" allow-same-day @confirm="onConfirm"/>
+            </van-cell-group>
+        </van-form>
 
-            <el-table ref="tableRef" :data="tableData" id="data-area"
-                      :style="tableHeight"
-                      style="width: 100%"
-                      highlight-current-row
-                      v-loading="loading"
-                      element-loading-text="数据加载中..."
-                      :element-loading-spinner="svg"
-                      element-loading-svg-view-box="-10, -10, 50, 50"
-                      element-loading-background="rgba(122, 122, 122, 0.8)"
-                      @row-click="selectRow">
-                <el-table-column fixed prop="chehao" label="车号"/>
-                <el-table-column prop="danjuhao" label="单据号" width="130"/>
-                <el-table-column prop="chengfang" label="秤房"/>
-                <el-table-column prop="pizhong" label="皮重" :formatter="formatter"/>
-            </el-table>
+        <el-table ref="tableRef" :data="tableData" id="data-area"
+                  :style="tableHeight"
+                  style="width: 100%"
+                  highlight-current-row
+                  v-loading="loading"
+                  element-loading-text="数据加载中..."
+                  :element-loading-spinner="svg"
+                  element-loading-svg-view-box="-10, -10, 50, 50"
+                  element-loading-background="rgba(122, 122, 122, 0.8)"
+                  @row-click="selectRow">
+            <el-table-column fixed prop="chehao" label="车号"/>
+            <el-table-column prop="danjuhao" label="单据号" width="130"/>
+            <el-table-column prop="chengfang" label="秤房"/>
+            <el-table-column prop="pizhong" label="皮重" :formatter="formatter"/>
+        </el-table>
 
-            <div>
-                <van-cell-group inset>
-                    <van-field class="chehao"
-                               v-model="chehao" label="车牌号" placeholder=""/>
-                </van-cell-group>
-                <div class="btn-area">
-                    <div @click="onQuery">
-                        <img src="@/assets/image/btn_chaxun3.png" alt=""/>
-                        <div>查询</div>
-                    </div>
-                    <div @click="confirmSelect">
-                        <img src="@/assets/image/btn_queren.png" alt=""/>
-                        <div>确认</div>
-                    </div>
-
-                    <div @click="handleConfirmSelect">
-                        <img src="@/assets/image/btn_shoudong.png" alt=""/>
-                        <div>手动确认</div>
-                    </div>
-
+        <div>
+            <van-cell-group inset>
+                <van-field class="chehao"
+                           v-model="chehao" label="车牌号" placeholder=""/>
+            </van-cell-group>
+            <div class="btn-area">
+                <div @click="onQuery">
+                    <img src="@/assets/image/btn_chaxun1.png" alt=""/>
+                    <div>查询</div>
                 </div>
+                <div @click="confirmSelect">
+                    <img src="@/assets/image/btn_queren.png" alt=""/>
+                    <div>确认</div>
+                </div>
+
+                <div @click="handleConfirmSelect">
+                    <img src="@/assets/image/btn_shoudong.png" alt=""/>
+                    <div>手动确认</div>
+                </div>
+
             </div>
         </div>
+    </div>
 </template>
 
 <script>
@@ -114,7 +114,7 @@
             })
 
 
-            const formatter =  (row, column)=>{
+            const formatter = (row, column) => {
                 return toRaw(row).pizhong.toFixed(4)
             }
 
@@ -150,7 +150,7 @@
 
                 if (selectedCheHao) {
                     store.commit('setCarInfo', selectedCheHao)
-                    store.commit('setScandList',[])
+                    store.commit('setScandList', [])
                     store.commit('setScandCalculateData', {})
                     router.push({
                         name: 'pickWithQueryInfoData',
@@ -175,10 +175,10 @@
                         danjuhao: '',
                         chengfang: '',
                         pizhong: 0,
-                        DataId:'',
+                        DataId: '',
                     }
                     store.commit('setCarInfo', obj)
-                    store.commit('setScandList',[])
+                    store.commit('setScandList', [])
                     store.commit('setScandCalculateData', {})
                     router.push({
                         name: 'pickWithQueryInfoData',
@@ -199,8 +199,8 @@
                 loading.value = true
                 chehao.value = ''
                 tableRef.value.setScrollTop(0)
-                queryParams.startDate = startDate.value
-                queryParams.endDate = endDate.value
+                queryParams.startDate = startDate.value + ' 00:00:00'
+                queryParams.endDate = endDate.value + ' 23:59:59'
                 getTruckNo(queryParams).then((res) => {
                     tableData.value = res.data.data
                     loading.value = false
@@ -209,7 +209,7 @@
             }
 
             //格式化时间
-            const dateFormat=(fmt, date) =>  {
+            const dateFormat = (fmt, date) => {
                 let ret;
                 let d = new Date(date);
                 const opt = {
@@ -282,8 +282,8 @@
     .btn-area div {
         border-radius: 25px;
         font-size: 20px;
-        width: 30%;
-        min-height: 50px;
+        width: 28%;
+        min-height: 45px;
     }
 
     .btn-area img {
@@ -292,6 +292,7 @@
 
     .btn-area > div:nth-child(3) {
         background-color: var(--btn-color1);
+        margin-right:10px
     }
 
     .btn-area > div:nth-child(2) {
@@ -300,6 +301,7 @@
 
     .btn-area > div:nth-child(1) {
         background-color: var(--btn-color1);
+        margin-left:10px
     }
 
 

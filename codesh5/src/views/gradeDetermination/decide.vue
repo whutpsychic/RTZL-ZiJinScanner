@@ -77,30 +77,6 @@
                 </div>
 
 
-                <div v-if="tabIndex==0">
-                    <van-divider content-position="left"><span style="color: red">*</span> 标签照片</van-divider>
-                    <div class="van-uploader">
-                        <div class="van-uploader__wrapper">
-                            <div class="van-uploader__preview" v-for="(item,index) in  labelFileList" :key="item.index">
-                                <div class="van-image van-uploader__preview-image">
-                                    <img class="van-image__img" :src="item.base64Img"
-                                         style="object-fit: cover;" @click="seeImgBQ">
-                                </div>
-                                <div role="button"
-                                     class="van-uploader__preview-delete van-uploader__preview-delete--shadow"
-                                     tabindex="0" aria-label="删除" @click="beforeDeleteBQ(item.index,item.base64Img)">
-                                    <i class="van-badge__wrapper van-icon van-icon-cross van-uploader__preview-delete-icon"></i>
-                                </div>
-                            </div>
-
-
-                            <div class="van-uploader__upload" @click="takePhotoBQ" v-if="labelFileList.length!=1">
-                                <i class="van-badge__wrapper van-icon van-icon-photograph van-uploader__upload-icon"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div v-if="tabIndex==1">
                     <van-divider content-position="left"><span style="color: red">*</span>改判理由</van-divider>
                     <el-select v-model="alterReason" filterable
@@ -177,11 +153,6 @@
             const base64ImgList = ref([])
             // 质检图片路径
             const imagePath = ref([])
-            //标签图片
-            const labelFileList = ref([])
-            const base64LabelImgList = ref([])
-            // 标签图片路径
-            const labelImagePath = ref([])
 
             const showImage = ref(false)
             const showLabelImage = ref(false)
@@ -203,7 +174,6 @@
             // 拍照监听
             fc.await("takePhoto", (res) => {
                 if (res != 'null') {
-                    if (takePhotoState.value == '0') {
                         let fileObj = {}
                         fileObj.index = fileList.value.length + 1
                         fileObj.base64Img = res
@@ -227,40 +197,14 @@
                             console.log(error)
                         })
 
-                    }
-
-                    if (takePhotoState.value == '1') {
-                        let fileLabelObj = {}
-                        fileLabelObj.index = labelFileList.value.length + 1
-                        fileLabelObj.base64Img = res
-                        labelFileList.value.push(fileLabelObj)
-                        base64LabelImgList.value.push(res)
-
-                        //上传图片
-                        let data = new FormData();
-                        let path = '/cathodeCopperLabel/' + listData.yjtJyInformationData.batchnumber
-                        data.append('file', dataURLtoFile(res));
-                        data.append('path', path);
 
 
-                        cathodeCopperImgUpload(data).then((result) => {
-                            let labelObj = {}
-                            labelObj.fileName = result.data.fileName
-                            labelObj.fileUrl = result.data.fileUrl
-                            labelObj.index = labelFileList.value.length
-                            labelImagePath.value.push(labelObj)
-                        }).catch(error => {
-                            console.log(error)
-                        })
-
-                    }
 
                 }
             })
 
             //质检照片拍照
             const takePhotoZJ = () => {
-                takePhotoState.value = '0'
                 fc.takePhoto();
             }
 
@@ -283,34 +227,6 @@
                 showImage.value = true
             }
 
-
-            //标签照片拍照
-            const takePhotoBQ = () => {
-                takePhotoState.value = '1'
-                fc.takePhoto();
-            }
-
-            //标签图片删除
-            const beforeDeleteBQ = (index, base64Img) => {
-                labelImagePath.value = labelImagePath.value.filter(item => {
-                    return item.index != index
-                })
-                labelFileList.value = labelFileList.value.filter(item => {
-                    return item.index != index
-                })
-                base64LabelImgList.value = base64LabelImgList.value.filter(item => {
-                    return item != base64Img
-                })
-
-
-            }
-
-
-            //标签图片预览
-            const seeImgBQ = () => {
-                imgList.value = base64LabelImgList.value
-                showImage.value = true
-            }
 
 
             //合格品
@@ -350,18 +266,6 @@
                     return false
                 }
 
-                if (tabIndex.value == 0) {
-                    if (labelImagePath.value.length == 0) {
-                        showToast({
-                            message: '请上传标签照片',
-                            type: 'fail',
-                            className: 'particulars-detail-popup'
-                        })
-
-                        return false
-                    }
-                }
-
 
                 if (tabIndex.value == 1) {
                     if (!alterReason.value) {
@@ -394,8 +298,6 @@
                 listMap.remarks = remarks.value
                 listMap.alterReason = alterReason.value
                 listMap.fileList = imagePath.value
-                listMap.labelFileList = labelImagePath.value
-
                 excellentJudgement(listMap).then((result) => {
                     if (result.data.code == 200) {
                         showToast({
@@ -465,7 +367,6 @@
                     if (ret) {
                         fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")));
                     }
-
                 }
 
                 return fmt;
@@ -478,8 +379,6 @@
                 fileList,
                 base64ImgList,
                 imagePath,
-                labelFileList,
-                labelImagePath,
                 takePhotoState,
                 alterReason,
                 remarks,
@@ -490,13 +389,10 @@
                 tabIndex,
                 typeCodeChecked,
                 seeImg,
-                seeImgBQ,
                 takePhotoZJ,
-                takePhotoBQ,
                 onClickLeft,
                 dateFormat,
                 beforeDelete,
-                beforeDeleteBQ,
                 conservation,
                 getTypeCodeData,
                 getAlterReasonQuery,

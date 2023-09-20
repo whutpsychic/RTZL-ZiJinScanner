@@ -1,5 +1,8 @@
 import axios from 'axios'
-import {showFailToast} from 'vant'
+import store from '../store'
+import {showToast, showLoadingToast, closeToast, showFailToast} from 'vant'
+import appConfig from '@/appConfig.js'
+import router from "../router/index.js";
 
 const baseUrl = {}
 
@@ -66,7 +69,7 @@ request.interceptors.response.use(
         if (url.indexOf("loginCheck.do") == -1) {
             //如果重定向的地址为登录地址的话，手机端跳转到登录页面
             if (config.request.responseURL.indexOf("loginCheck.do") != -1) {
-                window.location.href='/login'
+                router.push({path: '/login'})
             }
         }
         return config

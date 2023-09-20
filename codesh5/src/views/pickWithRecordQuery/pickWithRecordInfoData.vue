@@ -28,7 +28,7 @@
         <div class="btn-area">
             <div>
                 <img
-                        src="@/assets/image/btn_queren.png"
+                        src="@/assets/image/btn_fanhui1.png"
                         alt=""
                         @click="onClickLeft"
                 />

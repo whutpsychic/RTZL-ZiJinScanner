@@ -7,35 +7,35 @@
                                                font-size: 18px;
                                                font-weight: bold;">
             <van-grid-item @click="scanCode" v-if="gradeDeterminationRole">
-                <img src="/image/pjpd.png" style="width: 46%;"/>
+                <img src="/image/pjpd.png" style="width: 40%;"/>
                 <span style="margin-top: 8px;">品级质检</span>
             </van-grid-item>
 
             <van-grid-item to="/reportFormStatistics" v-if="reportFormStatisticsRole">
-                <img src="/image/baobiao.png" style="width: 46%;"/>
+                <img src="/image/baobiao.png" style="width: 40%;"/>
                 <span style="margin-top: 8px;">报表查询</span>
             </van-grid-item>
 
             <van-grid-item to="/auditingList" v-if="auditingListRole">
-                <img src="/image/shenhe.png" style="width: 46%;"/>
+                <img src="/image/shenhe.png" style="width: 40%;"/>
                 <span style="margin-top: 8px;">品级质检审核</span>
             </van-grid-item>
 
 
             <van-grid-item to="/qualityCheckingRecord" v-if="qualityCheckingRecordRole">
-                <img src="/image/zjjl.png" style="width: 46%;"/>
+                <img src="/image/zjjl.png" style="width: 40%;"/>
                 <span style="margin-top: 8px;">质检记录</span>
             </van-grid-item>
 
 
             <van-grid-item to="/pickWithQuery" v-if="pickWithQueryRecordRole">
-                <img src="/image/jianpei.png" style="width: 46%;"/>
+                <img src="/image/jianpei.png" style="width: 40%;"/>
                 <span style="margin-top: 8px;">拣配</span>
             </van-grid-item>
 
 
             <van-grid-item to="/pickWithRecordQuery" v-if="pickWithRecordQueryRecordRole">
-                <img src="/image/jianpeidan.png" style="width: 46%;"/>
+                <img src="/image/jianpeidan.png" style="width: 40%;"/>
                 <span style="margin-top: 8px;">查询拣配单</span>
             </van-grid-item>
         </van-grid>
@@ -96,7 +96,7 @@
                     if (groupNames[i] == 'yjtzj_user') {
                         gradeDeterminationRole.value = true
                         qualityCheckingRecordRole.value = true
-                        reportFormStatisticsRole.value = tru
+                        reportFormStatisticsRole.value = true
                         break
                     }
 
