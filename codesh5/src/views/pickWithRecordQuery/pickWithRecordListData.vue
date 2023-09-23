@@ -37,30 +37,18 @@
 
         </el-table>
         <div class="btn-area">
-            <div>
-                <img
-                        src="@/assets/image/btn_fanhui1.png"
-                        alt=""
-                        @click="onClickLeft"
-                />
+            <div @click="onClickLeft">
+                <img src="@/assets/image/btn_fanhui1.png"/>
                 <div>返回</div>
             </div>
-            <div>
-                <img
-                        src="@/assets/image/btn_tichu.png"
-                        alt=""
-                        type="primary"
-                        @click="onDelete"
-                />
+
+            <div @click="onDelete">
+                <img src="@/assets/image/btn_tichu.png"/>
                 <div>删除</div>
             </div>
-            <div>
-                <img
-                        src="@/assets/image/btn_mingxi.png"
-                        alt=""
-                        type="primary"
-                        @click="showDetail"
-                />
+
+            <div @click="showDetail">
+                <img src="@/assets/image/btn_mingxi.png"/>
                 <div>明细</div>
             </div>
         </div>

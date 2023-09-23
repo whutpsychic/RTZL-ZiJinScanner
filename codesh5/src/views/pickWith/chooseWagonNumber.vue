@@ -39,16 +39,16 @@
             </van-cell-group>
             <div class="btn-area">
                 <div @click="onQuery">
-                    <img src="@/assets/image/btn_chaxun1.png" alt=""/>
+                    <img src="@/assets/image/btn_chaxun1.png"/>
                     <div>查询</div>
                 </div>
                 <div @click="confirmSelect">
-                    <img src="@/assets/image/btn_queren.png" alt=""/>
+                    <img src="@/assets/image/btn_queren.png"/>
                     <div>确认</div>
                 </div>
 
                 <div @click="handleConfirmSelect">
-                    <img src="@/assets/image/btn_shoudong.png" alt=""/>
+                    <img src="@/assets/image/btn_shoudong.png"/>
                     <div>手动确认</div>
                 </div>
 

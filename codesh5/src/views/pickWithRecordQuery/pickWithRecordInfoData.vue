@@ -26,12 +26,8 @@
 
         </el-table>
         <div class="btn-area">
-            <div>
-                <img
-                        src="@/assets/image/btn_fanhui1.png"
-                        alt=""
-                        @click="onClickLeft"
-                />
+            <div @click="onClickLeft">
+                <img src="@/assets/image/btn_fanhui1.png"/>
                 <div>返回</div>
             </div>
         </div>

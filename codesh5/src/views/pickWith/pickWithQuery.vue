@@ -43,11 +43,11 @@
 
             <div class="btn-area" style="margin-top: 50px">
                 <div @click="onClickLeft">
-                    <img src="@/assets/image/btn_fanhui1.png" alt=""/>
+                    <img src="@/assets/image/btn_fanhui1.png"/>
                     <div>返回</div>
                 </div>
                 <div @click="onSearch">
-                    <img src="@/assets/image/btn_chaxun1.png" alt="" type="primary"/>
+                    <img src="@/assets/image/btn_chaxun1.png"/>
                     <div>查询</div>
                 </div>
             </div>

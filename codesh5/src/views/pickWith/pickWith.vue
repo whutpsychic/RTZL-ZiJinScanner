@@ -44,15 +44,15 @@
 
         <div class="btn-area">
             <div @click="onConfirm">
-                <img src="@/assets/image/btn_queren.png" alt=""/>
+                <img src="@/assets/image/btn_queren.png"/>
                 <div>确认</div>
             </div>
             <div @click="onHandle">
-                <img src="@/assets/image/btn_shoudong.png" alt="" type="primary"/>
+                <img src="@/assets/image/btn_shoudong.png"/>
                 <div>手动</div>
             </div>
             <div @click="onDelete">
-                <img src="@/assets/image/btn_tichu.png" alt="" type="primary"/>
+                <img src="@/assets/image/btn_tichu.png"/>
                 <div>剔除</div>
             </div>
         </div>
@@ -636,8 +636,8 @@
     .btn-area div {
         border-radius: 25px;
         font-size: 20px;
-        width: 30%;
-        min-height: 50px;
+        width: 28%;
+        min-height: 45px;
     }
 
     .btn-area img {
@@ -650,10 +650,12 @@
 
     .btn-area > div:nth-child(1) {
         background-color: var(--btn-color1);
+        margin-left:10px
     }
 
     .btn-area > div:nth-child(3) {
         background-color: var(--btn-color1);
+        margin-right:10px
     }
 
     /** */

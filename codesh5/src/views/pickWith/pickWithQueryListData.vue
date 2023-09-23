@@ -1,63 +1,50 @@
 <template>
 
-        <van-nav-bar
-                title="出库单查询结果"
-                class="page-nav-bar"
-                left-arrow
-                @click-left="onClickLeft"
-        />
-        <div class="table-content container" id="content">
-            <el-table :data="tableData" ref="tableRef"
-                      :style="tableHeight"
-                      highlight-current-row
-                      v-loading="loading"
-                      element-loading-text="数据加载中..."
-                      :element-loading-spinner="svg"
-                      element-loading-svg-view-box="-10, -10, 50, 50"
-                      element-loading-background="rgba(122, 122, 122, 0.8)"
-                      @row-click="selectRow">
-                <el-table-column prop="F_DELIVERYNO" label="发货单号" width="110px"/>
-                <el-table-column prop="F_RECIVE" label="收货单位"/>
-                <el-table-column prop="F_PLANSUTTLE" label="计划重量" width="90px"/>
+    <van-nav-bar
+            title="出库单查询结果"
+            class="page-nav-bar"
+            left-arrow
+            @click-left="onClickLeft"
+    />
+    <div class="table-content container" id="content">
+        <el-table :data="tableData" ref="tableRef"
+                  :style="tableHeight"
+                  highlight-current-row
+                  v-loading="loading"
+                  element-loading-text="数据加载中..."
+                  :element-loading-spinner="svg"
+                  element-loading-svg-view-box="-10, -10, 50, 50"
+                  element-loading-background="rgba(122, 122, 122, 0.8)"
+                  @row-click="selectRow">
+            <el-table-column prop="F_DELIVERYNO" label="发货单号" width="110px"/>
+            <el-table-column prop="F_RECIVE" label="收货单位"/>
+            <el-table-column prop="F_PLANSUTTLE" label="计划重量" width="90px"/>
+        </el-table>
 
+        <div class="btn-area">
+            <div @click="onClickLeft">
+                <img src="@/assets/image/btn_fanhui2.png"/>
+                <div>返回</div>
+            </div>
 
-            </el-table>
-            <div class="btn-area">
-                <div>
-                    <img
-                            src="@/assets/image/btn_fanhui2.png"
-                            alt=""
-                            @click="onClickLeft"
-                    />
-                    <div>返回</div>
-                </div>
-                <div>
-                    <img
-                            src="@/assets/image/btn_shuaxin2.png"
-                            alt=""
-                            type="primary"
-                            @click="renovateClikc"
-                    />
-                    <div>刷新</div>
-                </div>
-                <div>
-                    <img
-                            src="@/assets/image/btn_chaxun2.png"
-                            alt=""
-                            type="primary"
-                            @click="showDetail"
-                    />
-                    <div>查看</div>
-                </div>
+            <div @click="renovateClikc">
+                <img src="@/assets/image/btn_shuaxin2.png"/>
+                <div>刷新</div>
+            </div>
+
+            <div @click="showDetail">
+                <img src="@/assets/image/btn_chaxun2.png"/>
+                <div>查看</div>
             </div>
         </div>
+    </div>
 
 </template>
 
 <script>
     import {reactive, toRaw} from '@vue/reactivity'
     import {onMounted, ref} from 'vue'
-    import {useRoute, useRouter,onBeforeRouteLeave} from 'vue-router'
+    import {useRoute, useRouter, onBeforeRouteLeave} from 'vue-router'
     import {showToast, showLoadingToast, closeToast, showDialog} from 'vant'
     import {useStore} from 'vuex'
     import {
@@ -85,7 +72,6 @@
                     " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>`
 
 
-
             let queryParams = ''
 
             const onClickLeft = () => {
@@ -101,13 +87,13 @@
 
             const showDetail = () => {
                 if (selectedRow) {
-                    if (selectedRow.F_DELIVERYNO){
+                    if (selectedRow.F_DELIVERYNO) {
                         let standard = new RegExp(
                             /^\d{10}$/,
                         );
 
                         let bool = standard.test(selectedRow.F_DELIVERYNO)
-                        if (!bool){
+                        if (!bool) {
                             showDialog({
                                 title: '提示',
                                 width: '600',
@@ -115,14 +101,14 @@
                             }).then(() => {
                                 // on close
                             })
-                            return  false
+                            return false
                         }
                     }
                     let scrollTop = tableRef.value.$refs.bodyWrapper.getElementsByClassName('el-scrollbar__wrap')[0]
                     store.commit('setPickWithScroll', scrollTop.scrollTop)
                     store.commit('setChukudanListInfo', selectedRow)
                     store.commit('setCarInfo', {})
-                    store.commit('setScandList',[])
+                    store.commit('setScandList', [])
                     store.commit('setScandCalculateData', {})
                     router.push({
                         name: 'pickWithQueryInfoData',
@@ -144,13 +130,13 @@
 
 
             const renovateClikc = () => {
-                store.commit('setPickWithScroll',0) 
+                store.commit('setPickWithScroll', 0)
                 queryData()
             }
 
             const queryData = () => {
 
-                selectedRow=''
+                selectedRow = ''
                 loading.value = true
                 getPlanMain(queryParams).then((res) => {
                     tableData.value = res.data.data
@@ -223,12 +209,12 @@
 
     .btn-area > div:nth-child(1) {
         background-color: var(--btn-color1);
-        margin-left:10px
+        margin-left: 10px
     }
 
     .btn-area > div:nth-child(3) {
         background-color: var(--btn-color1);
-        margin-right:10px
+        margin-right: 10px
     }
 
 
