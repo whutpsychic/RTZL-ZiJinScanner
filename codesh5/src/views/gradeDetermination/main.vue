@@ -195,7 +195,7 @@
             <van-row>
                 <van-col span="3"></van-col>
                 <van-col span="18">
-                    <van-button type="primary" size="large" @click="outstandingClick">优等品</van-button>
+                    <van-button type="primary" size="large"  @click="outstandingClick">优等品</van-button>
                 </van-col>
                 <van-col span="3"></van-col>
             </van-row>
@@ -342,7 +342,7 @@
 <script>
     import fc from "flutter-core";
     import {judgementCathodeCopper, alterReasonQuery} from '@/api/gradeDetermination'
-    import {showConfirmDialog, showDialog, showImagePreview, showToast} from "vant";
+    import {closeToast, showConfirmDialog, showDialog, showImagePreview, showLoadingToast, showToast} from "vant";
     import {onMounted, ref} from 'vue';
     import {useRoute, useRouter} from "vue-router";
     import {
@@ -411,7 +411,6 @@
             const yjtJyInformation = shallowReactive({
                 data: []
             })
-
 
             const activeName = ref()
             const barcode = ref(route.query.barcode)
@@ -819,8 +818,15 @@
 
             //判定
             const getExcellentJudgement=(listMap)=> {
+                showLoadingToast({
+                    duration: 0,
+                    forbidClick: true,
+                    className: 'particulars-detail-popup',
+                    message: '正在质检...',
+                });
                 excellentJudgement(listMap).then((result) => {
                     if (result.data.code == 200) {
+                        closeToast();
                         showToast({
                             message: '质检成功',
                             type: 'success',
@@ -834,9 +840,10 @@
                         }
                     }
                 }).catch(error => {
+                    console.log(error)
                     buttonShow.value = false
                     buttonShowPL.value = false
-                    console.log(error)
+                    closeToast();
                 })
             }
 

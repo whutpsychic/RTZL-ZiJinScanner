@@ -108,6 +108,7 @@
             </el-card>
 
             <van-button type="primary" size="large"
+                        :disabled="disabled"
                         style="width: 80%;position: absolute;left: 10%;margin-top: 15px;background-color: #003363;color:#FFFFFF"
                         @click="conservation">提交
             </van-button>
@@ -136,7 +137,7 @@
         alterReasonQuery
     } from '@/api/gradeDetermination'
     import {compressImage, dataURLtoFile} from '@/utils/compressImage.js'
-    import {showToast} from "vant";
+    import {closeToast, showLoadingToast, showToast} from "vant";
 
     export default {
         setup() {
@@ -167,6 +168,8 @@
                 alterReasonList: []
             })
 
+            const disabled = ref(false)
+
             listData.yjtJyInformationData = JSON.parse(decodeURIComponent(route.query.yjtJyInformation))
             const exterior = ref(JSON.parse(decodeURIComponent(route.query.exterior)))
             const tabIndex = ref(JSON.parse(decodeURIComponent(route.query.tabIndex)))
@@ -174,30 +177,28 @@
             // 拍照监听
             fc.await("takePhoto", (res) => {
                 if (res != 'null') {
-                        let fileObj = {}
-                        fileObj.index = fileList.value.length + 1
-                        fileObj.base64Img = res
-                        fileList.value.push(fileObj)
-                        base64ImgList.value.push(res)
-                        //上传图片
-                        let data = new FormData();
-                        let path = '/cathodeCopper/' + listData.yjtJyInformationData.batchgroup
-                            + '/' + listData.yjtJyInformationData.batchnumber
-                        data.append('file', dataURLtoFile(res));
-                        data.append('path', path);
+                    let fileObj = {}
+                    fileObj.index = fileList.value.length + 1
+                    fileObj.base64Img = res
+                    fileList.value.push(fileObj)
+                    base64ImgList.value.push(res)
+                    //上传图片
+                    let data = new FormData();
+                    let path = '/cathodeCopper/' + listData.yjtJyInformationData.batchgroup
+                        + '/' + listData.yjtJyInformationData.batchnumber
+                    data.append('file', dataURLtoFile(res));
+                    data.append('path', path);
 
 
-                        cathodeCopperImgUpload(data).then((result) => {
-                            let obj = {}
-                            obj.fileName = result.data.fileName
-                            obj.fileUrl = result.data.fileUrl
-                            obj.index = fileList.value.length
-                            imagePath.value.push(obj)
-                        }).catch(error => {
-                            console.log(error)
-                        })
-
-
+                    cathodeCopperImgUpload(data).then((result) => {
+                        let obj = {}
+                        obj.fileName = result.data.fileName
+                        obj.fileUrl = result.data.fileUrl
+                        obj.index = fileList.value.length
+                        imagePath.value.push(obj)
+                    }).catch(error => {
+                        console.log(error)
+                    })
 
 
                 }
@@ -228,7 +229,6 @@
             }
 
 
-
             //合格品
             if (exterior.value == '1') {
                 typeCode.value = 'qualified'
@@ -255,14 +255,14 @@
 
             //保存
             const conservation = () => {
-
+                disabled.value = true
                 if (imagePath.value.length == 0) {
                     showToast({
                         message: '请上传质检照片',
                         type: 'fail',
                         className: 'particulars-detail-popup'
                     })
-
+                    disabled.value = false
                     return false
                 }
 
@@ -274,10 +274,17 @@
                             type: 'fail',
                             className: 'particulars-detail-popup'
                         })
-
+                        disabled.value = false
                         return false
                     }
                 }
+
+                showLoadingToast({
+                    duration: 0,
+                    forbidClick: true,
+                    className: 'particulars-detail-popup',
+                    message: '正在质检...',
+                });
 
                 let listMap = {
                     data: [],
@@ -299,6 +306,7 @@
                 listMap.alterReason = alterReason.value
                 listMap.fileList = imagePath.value
                 excellentJudgement(listMap).then((result) => {
+                    closeToast();
                     if (result.data.code == 200) {
                         showToast({
                             message: '质检成功',
@@ -306,10 +314,13 @@
                             className: 'particulars-detail-popup',
                             overlay: true,
                         })
+                        disabled.value = false
                         router.back()
                     }
                 }).catch(error => {
                     console.log(error)
+                    disabled.value = false
+                    closeToast();
                 })
 
             }
@@ -388,6 +399,7 @@
                 exterior,
                 tabIndex,
                 typeCodeChecked,
+                disabled,
                 seeImg,
                 takePhotoZJ,
                 onClickLeft,

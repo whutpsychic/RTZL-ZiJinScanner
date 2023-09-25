@@ -162,9 +162,6 @@
                 barCodeSelectList: [],
             })
 
-
-            console.log(router.currentRoute.value.path)
-
             fc.await('scanner', (res) => {
                 if (router.currentRoute.value.path=='/pickWith') {
                     if (res != 'null') {
@@ -405,6 +402,7 @@
                    showLoadingToast({
                         duration: 0,
                         forbidClick: true,
+                        className: 'particulars-detail-popup',
                         message: '拣配中...',
                     });
 
@@ -423,7 +421,12 @@
                     //单据号
                     condition.id = carInfo.danjuhao
                     //新增的DataId
-                    condition.strDataId = carInfo.DataId
+                    if (carInfo.DataId){
+                        condition.strDataId = carInfo.DataId
+                    }else {
+                        condition.strDataId = ''
+                    }
+
                     //条码数组
                     let str = toRaw(tableData.value).map((item) => {
                         return item.barcode + ',';
@@ -458,8 +461,8 @@
                     })
 
                 }).catch((err) => {
-                    closeToast()
                     console.log(err)
+                    closeToast()
                 });
             }
 

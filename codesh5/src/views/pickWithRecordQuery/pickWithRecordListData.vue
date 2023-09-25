@@ -156,6 +156,7 @@
                             showLoadingToast({
                                 duration: 0,
                                 forbidClick: true,
+                                className: 'particulars-detail-popup',
                                 message: '撤销中...',
                             });
 
@@ -163,8 +164,6 @@
                             obj.F_PICKNO=selectedRow.F_PICKNO
                             obj.F_SUTTLE=selectedRow.F_SUTTLE
                             obj.F_DELIVERYNO=selectedRow.F_DELIVERYNO
-
-
                             deletePickNo(obj).then((result) => {
                                 closeToast()
                                 showDialog({
@@ -177,12 +176,13 @@
                                 })
                             }).catch(error => {
                                 console.log(error)
+                                closeToast()
                             })
 
                         })
                         .catch((err) => {
-                            closeToast()
                             console.log(err)
+                            closeToast()
                         });
                 } else {
                     showDialog({
