@@ -32,8 +32,8 @@
     <div class="content">
         <van-list
                 v-model:loading="loading"
+                :immediate-check="false"
                 :finished="finished"
-                offset="50"
                 finished-text="没有更多了"
                 @load="onLoad"
         >
@@ -68,9 +68,9 @@
                         </p>
 
                         <p>
-                            <van-tag v-if="item.status=='0'" type="primary">未审核</van-tag>
-                            <van-tag v-if="item.status=='1'" type="danger">驳回</van-tag>
-                            <van-tag v-if="item.status=='2'" type="success">审核通过</van-tag>
+                            <van-tag v-if="item.status=='0'" type="primary" size="large">未审核</van-tag>
+                            <van-tag v-if="item.status=='1'" type="danger" size="large">驳回</van-tag>
+                            <van-tag v-if="item.status=='2'" type="success" size="large">审核通过</van-tag>
 
                         </p>
 
@@ -97,8 +97,8 @@
     >
         <div style="overflow-y: auto;overscroll-behavior-y: contain;" :style="elDialogHeight">
             <div>
-                <van-divider content-position="left">基本信息</van-divider>
                 <div>
+                    <van-divider content-position="left">基本信息</van-divider>
                     <p>
                         <span style="font-weight: bold">编号：</span>
                         <span>{{listData.yjtJyInformationDetails.batchnumber}}</span>
@@ -128,12 +128,76 @@
                     </p>
 
                 </div>
-                <van-divider content-position="left">质检信息</van-divider>
 
                 <div>
+                    <van-divider content-position="left">历史质检信息</van-divider>
+                    <div>
+                        <p>
+                            <span style="font-weight: bold">品级分类：</span>
+                            <van-tag v-if="listData.yjtJyInformationDecideData.details.exteriorName=='优等品'"
+                                     type="primary"
+                                     size="medium">优等品
+                            </van-tag>
+                            <van-tag v-if="listData.yjtJyInformationDecideData.details.exteriorName=='合格'"
+                                     type="warning"
+                                     size="medium">合格
+                            </van-tag>
+                            <van-tag v-if="listData.yjtJyInformationDecideData.details.exteriorName=='不合格'"
+                                     type="danger"
+                                     size="medium">不合格
+                            </van-tag>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span v-if="listData.yjtJyInformationDecideData.details.exterior!='0'"
+                                  style="font-weight: bold">类型：</span>
+                            <span>{{listData.yjtJyInformationDecideData.details.dictName}}</span>
+                        </p>
+
+                        <p>
+                            <span style="font-weight: bold">质检时间：</span>
+                            <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDecideData.details.checkoutDate)}}</span>
+                        </p>
+
+                        <p>
+                            <span style="font-weight: bold">质检人：</span>
+                            <span>{{listData.yjtJyInformationDecideData.details.checkoutUser}}</span>
+                        </p>
+
+                        <p v-if="listData.yjtJyInformationDecideData.details.alterReason">
+                            <span style="font-weight: bold">改判理由：</span><span>{{listData.yjtJyInformationDecideData.details.alterReason}}</span>
+                        </p>
+
+                        <p v-if="listData.yjtJyInformationDecideData.details.remarks">
+                            <span style="font-weight: bold">备注：</span><span>{{listData.yjtJyInformationDecideData.details.remarks}}</span>
+                        </p>
+
+
+                        <div v-if="listData.yjtJyInformationDecideData.details.exterior!='0'">
+                            <van-image style="margin:0 2%" @click="seeImg(listData.yjtJyInformationDecideData.fileList)"
+                                       v-for="(file,index) in  listData.yjtJyInformationDecideData.fileList"
+                                       width="45%"
+                                       height="8rem"
+                                       fit="cover"
+                                       position="left"
+                                       :src="file"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+
+                <div>
+                    <van-divider content-position="left">审核的质检信息</van-divider>
                     <p>
                         <span style="font-weight: bold">品级分类：</span>
-                        <span>{{listData.yjtJyInformationDetails.exteriorName}}</span>
+                        <van-tag v-if="listData.yjtJyInformationDetails.exteriorName=='优等品'" type="primary"
+                                 size="medium">优等品
+                        </van-tag>
+                        <van-tag v-if="listData.yjtJyInformationDetails.exteriorName=='合格'" type="warning"
+                                 size="medium">合格
+                        </van-tag>
+                        <van-tag v-if="listData.yjtJyInformationDetails.exteriorName=='不合格'" type="danger"
+                                 size="medium">不合格
+                        </van-tag>
                         &nbsp;&nbsp;
                         <span v-if="listData.yjtJyInformationDetails.exterior!='0'" style="font-weight: bold">类型：</span>
                         <span>{{listData.yjtJyInformationDetails.dictName}}</span>
@@ -155,10 +219,35 @@
                     </p>
 
 
+                    <p v-if="listData.yjtJyInformationDetails.remarks">
+                        <span style="font-weight: bold">备注：</span><span>{{listData.yjtJyInformationDetails.remarks}}</span>
+                    </p>
+
+
+                </div>
+
+                <div v-if="listData.yjtJyInformationDetails.status!='0'" style="margin-top: 15px">
+                    <p>
+                        <span style="font-weight: bold">状态：</span>
+                        <span>{{listData.yjtJyInformationDetails.status ==='0' ? '未审核' : (listData.yjtJyInformationDetails.status ==='1' ? '驳回' : '通过')}}</span>
+                        &nbsp;&nbsp;&nbsp;
+                        <span style="font-weight: bold">审核人：</span>
+                        <span>{{listData.yjtJyInformationDetails.auditorUserName}}</span>
+                    </p>
+
+                    <p>
+                        <span style="font-weight: bold">审核时间：</span>
+                        <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetails.auditorDate)}}</span>
+                    </p>
+
+                    <p>
+                        <span style="font-weight: bold">审核内容：</span>
+                        <span>{{listData.yjtJyInformationDetails.auditorContent}}</span>
+                    </p>
                 </div>
 
                 <div v-if="listData.yjtJyInformationDetails.exterior!='0'">
-                    <van-image style="margin:0 2%" @click="seeImg"
+                    <van-image style="margin:0 2%" @click="seeImg(listData.yjtJyInformationFileList)"
                                v-for="(item,index) in  listData.yjtJyInformationFileList"
                                width="45%"
                                height="8rem"
@@ -182,32 +271,11 @@
                 />
 
 
-                <div v-if="listData.yjtJyInformationDetails.status!='0'">
-                    <van-divider content-position="left">审核信息</van-divider>
-
-                    <p>
-                        <span style="font-weight: bold">状态：</span>
-                        <span>{{listData.yjtJyInformationDetails.status ==='0' ? '未审核' : (listData.yjtJyInformationDetails.status ==='1' ? '驳回' : '通过')}}</span>
-                        &nbsp;&nbsp;&nbsp;
-                        <span style="font-weight: bold">审核人：</span>
-                        <span>{{listData.yjtJyInformationDetails.auditorUserName}}</span>
-                    </p>
-
-                    <p>
-                        <span style="font-weight: bold">审核时间：</span>
-                        <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetails.auditorDate)}}</span>
-                    </p>
-
-                    <p>
-                        <span style="font-weight: bold">审核内容：</span>
-                        <span>{{listData.yjtJyInformationDetails.auditorContent}}</span>
-                    </p>
-                </div>
             </div>
 
             <van-image-preview
                     v-model:show="showImage"
-                    :images="listData.yjtJyInformationFileList"
+                    :images="listData.filePathList"
                     :closeable="true"
                     :loop="false"
                     :closeOnPopstate="true"
@@ -241,12 +309,16 @@
 </template>
 
 <script>
-    import {ref} from 'vue';
+    import {onMounted, ref} from 'vue';
     import {useRouter} from "vue-router";
     import {
         auditorDataQuery,
         cathodeCopperAuditor
     } from '@/api/auditing'
+
+    import {
+        qualityCheckingRecordDecide,
+    } from '@/api/qualityCheckingRecord'
     import {
         fileQuery
     } from '@/api/gradeDetermination'
@@ -277,6 +349,10 @@
                 yjtJyInformationDetails: {},
                 //阴极铜判定图片
                 yjtJyInformationFileList: [],
+                //审核阴极铜质检对比数据
+                yjtJyInformationDecideData: {},
+                //图片路径
+                filePathList: [],
             })
             const centerDialogVisible = ref(false)
             const options = [
@@ -301,31 +377,38 @@
             const offset = ref(0)
 
 
+            onMounted(() => {
+                offset.value = 1
+                getAuditorDataQuery({batchnumber: searchValue.value, status: status.value})
+            })
+
+
             //跳转到首页
             const onClickLeft = () => {
                 router.push({path: '/home'})
             }
 
+            const onLoad = () => {
+                console.log("aaa")
+                offset.value = offset.value + 1
+                getAuditorDataQuery({batchnumber: searchValue.value, status: status.value})
+            }
+
+
             //选择状态
             const statusChange = (val) => {
-
-                offset.value = 1
+                console.log("bbbb")
                 listData.auditorListData = []
+                offset.value = 1
                 finished.value = false
                 getAuditorDataQuery({batchnumber: val, status: status.value})
             }
             //搜索
             const onSearch = (val) => {
-                offset.value = 1
                 listData.auditorListData = []
+                offset.value = 1
                 finished.value = false
                 getAuditorDataQuery({batchnumber: val, status: status.value})
-            }
-
-
-            const onLoad = () => {
-                offset.value = offset.value + 1
-                getAuditorDataQuery({batchnumber: searchValue.value, status: status.value})
             }
 
 
@@ -336,9 +419,10 @@
                 //     path: '/auditingDetails',
                 //     query: {yjtJyInformationDetails: data}
                 // })
-
+                let obj = {yjtJyInformationId: item.yjtJyInformationId, status: '2'}
+                getQualityCheckingRecordDecide(obj)
                 listData.yjtJyInformationDetails = item
-                centerDialogVisible.value = true
+
                 if (listData.yjtJyInformationDetails.exterior != '0') {
                     getFileQuery(listData.yjtJyInformationDetails.yjtJyInformationDetailsId)
                 }
@@ -346,14 +430,16 @@
 
 
             //图片预览
-            const seeImg = () => {
+            const seeImg = (fileList) => {
+                listData.filePathList = []
+                listData.filePathList = fileList
                 showImage.value = true
-
             }
 
 
             //获取阴极铜审核数据
             const getAuditorDataQuery = (obj) => {
+                loading.value = true
                 let paramInfo = {}
                 let blocks = {}
                 let paramBlock = {}
@@ -377,30 +463,6 @@
                 }).catch(error => {
                     console.log(error)
                 })
-            }
-
-            //格式化时间
-            const dateFormat = (fmt, date) => {
-                let ret;
-                let d = new Date(date);
-                const opt = {
-                    "Y+": d.getFullYear().toString(),        // 年
-                    "m+": (d.getMonth() + 1).toString(),     // 月
-                    "d+": d.getDate().toString(),            // 日
-                    "H+": d.getHours().toString(),           // 时
-                    "M+": d.getMinutes().toString(),         // 分
-                    "S+": d.getSeconds().toString()          // 秒
-                    // 有其他格式化字符需求可以继续添加，必须转化成字符串
-                };
-                for (let k in opt) {
-                    ret = new RegExp("(" + k + ")").exec(fmt);
-                    if (ret) {
-                        fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")));
-                    }
-
-                }
-
-                return fmt;
             }
 
 
@@ -477,6 +539,51 @@
             }
 
 
+            //获取阴极铜质检审核对比数据
+            const getQualityCheckingRecordDecide = (obj) => {
+                qualityCheckingRecordDecide(obj).then((result) => {
+                    let yjtJyInformationDecideData = {}
+                    let status = listData.yjtJyInformationDetails.status
+                    //未审核，驳回
+                    if (status == '0' || status == '1') {
+                        yjtJyInformationDecideData = result.data.data[0]
+                    } else {
+                        //审核通过
+                        yjtJyInformationDecideData = result.data.data[1]
+                    }
+                    listData.yjtJyInformationDecideData = yjtJyInformationDecideData
+                    centerDialogVisible.value = true
+                }).catch(error => {
+                    console.log(error)
+                })
+            }
+
+
+            //格式化时间
+            const dateFormat = (fmt, date) => {
+                let ret;
+                let d = new Date(date);
+                const opt = {
+                    "Y+": d.getFullYear().toString(),        // 年
+                    "m+": (d.getMonth() + 1).toString(),     // 月
+                    "d+": d.getDate().toString(),            // 日
+                    "H+": d.getHours().toString(),           // 时
+                    "M+": d.getMinutes().toString(),         // 分
+                    "S+": d.getSeconds().toString()          // 秒
+                    // 有其他格式化字符需求可以继续添加，必须转化成字符串
+                };
+                for (let k in opt) {
+                    ret = new RegExp("(" + k + ")").exec(fmt);
+                    if (ret) {
+                        fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")));
+                    }
+
+                }
+
+                return fmt;
+            }
+
+
             return {
                 elDialogHeight,
                 state,
@@ -501,7 +608,8 @@
                 onSearch,
                 auditingDetails,
                 seeImg,
-                cathodeCopperAuditorClick
+                cathodeCopperAuditorClick,
+                getQualityCheckingRecordDecide,
             }
         }
     }

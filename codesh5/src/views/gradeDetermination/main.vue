@@ -285,14 +285,14 @@
                         v-model="F_BATCHGROUP"
                         name="F_BATCHGROUP"
                         label="批次号"
-                        placeholder="批次号"
+                        placeholder="批次号(四位)"
                         :rules="[{ required: true, message: '请填写批次号' }]"
                 />
                 <van-field
                         v-model="F_BATCHNUMBER"
                         name="F_BATCHNUMBER"
                         label="编号"
-                        placeholder="编号"
+                        placeholder="编号(三位)"
                         :rules="[{ required: true, message: '请填写编号' }]"
                 />
             </van-cell-group>
@@ -420,9 +420,26 @@
             fc.await('scanner', (res) => {
                 if (router.currentRoute.value.path=='/gradeDetermination'){
                     if (res != 'null') {
-                        let tbCathodeCopper = {}
-                        tbCathodeCopper.fBarcode = res
-                        getJudgementCathodeCopper(tbCathodeCopper)
+
+                        let barcode = res
+                        let standard = new RegExp(
+                            /^124010[1-9][0-9]{2}(0[1-9]|1[0-2])((0[1-9])|((1|2)[0-9])|30|31)[0-9]{12}$/,
+                        );
+                        let bool = standard.test(barcode) && barcode.length === 25;
+                        if(bool){
+                            let tbCathodeCopper = {}
+                            tbCathodeCopper.fBarcode = res
+                            getJudgementCathodeCopper(tbCathodeCopper)
+                        }else{
+                            showDialog({
+                                title: '提示',
+                                width: '600',
+                                message: '对不起，此条码不符合规范',
+                            }).then(() => {
+                                // on close
+                            })
+                        }
+
 
                     } else {
                         showToast({
@@ -455,7 +472,7 @@
 
             const onSubmit = (values) => {
                 barCodeSelect.value = ''
-                let obj = {fBatchgroup: F_BATCHGROUP.value, fBatchnumber: F_BATCHNUMBER.value}
+                let obj = {fBatchnumber: F_BATCHNUMBER.value + '-' + F_BATCHGROUP.value}
                 tbSmCopperOfflineBarCodeQuery(obj).then((result) => {
                     listData.barCodeSelectList = result.data.data
                     if (listData.barCodeSelectList.length > 0) {
@@ -618,24 +635,13 @@
                         });
 
                         return false
-                    }
-
-
-                    if (listData.yjtJyInformationDetailsData.exterior == '0') {
-                        buttonShow.value = false
-                        showDialog({
-                            title: '提示',
-                            width: '600',
-                            message: '当前质检信息为优等品，不能再质检为优等品',
-                        }).then(() => {
-                            // on close
-                        });
-                    } else {
+                    }else {
                         centerDialogVisible.value = true
                         buttonShow.value = false
                         listMap.data.push(listData.yjtJyInformationData)
                         listData.outstandingAlterList = listMap
                     }
+
                 }
             }
 
@@ -697,25 +703,14 @@
                         });
 
                         return false
-                    }
-
-
-                    if (listData.yjtJyInformationDetailsData.exterior == '1') {
-                        buttonShow.value = false
-                        showDialog({
-                            title: '提示',
-                            width: '600',
-                            message: '当前质检信息为合格品，不能再质检为合格品',
-                        }).then(() => {
-                            // on close
-                        });
-                    } else {
+                    }else {
                         let data = encodeURIComponent(JSON.stringify(listData.yjtJyInformationData))
                         router.push({
                             path: '/decide',
                             query: {yjtJyInformation: data, exterior: '1', tabIndex: active.value}
                         })
                     }
+
                 }
 
             };
@@ -735,7 +730,6 @@
                             // on close
                         });
                     } else {
-
                         router.push({
                             path: '/decide',
                             query: {yjtJyInformation: data, exterior: '2', tabIndex: active.value}
@@ -763,19 +757,7 @@
                         });
 
                         return false
-                    }
-
-
-                    if (listData.yjtJyInformationDetailsData.exterior == '2') {
-                        buttonShow.value = false
-                        showDialog({
-                            title: '提示',
-                            width: '600',
-                            message: '当前质检信息为不合格品，不能再质检为不合格品',
-                        }).then(() => {
-                            // on close
-                        });
-                    } else {
+                    }else {
                         let data = encodeURIComponent(JSON.stringify(listData.yjtJyInformationData))
                         router.push({
                             path: '/decide',

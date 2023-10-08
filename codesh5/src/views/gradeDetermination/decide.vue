@@ -174,6 +174,7 @@
             const exterior = ref(JSON.parse(decodeURIComponent(route.query.exterior)))
             const tabIndex = ref(JSON.parse(decodeURIComponent(route.query.tabIndex)))
 
+
             // 拍照监听
             fc.await("takePhoto", (res) => {
                 if (res != 'null') {
@@ -315,7 +316,11 @@
                             overlay: true,
                         })
                         disabled.value = false
-                        router.back()
+                        //router.back()
+                        router.push({
+                            path: '/gradeDetermination',
+                            query: {barcode: listData.yjtJyInformationData.barcode, tabState: '1'}
+                        })
                     }
                 }).catch(error => {
                     console.log(error)

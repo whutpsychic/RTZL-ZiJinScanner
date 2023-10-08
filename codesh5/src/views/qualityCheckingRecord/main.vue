@@ -25,7 +25,7 @@
         <van-list
                 v-model:loading="loading"
                 :finished="finished"
-                offset="50"
+                :immediate-check="false"
                 finished-text="没有更多了"
                 @load="onLoad"
         >
@@ -56,8 +56,8 @@
                              </span>
                         </p>
 
-                        <van-tag v-if="item.state=='0'" type="primary">未质检</van-tag>
-                        <van-tag v-if="item.state=='1'" type="success">已质检</van-tag>
+                        <van-tag v-if="item.state=='0'" type="primary" size="large">未质检</van-tag>
+                        <van-tag v-if="item.state=='1'" type="success" size="large">已质检</van-tag>
 
 
                     </div>
@@ -139,6 +139,11 @@
                             <span style="font-weight: bold">改判理由：</span><span>{{item.details.alterReason}}</span>
                         </p>
 
+
+                        <p v-if="item.details.remarks">
+                            <span style="font-weight: bold">备注：</span><span>{{item.details.remarks}}</span>
+                        </p>
+
                         <div v-if="item.details.exterior!='0'">
                             <van-image style="margin:0 2%" @click="seeImg(item.fileList)"
                                        v-for="(file,index) in  item.fileList"
@@ -167,7 +172,7 @@
 </template>
 
 <script>
-    import {ref} from 'vue';
+    import {onMounted, ref} from 'vue';
     import {useRouter} from "vue-router";
     import {
         qualityCheckingRecordDecide,
@@ -218,6 +223,11 @@
                 }
             })
 
+
+            onMounted(() => {
+                offset.value = 1
+                getQualityCheckingRecord({batchnumber: searchValue.value, barcode: ''})
+            })
 
 
             //跳转到首页
@@ -280,6 +290,7 @@
 
             //获取阴极铜质检数据
             const getQualityCheckingRecord = (obj) => {
+                loading.value = true
                 let paramInfo = {}
                 let blocks = {}
                 let paramBlock = {}
