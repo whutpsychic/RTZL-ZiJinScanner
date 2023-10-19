@@ -7,7 +7,7 @@
             @click-left="onClickLeft"
     />
 
-    <div class="table-content container">
+    <div>
         <van-form @submit="onSubmit" id="form-area" ref="formRef">
             <van-cell-group inset>
                 <van-cell title="选择日期：" title-style="max-width: 25%" :value="dataText" @click="show = true"/>
@@ -16,18 +16,20 @@
             </van-cell-group>
         </van-form>
 
-        <el-table ref="tableRef" :data="tableData" id="data-area"
+        <el-table ref="tableRef"
+                  :data="tableData"
+                  id="data-area"
                   :style="tableHeight"
-                  style="width: 100%"
-                  highlight-current-row
                   v-loading="loading"
                   element-loading-text="数据加载中..."
-                  :element-loading-spinner="svg"
-                  element-loading-svg-view-box="-10, -10, 50, 50"
                   element-loading-background="rgba(122, 122, 122, 0.8)"
                   @row-click="selectRow">
-            <el-table-column fixed prop="chehao" label="车号"/>
-            <el-table-column prop="danjuhao" label="单据号" width="130"/>
+            <el-table-column fixed prop="chehao" label="车号" width="110px">
+                <template #default="scope">
+                    <span style="font-weight: bolder;font-size: 16px">{{ scope.row.chehao }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="danjuhao" label="单据号" width="130px"/>
             <el-table-column prop="chengfang" label="秤房"/>
             <el-table-column prop="pizhong" label="皮重" :formatter="formatter"/>
         </el-table>
@@ -91,21 +93,10 @@
             const tableHeight = ref('')
             const loading = ref(true)
             const tableRef = ref(null)
-            const svg = `
-                    <path class="path" d="
-                      M 30 15
-                      L 28 17
-                      M 25.61 25.61
-                      A 15 15, 0, 0, 1, 15 30
-                      A 15 15, 0, 1, 1, 27.99 7.5
-                      L 15 15
-                    " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>`
-
-
             onMounted(() => {
                 startDate.value = dateFormat('YYYY-mm-dd', new Date((new Date).getTime() - 24 * 60 * 60 * 1000))
                 endDate.value = dateFormat('YYYY-mm-dd', new Date())
-                let height = document.body.scrollHeight - 260
+                let height = document.body.scrollHeight - 275
                 tableHeight.value = 'height:' + height + 'px'
                 dataText.value = startDate.value + '至' + endDate.value
                 setTimeout(() => {
@@ -146,12 +137,14 @@
                 selectedCheHao = row
             }
 
+
+
             const confirmSelect = () => {
 
                 if (selectedCheHao) {
                     store.commit('setCarInfo', selectedCheHao)
-                    store.commit('setScandList', [])
-                    store.commit('setScandCalculateData', {})
+                    // store.commit('setScandList', [])
+                    // store.commit('setScandCalculateData', {})
                     router.push({
                         name: 'pickWithQueryInfoData',
                     })
@@ -159,7 +152,8 @@
                     showDialog({
                         title: '提示',
                         width: '600',
-                        message: '请选择车号',
+                        allowHtml: true,
+                        message: '<span style="font-size: 18px">请选择车号</span>',
                     }).then(() => {
                         // on close
                     });
@@ -178,8 +172,8 @@
                         DataId: '',
                     }
                     store.commit('setCarInfo', obj)
-                    store.commit('setScandList', [])
-                    store.commit('setScandCalculateData', {})
+                    // store.commit('setScandList', [])
+                    // store.commit('setScandCalculateData', {})
                     router.push({
                         name: 'pickWithQueryInfoData',
                     })
@@ -187,7 +181,8 @@
                     showDialog({
                         title: '提示',
                         width: '600',
-                        message: '请手工录入车号',
+                        allowHtml: true,
+                        message: '<span style="font-size: 18px">请手工录入车号</span>',
                     }).then(() => {
                         // on close
                     });
@@ -242,9 +237,9 @@
                 endDate,
                 tableData,
                 tableRef,
-                svg,
                 loading,
                 tableHeight,
+                chehao,
                 formatter,
                 onClickLeft,
                 onConfirm,
@@ -255,19 +250,13 @@
                 confirmSelect,
                 dateFormat,
                 handleConfirmSelect,
-                chehao,
+
             }
         },
     }
 </script>
 
 <style scoped>
-    .container {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
     #data-area {
         flex-grow: 1;
         margin-bottom: 10px;

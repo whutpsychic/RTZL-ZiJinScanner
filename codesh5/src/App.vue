@@ -5,7 +5,7 @@
 
 
     <!-- vue3.0配置 -->
-<!--    <router-view v-slot="{ Component }">-->
+<!--    <router-view v-slot="{ Component }" v-if="isRouterAlive">-->
 <!--        <keep-alive>-->
 <!--            <component :is="Component" :key="route.name" v-if="route.meta.keepAlive" />-->
 <!--        </keep-alive>-->
@@ -29,13 +29,23 @@
         },
         data() {
             return {
-                tabType: true
+                tabType: true,
+                isRouterAlive:true
             }
         },
         mounted() {
             fc.init(this)
 
         },
+
+        // provide () { return { reload: this.reload } },
+        //
+        // methods: {
+        //     reload () {
+        //         this.isRouterAlive = false
+        //         this.$nextTick(() => (this.isRouterAlive = true))
+        //     }
+        // },
 
         watch: {
             $route(e) {

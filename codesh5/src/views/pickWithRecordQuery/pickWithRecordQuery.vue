@@ -106,7 +106,7 @@
                 obj.strDeliveryNo = F_DELIVERYNO.value
 
                 store.commit('setPickWithRecordQuery', obj)
-                store.commit('setPickWithRecordScroll',0)
+                store.commit('setPickWithRecordScroll', 0)
                 router.push({name: 'pickWithRecordListData'})
 
             }
@@ -142,9 +142,10 @@
             }
 
 
-            return{
+            return {
                 F_DELIVERYNO,
                 show,
+                //minDate: new Date('2022', '05', '01'),
                 minDate: new Date(dateY, dateM, dateD),
                 dataText,
                 onConfirm,
@@ -172,12 +173,13 @@
     }
 
     .btn-area > div:nth-child(2) {
-        background-color: var(--btn-color1);
+        background-color: var(--btn-color2);
+
         margin-right: 30px;
     }
 
     .btn-area > div:nth-child(1) {
-        background-color: var(--btn-color2);
+        background-color: var(--btn-color1);
         margin-left: 30px;
     }
 

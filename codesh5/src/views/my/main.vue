@@ -43,8 +43,8 @@
                 showConfirmDialog({
                     title: '提示',
                     width:'600',
-                    message:
-                        '是否退出当前程序？',
+                    allowHtml: true,
+                    message: '<span style="font-size: 18px">是否退出当前程序？</span>',
                 })
                     .then(() => {
                         logout().then(() => {

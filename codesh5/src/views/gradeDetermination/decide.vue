@@ -261,6 +261,7 @@
                     showToast({
                         message: '请上传质检照片',
                         type: 'fail',
+                        overlay: true,
                         className: 'particulars-detail-popup'
                     })
                     disabled.value = false
@@ -273,6 +274,7 @@
                         showToast({
                             message: '请选择或者填写改判理由',
                             type: 'fail',
+                            overlay: true,
                             className: 'particulars-detail-popup'
                         })
                         disabled.value = false
@@ -284,6 +286,7 @@
                     duration: 0,
                     forbidClick: true,
                     className: 'particulars-detail-popup',
+                    overlay: true,
                     message: '正在质检...',
                 });
 
@@ -422,8 +425,8 @@
     .header {
 
         width: 100%;
-        height: 46px;
-        line-height: 46px;
+        height: 58px;
+        line-height: 58px;
         position: absolute;
         z-index: 5;
         top: 0;
@@ -432,7 +435,7 @@
     .content {
         width: 100%;
         overflow: scroll;
-        top: 46px;
+        top: 58px;
         position: absolute;
         z-index: 10;
         bottom: 5px;

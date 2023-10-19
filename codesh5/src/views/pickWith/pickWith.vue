@@ -153,7 +153,7 @@
             const yij2 = ref('0')
             const pz = ref('0')
             const centerDialogVisibleTXM = ref(false)
-            const typeName=ref('')
+            const typeName = ref('')
             const barCodeSelect = ref('')
             const F_BATCHGROUP = ref('')
             const F_BATCHNUMBER = ref('')
@@ -163,7 +163,7 @@
             })
 
             fc.await('scanner', (res) => {
-                if (router.currentRoute.value.path=='/pickWith') {
+                if (router.currentRoute.value.path == '/pickWith') {
                     if (res != 'null') {
                         let barcode = res
                         let standard = new RegExp(
@@ -185,10 +185,20 @@
                                             checkIfExist(toRaw(tableData.value), databar);
                                         })
                                 } else {
+                                    let message = ''
+                                    if (res.data.distinguish == '1') {
+                                        message = '<span style="font-size: 18px;color: red">' + res.data.message + '</span>'
+                                    } else if (res.data.distinguish == '2') {
+                                        message = '<span style="font-size: 18px;color: #0e80d2">' + res.data.message + '</span>'
+                                    } else {
+                                        message = '<span style="font-size: 18px">' + res.data.message + '</span>'
+                                    }
+
                                     showDialog({
                                         title: '提示',
                                         width: '600',
-                                        message: res.data.message,
+                                        allowHtml: true,
+                                        message: message,
                                     }).then(() => {
                                         // on close
                                     })
@@ -198,7 +208,8 @@
                             showDialog({
                                 title: '提示',
                                 width: '600',
-                                message: '对不起，此条码不符合规范',
+                                allowHtml: true,
+                                message: '<span style="font-size: 18px">对不起，此条码不符合规范</span>',
                             }).then(() => {
                                 // on close
                             })
@@ -208,7 +219,8 @@
                         showDialog({
                             title: '提示',
                             width: '600',
-                            message: '数据获取失败',
+                            allowHtml: true,
+                            message: '<span style="font-size: 18px">数据获取失败</span>',
                         }).then(() => {
                             // on close
                         })
@@ -242,24 +254,25 @@
             }
 
 
-
             onMounted(() => {
                 let chukudanListInfo = toRaw(store.state.chukudanListInfo)
                 if (toRaw(store.state.carInfo.pizhong)) {
                     pizhong.value = toRaw(store.state.carInfo.pizhong).toFixed(4)
                 }
                 yingj.value = new BigNumber(chukudanListInfo.F_PLANSUTTLE).minus(chukudanListInfo.F_SUTTLE).toFixed(4)
-                tableData.value = toRaw(store.state.scandList)
-                let calculateData = toRaw(store.state.scandCalculateData)
-                if (Object.getOwnPropertyNames(calculateData).length == 0) {
-                    ques.value = new BigNumber(chukudanListInfo.F_PLANSUTTLE).minus(chukudanListInfo.F_SUTTLE).toFixed(4)
-                    pz.value = new BigNumber(pizhong.value).plus(yij1.value).toFixed(4)
-                } else {
-                    yij1.value = calculateData.yij1
-                    ques.value = calculateData.ques
-                    pz.value = calculateData.pz
-                    yij2.value = calculateData.yij2
-                }
+                ques.value = new BigNumber(chukudanListInfo.F_PLANSUTTLE).minus(chukudanListInfo.F_SUTTLE).toFixed(4)
+                pz.value = new BigNumber(pizhong.value).plus(yij1.value).toFixed(4)
+                // tableData.value = toRaw(store.state.scandList)
+                // let calculateData = toRaw(store.state.scandCalculateData)
+                // if (Object.getOwnPropertyNames(calculateData).length == 0) {
+                //     ques.value = new BigNumber(chukudanListInfo.F_PLANSUTTLE).minus(chukudanListInfo.F_SUTTLE).toFixed(4)
+                //     pz.value = new BigNumber(pizhong.value).plus(yij1.value).toFixed(4)
+                // } else {
+                //     yij1.value = calculateData.yij1
+                //     ques.value = calculateData.ques
+                //     pz.value = calculateData.pz
+                //     yij2.value = calculateData.yij2
+                // }
 
             })
 
@@ -269,7 +282,8 @@
                     showDialog({
                         title: '提示',
                         width: '600',
-                        message: '请选择条形码',
+                        allowHtml: true,
+                        message: '<span style="font-size: 18px">请选择条形码</span>',
                     }).then(() => {
                         // on close
                     })
@@ -298,10 +312,20 @@
                                     checkIfExist(toRaw(tableData.value), databar);
                                 })
                         } else {
+                            let message = ''
+                            if (res.data.distinguish == '1') {
+                                message = '<span style="font-size: 18px;color: red">' + res.data.message + '</span>'
+                            } else if (res.data.distinguish == '2') {
+                                message = '<span style="font-size: 18px;color: #0e80d2">' + res.data.message + '</span>'
+                            } else {
+                                message = '<span style="font-size: 18px">' + res.data.message + '</span>'
+                            }
+
                             showDialog({
                                 title: '提示',
                                 width: '600',
-                                message: res.data.message,
+                                allowHtml: true,
+                                message: message,
                             }).then(() => {
                                 // on close
                             })
@@ -311,7 +335,8 @@
                     showDialog({
                         title: '提示',
                         width: '600',
-                        message: '对不起，此条码不符合规范',
+                        allowHtml: true,
+                        message: '<span style="font-size: 18px">对不起，此条码不符合规范</span>',
                     }).then(() => {
                         // on close
                     })
@@ -336,7 +361,8 @@
                         showDialog({
                             title: '提示',
                             width: '600',
-                            message: '没有查询到对应的条码数据',
+                            allowHtml: true,
+                            message: '<span style="font-size: 18px">没有查询到对应的条码数据</span>',
                         }).then(() => {
                             // on close
                         })
@@ -352,16 +378,17 @@
                     showConfirmDialog({
                         title: '提示',
                         width: '600',
-                        message:
-                            '是否要剔除当前所选数据？',
+                        allowHtml: true,
+                        message: '<span style="font-size: 18px">是否要剔除当前所选数据？</span>',
+
                     })
                         .then(() => {
                             let filtedData = tableData.value.filter(
                                 (item) => item.barcode != selectedRow.barcode
                             )
                             tableData.value = filtedData
-                            typeName.value='edit'
-                            calcPick(filtedData,selectedRow)
+                            typeName.value = 'edit'
+                            calcPick(filtedData, selectedRow)
                             selectedRow = ''
                         })
                         .catch((err) => {
@@ -373,7 +400,8 @@
                     showDialog({
                         title: '提示',
                         width: '600',
-                        message: '请选择要剔除的的数据',
+                        allowHtml: true,
+                        message: '<span style="font-size: 18px">请选择要剔除的的数据</span>',
                     }).then(() => {
                         // on close
                     })
@@ -385,7 +413,8 @@
                     showDialog({
                         title: '提示',
                         width: '600',
-                        message: '没有要处理的数据',
+                        allowHtml: true,
+                        message: '<span style="font-size: 18px">没有要处理的数据</span>',
                     }).then(() => {
                         // on close
                     })
@@ -396,12 +425,14 @@
                 showConfirmDialog({
                     title: '提示',
                     width: '600',
-                    message: '是否已完成扫描？',
+                    allowHtml: true,
+                    message: '<span style="font-size: 18px">是否已完成扫描？</span>',
                 }).then(() => {
 
-                   showLoadingToast({
+                    showLoadingToast({
                         duration: 0,
                         forbidClick: true,
+                        overlay: true,
                         className: 'particulars-detail-popup',
                         message: '拣配中...',
                     });
@@ -421,9 +452,9 @@
                     //单据号
                     condition.id = carInfo.danjuhao
                     //新增的DataId
-                    if (carInfo.DataId){
+                    if (carInfo.DataId) {
                         condition.strDataId = carInfo.DataId
-                    }else {
+                    } else {
                         condition.strDataId = ''
                     }
 
@@ -436,24 +467,26 @@
                     scanConfirm(condition).then((res) => {
                         closeToast()
                         if (res.data.code == '200') {
-                            tableData.value=[]
+                            tableData.value = []
                             showDialog({
                                 title: '提示',
                                 width: '600',
-                                message: res.data.message,
+                                allowHtml: true,
+                                message: '<span style="font-size: 18px">' + res.data.message + '</span>',
                             }).then(() => {
-                                store.commit('setPickWithScroll',0)
+                                store.commit('setPickWithScroll', 0)
                                 store.commit('setChukudanListInfo', {})
                                 store.commit('setCarInfo', {})
-                                store.commit('setScandList',[])
-                                store.commit('setScandCalculateData', {})
+                                // store.commit('setScandList',[])
+                                // store.commit('setScandCalculateData', {})
                                 router.push({path: '/pickWithQueryListData'})
                             })
                         } else {
                             showDialog({
                                 title: '提示',
                                 width: '600',
-                                message: res.data.message,
+                                allowHtml: true,
+                                message: '<span style="font-size: 18px">' + res.data.message + '</span>',
                             }).then(() => {
                                 // on close
                             })
@@ -466,7 +499,7 @@
                 });
             }
 
-            const calcPick = (arr,obj) => {
+            const calcPick = (arr, obj) => {
                 if (typeName.value == 'add') {
                     yij1.value = (new BigNumber(yij1.value).plus(new BigNumber(obj.weight).dividedBy(1000).toNumber())).toFixed(4)
                 } else {
@@ -480,20 +513,20 @@
                 itemKey.value = Math.random()
 
 
-
-                let calculateData = {}
-                calculateData.yij1 = yij1.value
-                calculateData.ques = ques.value
-                calculateData.pz = pz.value
-                calculateData.yij2 = yij2.value
-                store.commit('setScandCalculateData', calculateData)
-                store.commit('setScandList', tableData.value)
+                // let calculateData = {}
+                // calculateData.yij1 = yij1.value
+                // calculateData.ques = ques.value
+                // calculateData.pz = pz.value
+                // calculateData.yij2 = yij2.value
+                // store.commit('setScandCalculateData', calculateData)
+                // store.commit('setScandList', tableData.value)
 
                 if (ques.value < 0) {
                     showDialog({
                         title: '提示',
                         width: '600',
-                        message: '缺少数值已为负数',
+                        allowHtml: true,
+                        message: '<span style="font-size: 18px">缺少数值已为负数</span>',
                     }).then(() => {
                         // on close
                     })
@@ -543,13 +576,14 @@
                     let existDatabar = []
                     arr.unshift(obj)
                     existDatabar = arr
-                    typeName.value='add'
-                    calcPick(existDatabar,obj)
+                    typeName.value = 'add'
+                    calcPick(existDatabar, obj)
                 } else {
                     showDialog({
                         title: '提示',
                         width: '600',
-                        message: '该批次已经选择，请勿重复选择',
+                        allowHtml: true,
+                        message: '<span style="font-size: 18px">该批次已经选择，请勿重复选择</span>',
                     }).then(() => {
                         // on close
                     })
@@ -653,12 +687,12 @@
 
     .btn-area > div:nth-child(1) {
         background-color: var(--btn-color1);
-        margin-left:10px
+        margin-left: 10px
     }
 
     .btn-area > div:nth-child(3) {
         background-color: var(--btn-color1);
-        margin-right:10px
+        margin-right: 10px
     }
 
     /** */

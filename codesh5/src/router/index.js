@@ -45,9 +45,6 @@ const router = createRouter({
         {
             path: '/auditingList',
             name: 'auditingList',
-            // meta: {
-            //     keepAlive: true
-            // },
             component: () => import('../views/auditing/main.vue')
         },
 
@@ -124,6 +121,9 @@ const router = createRouter({
         {
             path: '/pickWithRecordListData',
             name: 'pickWithRecordListData',
+            // meta: {
+            //     keepAlive: true
+            // },
             component: () => import('../views/pickWithRecordQuery/pickWithRecordListData.vue')
         },
 
@@ -131,19 +131,22 @@ const router = createRouter({
         {
             path: '/pickWithRecordInfoData',
             name: 'pickWithRecordInfoData',
+            // meta: {
+            //     keepAlive: false
+            // },
             component: () => import('../views/pickWithRecordQuery/pickWithRecordInfoData.vue')
         },
 
         {
             path: '/login',
             name: 'login',
-            component: LoginView
+            component: () => import('../views/login/main.vue')
         },
 
 
         {
             path: '/',
-            component: LoginView
+            component: () => import('../views/login/main.vue')
         }
     ],
     // scrollBehavior(to, from, savedPosition) {

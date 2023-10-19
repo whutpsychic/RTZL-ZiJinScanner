@@ -25,10 +25,10 @@
 
                 <div class="test">
 
-                        <div @click="details(item)">{{item.batchnumber}}</div>
-                        <van-button size="small" style="margin-left: 30px;background-color: #003363;color:#FFFFFF"
-                                    @click="identifyClick('0',item)">单个鉴定
-                        </van-button>
+                    <div @click="details(item)">{{item.batchnumber}}</div>
+                    <van-button size="small" style="margin-left: 30px;background-color: #003363;color:#FFFFFF"
+                                @click="identifyClick('0',item)">单个鉴定
+                    </van-button>
 
                     <img src="/image/delete.png" class="delete" @click="deleteData(item)"/>
 
@@ -91,7 +91,8 @@
                                 <span style="font-weight: bold">品级分类：</span>
                                 <span>{{listData.yjtJyInformationDetailsData.exteriorName}}</span>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
-                                <span v-if="listData.yjtJyInformationDetailsData.exterior!='0'" style="font-weight: bold">类型：</span>
+                                <span v-if="listData.yjtJyInformationDetailsData.exterior!='0'"
+                                      style="font-weight: bold">类型：</span>
                                 <span>{{listData.yjtJyInformationDetailsData.dictName}}</span>
                             </p>
 
@@ -195,7 +196,7 @@
             <van-row>
                 <van-col span="3"></van-col>
                 <van-col span="18">
-                    <van-button type="primary" size="large"  @click="outstandingClick">优等品</van-button>
+                    <van-button type="primary" size="large" @click="outstandingClick">优等品</van-button>
                 </van-col>
                 <van-col span="3"></van-col>
             </van-row>
@@ -217,16 +218,18 @@
             width="90%"
             align-center
     >
-        <el-select v-model="alterReason" filterable
-                   clearable allow-create
-                   placeholder="改判理由" style="width: 100%">
-            <el-option
-                    v-for="item in listData.alterReasonList"
-                    :key="item.alterReason"
-                    :label="item.alterReason"
-                    :value="item.alterReason"
-            />
-        </el-select>
+        <div style="padding: 15px;">
+            <el-select v-model="alterReason" filterable
+                       clearable allow-create
+                       placeholder="改判理由" style="width: 100%">
+                <el-option
+                        v-for="item in listData.alterReasonList"
+                        :key="item.alterReason"
+                        :label="item.alterReason"
+                        :value="item.alterReason"
+                />
+            </el-select>
+        </div>
         <template #footer>
       <span class="dialog-footer">
         <el-button @click="outstandingAlter" type="primary">提交</el-button>
@@ -235,6 +238,8 @@
         </el-button>
       </span>
         </template>
+
+
     </el-dialog>
 
 
@@ -245,7 +250,7 @@
             align-center
     >
 
-        <div style="position: relative">
+        <div style="position: relative;padding: 15px;">
             <p>
                 <span style="font-weight: bold">编号：</span><span>{{listData.detailsInfo.batchnumber}}</span>
             </p>
@@ -278,61 +283,64 @@
             width="96%"
             align-center
     >
+        <div style="padding: 15px;">
+            <van-form @submit="onSubmit">
+                <van-cell-group inset>
+                    <van-field
+                            v-model="F_BATCHGROUP"
+                            name="F_BATCHGROUP"
+                            label="批次号"
+                            placeholder="批次号(四位)"
+                            :rules="[{ required: true, message: '请填写批次号' }]"
+                    />
+                    <van-field
+                            v-model="F_BATCHNUMBER"
+                            name="F_BATCHNUMBER"
+                            label="编号"
+                            placeholder="编号(三位)"
+                            :rules="[{ required: true, message: '请填写编号' }]"
+                    />
+                </van-cell-group>
+                <div style="margin: 16px;">
+                    <van-button square icon="search" block type="primary" native-type="submit"
+                                style="background-color: #003363;color:#FFFFFF">
+                        查询
+                    </van-button>
 
-        <van-form @submit="onSubmit">
-            <van-cell-group inset>
-                <van-field
-                        v-model="F_BATCHGROUP"
-                        name="F_BATCHGROUP"
-                        label="批次号"
-                        placeholder="批次号(四位)"
-                        :rules="[{ required: true, message: '请填写批次号' }]"
-                />
-                <van-field
-                        v-model="F_BATCHNUMBER"
-                        name="F_BATCHNUMBER"
-                        label="编号"
-                        placeholder="编号(三位)"
-                        :rules="[{ required: true, message: '请填写编号' }]"
-                />
-            </van-cell-group>
-            <div style="margin: 16px;">
-                <van-button square icon="search" block type="primary" native-type="submit"
-                            style="background-color: #003363;color:#FFFFFF">
-                    查询
-                </van-button>
+                    <div style="margin-top: 10px">
+                        <p>条形码</p>
 
-                <div style="margin-top: 10px">
-                    <p>条形码</p>
+                        <el-select v-model="barCodeSelect"
+                                   placeholder="条形码" style="width: 100%;">
+                            <el-option
+                                    v-for="item in listData.barCodeSelectList"
+                                    :key="item.F_BARCODE"
+                                    :label="item.F_BARCODE"
+                                    :value="item.F_BARCODE"
+                            />
+                        </el-select>
+                    </div>
 
-                    <el-select v-model="barCodeSelect"
-                               placeholder="条形码" style="width: 100%;">
-                        <el-option
-                                v-for="item in listData.barCodeSelectList"
-                                :key="item.F_BARCODE"
-                                :label="item.F_BARCODE"
-                                :value="item.F_BARCODE"
-                        />
-                    </el-select>
+                    <van-row style="margin-top: 15px">
+                        <van-col span="2"></van-col>
+                        <van-col span="10">
+                            <van-button icon="passed" style="background-color: #003363;color:#FFFFFF"
+                                        @click="passedTXMClick">确定
+                            </van-button>
+                        </van-col>
+                        <van-col span="10" style="text-align: center">
+                            <van-button icon="close" style="background-color:red;color:#FFFFFF" @click="closeTXMClick">
+                                退出
+                            </van-button>
+                        </van-col>
+                        <van-col span="2"></van-col>
+
+                    </van-row>
+
                 </div>
+            </van-form>
+        </div>
 
-                <van-row style="margin-top: 15px">
-                    <van-col span="2"></van-col>
-                    <van-col span="10">
-                        <van-button icon="passed" style="background-color: #003363;color:#FFFFFF"
-                                    @click="passedTXMClick">确定
-                        </van-button>
-                    </van-col>
-                    <van-col span="10" style="text-align: center">
-                        <van-button icon="close" style="background-color:red;color:#FFFFFF" @click="closeTXMClick">退出
-                        </van-button>
-                    </van-col>
-                    <van-col span="2"></van-col>
-
-                </van-row>
-
-            </div>
-        </van-form>
 
     </el-dialog>
 
@@ -418,7 +426,7 @@
 
 
             fc.await('scanner', (res) => {
-                if (router.currentRoute.value.path=='/gradeDetermination'){
+                if (router.currentRoute.value.path == '/gradeDetermination') {
                     if (res != 'null') {
 
                         let barcode = res
@@ -426,15 +434,16 @@
                             /^124010[1-9][0-9]{2}(0[1-9]|1[0-2])((0[1-9])|((1|2)[0-9])|30|31)[0-9]{12}$/,
                         );
                         let bool = standard.test(barcode) && barcode.length === 25;
-                        if(bool){
+                        if (bool) {
                             let tbCathodeCopper = {}
                             tbCathodeCopper.fBarcode = res
                             getJudgementCathodeCopper(tbCathodeCopper)
-                        }else{
+                        } else {
                             showDialog({
                                 title: '提示',
                                 width: '600',
-                                message: '对不起，此条码不符合规范',
+                                allowHtml: true,
+                                message: '<span style="font-size: 18px">对不起，此条码不符合规范</span>',
                             }).then(() => {
                                 // on close
                             })
@@ -445,6 +454,7 @@
                         showToast({
                             message: '数据获取失败',
                             type: 'fail',
+                            overlay: true,
                             className: 'particulars-detail-popup',
                         })
                     }
@@ -483,10 +493,13 @@
                             overlay: true,
                         })
                     } else {
-                        showToast({
-                            message: '没有查询到对应的条码数据',
-                            type: 'fail',
-                            className: 'particulars-detail-popup'
+                        showDialog({
+                            title: '提示',
+                            width: '600',
+                            allowHtml: true,
+                            message: '<span style="font-size: 18px">没有查询到对应的条码数据</span>',
+                        }).then(() => {
+                            // on close
                         })
                     }
                 }).catch(error => {
@@ -513,10 +526,13 @@
 
             const passedTXMClick = () => {
                 if (barCodeSelect.value == '') {
-                    showToast({
-                        message: '请选择条形码',
-                        type: 'fail',
-                        className: 'particulars-detail-popup'
+                    showDialog({
+                        title: '提示',
+                        width: '600',
+                        allowHtml: true,
+                        message: '<span style="font-size: 18px">请选择条形码</span>',
+                    }).then(() => {
+                        // on close
                     })
                     return false
                 }
@@ -606,21 +622,29 @@
                         getExcellentJudgement(listMap)
                     } else {
                         buttonShowPL.value = false
-                        showToast({
-                            message: '当前没有要质检的数据',
-                            type: 'fail',
-                            className: 'particulars-detail-popup'
-                        })
+
+                        showDialog({
+                            title: '提示',
+                            width: '600',
+                            allowHtml: true,
+                            message: '<span style="font-size: 18px">当前没有要质检的数据</span>',
+                        }).then(() => {
+                            // on close
+                        });
+
                     }
                 } else {
 
                     if (JSON.stringify(listData.yjtJyInformationData) === '{}') {
                         buttonShow.value = false
-                        showToast({
-                            message: '当前没有要质检的数据',
-                            type: 'fail',
-                            className: 'particulars-detail-popup'
-                        })
+                        showDialog({
+                            title: '提示',
+                            width: '600',
+                            allowHtml: true,
+                            message: '<span style="font-size: 18px">当前没有要质检的数据</span>',
+                        }).then(() => {
+                            // on close
+                        });
                         return false
                     }
 
@@ -629,13 +653,14 @@
                         showDialog({
                             title: '提示',
                             width: '600',
-                            message: '审核中的数据不允许质检',
+                            allowHtml: true,
+                            message: '<span style="font-size: 18px">审核中的数据不允许质检</span>',
                         }).then(() => {
                             // on close
                         });
 
                         return false
-                    }else {
+                    } else {
                         centerDialogVisible.value = true
                         buttonShow.value = false
                         listMap.data.push(listData.yjtJyInformationData)
@@ -651,6 +676,7 @@
                     showToast({
                         message: '请选择或者填写改判理由',
                         type: 'fail',
+                        overlay: true,
                         className: 'particulars-detail-popup'
                     })
                     return false
@@ -670,10 +696,12 @@
                         showDialog({
                             title: '提示',
                             width: '600',
-                            message: '合格品不支持批量质检，请单个质检',
+                            allowHtml: true,
+                            message: '<span style="font-size: 18px">合格品不支持批量质检，请单个质检</span>',
                         }).then(() => {
                             // on close
                         });
+
                     } else {
                         router.push({
                             path: '/decide',
@@ -684,11 +712,14 @@
 
                     if (JSON.stringify(listData.yjtJyInformationData) === '{}') {
                         buttonShow.value = false
-                        showToast({
-                            message: '当前没有要质检的数据',
-                            type: 'fail',
-                            className: 'particulars-detail-popup'
-                        })
+                        showDialog({
+                            title: '提示',
+                            width: '600',
+                            allowHtml: true,
+                            message: '<span style="font-size: 18px">当前没有要质检的数据</span>',
+                        }).then(() => {
+                            // on close
+                        });
                         return false
                     }
 
@@ -697,13 +728,14 @@
                         showDialog({
                             title: '提示',
                             width: '600',
-                            message: '审核中的数据不允许质检',
+                            allowHtml: true,
+                            message: '<span style="font-size: 18px">审核中的数据不允许质检</span>',
                         }).then(() => {
                             // on close
                         });
 
                         return false
-                    }else {
+                    } else {
                         let data = encodeURIComponent(JSON.stringify(listData.yjtJyInformationData))
                         router.push({
                             path: '/decide',
@@ -725,7 +757,8 @@
                         showDialog({
                             title: '提示',
                             width: '600',
-                            message: '不合格品不支持批量质检，请单个质检',
+                            allowHtml: true,
+                            message: '<span style="font-size: 18px">不合格品不支持批量质检，请单个质检</span>',
                         }).then(() => {
                             // on close
                         });
@@ -738,11 +771,14 @@
                 } else {
                     if (JSON.stringify(listData.yjtJyInformationData) === '{}') {
                         buttonShow.value = false
-                        showToast({
-                            message: '当前没有要质检的数据',
-                            type: 'fail',
-                            className: 'particulars-detail-popup'
-                        })
+                        showDialog({
+                            title: '提示',
+                            width: '600',
+                            allowHtml: true,
+                            message: '<span style="font-size: 18px">当前没有要质检的数据</span>',
+                        }).then(() => {
+                            // on close
+                        });
                         return false
                     }
 
@@ -751,13 +787,14 @@
                         showDialog({
                             title: '提示',
                             width: '600',
-                            message: '审核中的数据不允许质检',
+                            allowHtml: true,
+                            message: '<span style="font-size: 18px">审核中的数据不允许质检</span>',
                         }).then(() => {
                             // on close
                         });
 
                         return false
-                    }else {
+                    } else {
                         let data = encodeURIComponent(JSON.stringify(listData.yjtJyInformationData))
                         router.push({
                             path: '/decide',
@@ -772,8 +809,8 @@
                 showConfirmDialog({
                     title: '提示',
                     width: '600',
-                    // overlayStyle:'',
-                    message: '是否删除当前数据？',
+                    allowHtml: true,
+                    message: '<span style="font-size: 18px">是否删除当前数据？</span>',
                 })
                     .then(() => {
                         let tbCathodeCopper = {}
@@ -799,10 +836,11 @@
             };
 
             //判定
-            const getExcellentJudgement=(listMap)=> {
+            const getExcellentJudgement = (listMap) => {
                 showLoadingToast({
                     duration: 0,
                     forbidClick: true,
+                    overlay: true,
                     className: 'particulars-detail-popup',
                     message: '正在质检...',
                 });
@@ -842,7 +880,8 @@
                             showDialog({
                                 title: '提示',
                                 width: '600',
-                                message: result.data.message,
+                                allowHtml: true,
+                                message: '<span style="font-size: 18px">' + result.data.message + '</span>',
                             }).then(() => {
 
                             });
@@ -1014,8 +1053,8 @@
     .header {
 
         width: 100%;
-        height: 95px;
-        line-height: 95px;
+        height: 105px;
+        line-height: 105px;
         position: absolute;
         z-index: 5;
         top: 0;
@@ -1025,7 +1064,7 @@
 
         width: 100%;
         overflow: auto;
-        top: 95px;
+        top: 105px;
         position: absolute;
         z-index: 10;
         bottom: 58px;
@@ -1063,7 +1102,7 @@
         --el-card-padding: 4px;
     }
 
-    .test{
+    .test {
 
         display: flex;
         align-items: center;

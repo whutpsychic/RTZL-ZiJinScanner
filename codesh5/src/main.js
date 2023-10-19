@@ -12,10 +12,12 @@ import Vant from 'vant'
 import 'vant/lib/index.css'
 const app = createApp(App)
 
+import elTableInfiniteScroll from 'el-table-infinite-scroll';
+
 import VueECharts from "vue-echarts";
 app.component('v-chart', VueECharts)
 
-app.use(Vant).use(store).use(router)
+app.use(Vant).use(store).use(router).use(elTableInfiniteScroll)
 app.mount('#app')
 
 

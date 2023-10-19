@@ -9,8 +9,8 @@ import {request, baseUrl} from '@/utils/request'
 export function getPickHeadData(data) {
     return request({
         url: `${baseUrl.api_base_url}/mobileTerminalApi.do?method=getPickHeadData`,
-        method: 'get',
-        params: data,
+        method: 'post',
+        data: data,
     })
 }
 

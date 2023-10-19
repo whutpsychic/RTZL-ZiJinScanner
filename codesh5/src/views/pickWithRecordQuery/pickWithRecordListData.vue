@@ -6,19 +6,18 @@
             left-arrow
             @click-left="onClickLeft"
     />
-    <div class="table-content container" id="content">
-        <el-table :data="tableData" ref="tableRef"
+    <div>
+        <el-table :data="tableData"
+                  ref="tableRef"
                   :style="tableHeight"
-                  highlight-current-row
                   v-loading="loading"
+                  v-el-table-infinite-scroll="scrollBehavior"
                   element-loading-text="数据加载中..."
-                  :element-loading-spinner="svg"
-                  element-loading-svg-view-box="-10, -10, 50, 50"
                   element-loading-background="rgba(122, 122, 122, 0.8)"
                   @row-click="selectRow">
 
             <el-table-column fixed prop="F_PICKDATE" label="拣配日期" width="100px" :formatter="formatDate"/>
-            <el-table-column prop="F_TRUCKNO" label="车号"/>
+            <el-table-column prop="F_TRUCKNO" label="车号" width="100px"/>
             <el-table-column prop="F_RECIVE" label="收货单位" width="100px"/>
             <el-table-column prop="F_PICKSTATE_NAME" label="拣配状态" width="100px"/>
             <el-table-column prop="F_CONTRACT" label="合同号"/>
@@ -53,18 +52,60 @@
             </div>
         </div>
     </div>
+
+
+    <el-dialog class="elDialogInfo"
+               v-model="centerDialogVisible"
+               :destroy-on-close="true"
+               :show-close="false"
+               title="拣配单明细"
+               fullscreen
+               align-center
+    >
+
+
+        <div id="contentInfo">
+            <el-table :data="tableDataInfo"
+                      ref="tableRefInfo"
+                      :style="tableHeightInfo"
+                      v-loading="loadingInfo"
+                      element-loading-text="数据加载中..."
+                      element-loading-background="rgba(122, 122, 122, 0.8)"
+            >
+
+                <el-table-column fixed prop="F_PICKNO" label="拣配单号" width="110px"/>
+                <el-table-column prop="F_BATCHGROUP" label="批次号"/>
+                <el-table-column prop="F_BATCHNUMBER" label="批次编码" width="110px"/>
+                <el-table-column prop="F_SUTTLE" label="重量"/>
+                <el-table-column prop="F_BLOCKS" label="块数"/>
+                <el-table-column prop="F_UNIT" label="计量单位" width="110px"/>
+
+
+            </el-table>
+            <div class="btn-area">
+                <div @click="centerDialogVisible = false" style=" margin: 0 auto;">
+                    <img src="@/assets/image/btn_fanhui1.png"/>
+                    <div>返回</div>
+                </div>
+            </div>
+        </div>
+
+    </el-dialog>
 </template>
 
 <script>
     import {toRaw} from '@vue/reactivity'
     import {onMounted, ref} from 'vue'
-    import {useRoute, useRouter} from 'vue-router'
+    import {onBeforeRouteLeave, useRoute, useRouter} from 'vue-router'
     import {closeToast, showConfirmDialog, showDialog, showLoadingToast, showToast} from 'vant'
     import {useStore} from 'vuex'
     import {
         getPickHeadData,
+        getPickListData,
         deletePickNo
     } from '@/api/pickWithRecordQuery'
+    import {onActivated, onUnmounted} from "@vue/runtime-core";
+    import {default as vElTableInfiniteScroll} from "el-table-infinite-scroll";
 
     export default {
         setup() {
@@ -75,25 +116,65 @@
             const tableHeight = ref('')
             const loading = ref(true)
             const tableRef = ref(null)
-            const svg = `
-                    <path class="path" d="
-                      M 30 15
-                      L 28 17
-                      M 25.61 25.61
-                      A 15 15, 0, 0, 1, 15 30
-                      A 15 15, 0, 1, 1, 27.99 7.5
-                      L 15 15
-                    " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>`
+            const tableHeightInfo = ref('')
+            const loadingInfo = ref(true)
+            const tableRefInfo = ref(null)
+            const tableDataInfo = ref([])
 
+            const limit = ref(20)
+            const offset = ref(0)
+            const continuation = ref(true)
+            const centerDialogVisible = ref(false)
+
+            // setTimeout(()=>{
+            //
+            // },100)
+
+            // onActivated(()=>{
+            //     console.log(toRaw(store.state.pickWithRecordScroll))
+            //     tableRef.value.setScrollTop(toRaw(store.state.pickWithRecordScroll))
+            //     return true
+            // })
+            //
+            //
+            // const changeRouterKeepAlive = (name, keepAlive) => {
+            //     router.options.routes.map((item) => {
+            //         if (item.name === name) {
+            //             item.meta.keepAlive = keepAlive;
+            //         }
+            //     });
+            // }
+            //
+            //
+            // onBeforeRouteLeave((to, from,next) => {
+            //
+            //     if (to.name !== 'pickWithRecordInfoData') {
+            //         // 不是去 c 页面，不缓存
+            //
+            //         changeRouterKeepAlive(from.name, false);
+            //     } else {
+            //         changeRouterKeepAlive(from.name , true);
+            //     }
+            //
+            //     next()
+            // })
+
+
+            let queryParams = ''
             onMounted(() => {
                 let height = document.body.scrollHeight - 170
                 tableHeight.value = 'height:' + height + 'px'
                 queryParams = toRaw(store.state.pickWithRecordQuery)
-                queryData()
             })
 
 
-            let queryParams = ''
+            const scrollBehavior = () => {
+                if (continuation.value) {
+                    offset.value = offset.value + 1
+                    queryData()
+                }
+            }
+
 
             const onClickLeft = () => {
                 router.push({path: '/pickWithRecordQuery'})
@@ -109,21 +190,26 @@
             //明细
             const showDetail = () => {
                 if (selectedRow) {
-                    let scrollTop = tableRef.value.$refs.bodyWrapper.getElementsByClassName('el-scrollbar__wrap')[0]
-                    store.commit('setPickWithRecordScroll', scrollTop.scrollTop)
-                    console.log(scrollTop.scrollTop)
-                    let pickno = selectedRow.F_PICKNO
-                    router.push({
-                        name: 'pickWithRecordInfoData',
-                        query: {
-                            pickno,
-                        },
-                    })
+                    centerDialogVisible.value = true
+                    setTimeout(() => {
+                        // document.querySelector('.el-dialog__header').style.display = 'none'
+                        let height = document.body.scrollHeight - 180
+                        tableHeightInfo.value = 'height:' + height + 'px'
+
+                        loadingInfo.value = true
+                        let obj = {pickno: selectedRow.F_PICKNO}
+                        getPickListData(obj).then((res) => {
+                            tableDataInfo.value = res.data.data
+                            loadingInfo.value = false
+                        })
+                    }, 200)
+
                 } else {
                     showDialog({
                         title: '提示',
                         width: '600',
-                        message: '请选择一条数据',
+                        allowHtml: true,
+                        message: '<span style="font-size: 18px">请选择一条数据</span>',
                     }).then(() => {
                         // on close
                     });
@@ -139,7 +225,8 @@
                         showDialog({
                             title: '提示',
                             width: '600',
-                            message: '已装车，不能删除',
+                            allowHtml: true,
+                            message: '<span style="font-size: 18px">已装车，不能删除</span>',
                         }).then(() => {
                             // on close
                         });
@@ -148,30 +235,34 @@
 
                     showConfirmDialog({
                         title: '提示',
-                        width:'600',
-                        message:
-                            '确定删除车号为' + selectedRow.F_TRUCKNO + '的记录？',
+                        width: '600',
+                        allowHtml: true,
+                        message: '<p style="font-size: 18px"><span>确定删除车号为</span><span style="color: red;font-weight: bolder">' + selectedRow.F_TRUCKNO + '</span><span>的记录？</span></p>',
                     })
                         .then(() => {
                             showLoadingToast({
                                 duration: 0,
                                 forbidClick: true,
                                 className: 'particulars-detail-popup',
+                                overlay: true,
                                 message: '撤销中...',
                             });
 
-                            let obj={}
-                            obj.F_PICKNO=selectedRow.F_PICKNO
-                            obj.F_SUTTLE=selectedRow.F_SUTTLE
-                            obj.F_DELIVERYNO=selectedRow.F_DELIVERYNO
+                            let obj = {}
+                            obj.F_PICKNO = selectedRow.F_PICKNO
+                            obj.F_SUTTLE = selectedRow.F_SUTTLE
+                            obj.F_DELIVERYNO = selectedRow.F_DELIVERYNO
                             deletePickNo(obj).then((result) => {
                                 closeToast()
                                 showDialog({
                                     title: '提示',
                                     width: '600',
-                                    message: result.data.message,
+                                    allowHtml: true,
+                                    message: '<span style="font-size: 18px">' + result.data.message + '</span>',
                                 }).then(() => {
-                                    store.commit('setPickWithRecordScroll', 0)
+                                    offset.value = 1
+                                    tableData.value = []
+                                    tableRef.value.setScrollTop(0)
                                     queryData()
                                 })
                             }).catch(error => {
@@ -188,7 +279,8 @@
                     showDialog({
                         title: '提示',
                         width: '600',
-                        message: '请选择一条数据',
+                        allowHtml: true,
+                        message: '<span style="font-size: 18px">请选择一条数据</span>',
                     }).then(() => {
                         // on close
                     });
@@ -197,17 +289,25 @@
             }
 
             const queryData = () => {
-
                 selectedRow = ''
-
                 loading.value = true
-                getPickHeadData(queryParams).then((res) => {
-                    tableData.value = res.data.data
+
+                let paramInfo = {}
+                let blocks = {}
+                let paramBlock = {}
+                paramBlock.limit = limit.value
+                paramBlock.offset = offset.value
+                paramBlock.blockId = 'paramBlock'
+                paramBlock.data = queryParams
+                blocks.paramBlock = paramBlock
+                paramInfo.blocks = blocks
+                getPickHeadData(paramInfo).then((res) => {
+                    tableData.value = [...tableData.value, ...res.data.blocks.resultBlock.data];
+                    if (tableData.value.length == res.data.blocks.resultBlock.total) {
+                        continuation.value = false
+                    }
                     loading.value = false
-                    setTimeout(() => {
-                        //滚动条位置
-                        tableRef.value.setScrollTop(toRaw(store.state.pickWithRecordScroll))
-                    }, 0)
+
 
                 })
 
@@ -245,11 +345,19 @@
             }
 
             return {
+                tableHeightInfo,
+                loadingInfo,
+                tableRefInfo,
+                tableDataInfo,
                 tableData,
                 tableRef,
-                svg,
                 loading,
                 tableHeight,
+                limit,
+                offset,
+                continuation,
+                centerDialogVisible,
+                scrollBehavior,
                 formatDate,
                 dateFormat,
                 onDelete,
@@ -263,17 +371,6 @@
 </script>
 
 <style scoped>
-
-
-    .table-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
-    #data-area {
-        flex-grow: 1;
-    }
 
     .btn-area {
         flex-grow: 0;
@@ -298,12 +395,36 @@
 
     .btn-area > div:nth-child(1) {
         background-color: var(--btn-color1);
-        margin-left:10px
+        margin-left: 10px
     }
 
     .btn-area > div:nth-child(3) {
         background-color: var(--btn-color1);
-        margin-right:10px
+        margin-right: 10px
+    }
+
+
+    .btn-areaInfo {
+        flex-grow: 0;
+    }
+
+    /** 按钮样式 */
+
+    .btn-areaInfo div {
+        border-radius: 25px;
+        font-size: 20px;
+        width: 30%;
+        min-height: 50px;
+    }
+
+    .btn-areaInfo img {
+        width: 45px;
+    }
+
+
+    .btn-areaInfo > div:nth-child(1) {
+        background-color: var(--btn-color1);
+        margin: 0 auto;
     }
 
 

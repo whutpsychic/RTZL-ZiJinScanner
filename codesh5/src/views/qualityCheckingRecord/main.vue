@@ -75,7 +75,7 @@
             width="96%"
             align-center
     >
-        <div style="overflow-y: auto; overscroll-behavior-y: contain; height: calc(100vh - 180px);">
+        <div style="padding: 15px; overflow-y: auto; overscroll-behavior-y: contain; height: calc(100vh - 180px);">
 
             <div>
                 <van-divider content-position="left">基本信息</van-divider>
@@ -367,8 +367,8 @@
     .header {
 
         width: 100%;
-        height: 95px;
-        line-height: 95px;
+        height: 110px;
+        line-height: 110px;
         position: absolute;
         z-index: 5;
         top: 0;
@@ -378,7 +378,7 @@
 
         width: 100%;
         overflow: scroll;
-        top: 95px;
+        top: 110px;
         position: absolute;
         z-index: 10;
         bottom: 5px;

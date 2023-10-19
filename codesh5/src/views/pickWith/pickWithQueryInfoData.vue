@@ -99,7 +99,8 @@
                    showDialog({
                        title: '提示',
                        width: '600',
-                       message: '您尚未选择车号',
+                       allowHtml: true,
+                       message: '<span style="font-size: 18px">您尚未选择车号</span>',
                    }).then(() => {
                        // on close
                    })
@@ -170,7 +171,7 @@
 
         width: 100%;
         overflow: auto;
-        top: 50px;
+        top: 65px;
         position: absolute;
         z-index: 10;
         bottom: 5px;

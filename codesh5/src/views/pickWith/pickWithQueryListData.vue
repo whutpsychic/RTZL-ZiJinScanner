@@ -6,17 +6,16 @@
             left-arrow
             @click-left="onClickLeft"
     />
-    <div class="table-content container" id="content">
-        <el-table :data="tableData" ref="tableRef"
+    <div>
+        <el-table ref="tableRef"
+                  :data="tableData"
+                  id="data-area"
                   :style="tableHeight"
-                  highlight-current-row
                   v-loading="loading"
                   element-loading-text="数据加载中..."
-                  :element-loading-spinner="svg"
-                  element-loading-svg-view-box="-10, -10, 50, 50"
                   element-loading-background="rgba(122, 122, 122, 0.8)"
                   @row-click="selectRow">
-            <el-table-column prop="F_DELIVERYNO" label="发货单号" width="110px"/>
+            <el-table-column prop="F_DELIVERYNO" fixed label="发货单号" width="110px"/>
             <el-table-column prop="F_RECIVE" label="收货单位"/>
             <el-table-column prop="F_PLANSUTTLE" label="计划重量" width="90px"/>
         </el-table>
@@ -61,16 +60,6 @@
             const tableHeight = ref('')
             const loading = ref(true)
             const tableRef = ref(null)
-            const svg = `
-                    <path class="path" d="
-                      M 30 15
-                      L 28 17
-                      M 25.61 25.61
-                      A 15 15, 0, 0, 1, 15 30
-                      A 15 15, 0, 1, 1, 27.99 7.5
-                      L 15 15
-                    " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>`
-
 
             let queryParams = ''
 
@@ -97,7 +86,8 @@
                             showDialog({
                                 title: '提示',
                                 width: '600',
-                                message: '非正常发货单号',
+                                allowHtml: true,
+                                message: '<span style="font-size: 18px">非正常发货单号</span>',
                             }).then(() => {
                                 // on close
                             })
@@ -108,8 +98,8 @@
                     store.commit('setPickWithScroll', scrollTop.scrollTop)
                     store.commit('setChukudanListInfo', selectedRow)
                     store.commit('setCarInfo', {})
-                    store.commit('setScandList', [])
-                    store.commit('setScandCalculateData', {})
+                    // store.commit('setScandList', [])
+                    // store.commit('setScandCalculateData', {})
                     router.push({
                         name: 'pickWithQueryInfoData',
                         // query: {
@@ -118,9 +108,11 @@
                     })
                 } else {
                     showDialog({
+                        allowHtml: true,
                         title: '提示',
                         width: '600',
-                        message: '您尚未选择一条有效数据',
+                        message: '<span style="font-size: 18px">您尚未选择一条有效数据</span>',
+
                     }).then(() => {
                         // on close
                     });
@@ -151,7 +143,7 @@
             }
 
             onMounted(() => {
-                let height = document.body.scrollHeight - 170
+                let height = document.body.scrollHeight - 185
                 tableHeight.value = 'height:' + height + 'px'
                 queryParams = toRaw(store.state.pickWithQuery)
                 queryData()
@@ -160,7 +152,6 @@
             return {
                 tableData,
                 tableRef,
-                svg,
                 loading,
                 tableHeight,
                 renovateClikc,
@@ -174,13 +165,6 @@
 </script>
 
 <style scoped>
-
-
-    .table-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
 
     #data-area {
         flex-grow: 1;

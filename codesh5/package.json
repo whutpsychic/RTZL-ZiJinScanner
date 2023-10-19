@@ -14,6 +14,7 @@
     "axios": "^1.4.0",
     "bignumber.js": "^9.1.2",
     "echarts": "^5.4.2",
+    "el-table-infinite-scroll": "^3.0.3",
     "element-plus": "^2.3.4",
     "flutter-core": "0.1",
     "jsencrypt": "^3.3.2",

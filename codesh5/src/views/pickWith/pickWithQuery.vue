@@ -205,12 +205,13 @@
     }
 
     .btn-area > div:nth-child(2) {
-        background-color: var(--btn-color1);
+        background-color: var(--btn-color2);
+
         margin-right: 30px;
     }
 
     .btn-area > div:nth-child(1) {
-        background-color: var(--btn-color2);
+        background-color: var(--btn-color1);
         margin-left: 30px;
     }
 

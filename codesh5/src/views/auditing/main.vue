@@ -95,7 +95,7 @@
             width="96%"
             align-center
     >
-        <div style="overflow-y: auto;overscroll-behavior-y: contain;" :style="elDialogHeight">
+        <div style="padding: 15px;overflow-y: auto;overscroll-behavior-y: contain;" :style="elDialogHeight">
             <div>
                 <div>
                     <van-divider content-position="left">基本信息</van-divider>
@@ -389,7 +389,6 @@
             }
 
             const onLoad = () => {
-                console.log("aaa")
                 offset.value = offset.value + 1
                 getAuditorDataQuery({batchnumber: searchValue.value, status: status.value})
             }
@@ -397,7 +396,6 @@
 
             //选择状态
             const statusChange = (val) => {
-                console.log("bbbb")
                 listData.auditorListData = []
                 offset.value = 1
                 finished.value = false
@@ -472,6 +470,7 @@
                     showToast({
                         message: '请填写审核内容',
                         type: 'fail',
+                        overlay: true,
                         className: 'particulars-detail-popup'
                     })
 
@@ -500,11 +499,10 @@
                 showConfirmDialog({
                     title: '提示',
                     width: '600',
-                    message:
-                        '是否' + text + '这条数据？',
+                    allowHtml: true,
+                    message: '<span style="font-size: 18px">是否'+text+'这条数据？</span>',
                 })
                     .then(() => {
-
                         cathodeCopperAuditor(paramInfo).then((result) => {
                             if (result.data.status == '0') {
                                 showToast({
@@ -622,8 +620,8 @@
     .header {
 
         width: 100%;
-        height: 95px;
-        line-height: 95px;
+        height: 110px;
+        line-height: 110px;
         position: absolute;
         z-index: 5;
         top: 0;
@@ -632,7 +630,7 @@
     .content {
         width: 100%;
         overflow: scroll;
-        top: 95px;
+        top: 110px;
         position: absolute;
         z-index: 10;
         bottom: 5px;

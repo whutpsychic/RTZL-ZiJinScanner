@@ -69,7 +69,8 @@ request.interceptors.response.use(
         if (url.indexOf("loginCheck.do") == -1) {
             //如果重定向的地址为登录地址的话，手机端跳转到登录页面
             if (config.request.responseURL.indexOf("loginCheck.do") != -1) {
-                router.push({path: '/login'})
+                router.push({path: '/login'}).then(r => {})
+                // router.push({path: '/login'})
             }
         }
         return config
