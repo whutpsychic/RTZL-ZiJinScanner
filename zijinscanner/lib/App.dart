@@ -102,7 +102,6 @@ class AppState extends State<App> {
         ? Container()
         : WillPopScope(
             onWillPop: () async {
-              print("-----------------------------WillPopScope");
               Utils.runChannelJs(globalWebViewController, "goback()");
               return false;
             },

@@ -21,7 +21,7 @@ class Configure {
   // 与任何可调节的设置断绝
   // 连接到正式环境
   // ✔ 云上正式地址
-  static const AppMode appMode = AppMode.dev;
+  static const AppMode appMode = AppMode.prodution;
 }
 
 // 最终控制结果
