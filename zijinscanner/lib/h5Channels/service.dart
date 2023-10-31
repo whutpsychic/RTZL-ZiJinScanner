@@ -100,6 +100,10 @@ JavascriptChannel serviceChannel(BuildContext context) => JavascriptChannel(
         else if (mainInfo == "takePhoto") {
           appPageKey.currentState?.takePhoto();
         }
+        // 退出程序
+        else if (mainInfo == 'exitApp') {
+          SystemNavigator.pop();
+        }
         // =================== 带参数调用 ===================
         else {
           List<String> infoArr = mainInfo.split(StaticConfig.argsSpliter);

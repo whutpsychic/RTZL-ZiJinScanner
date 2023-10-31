@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, use_build_context_synchronously
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_webview_pro/webview_flutter.dart';
 import 'package:shake/shake.dart';
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
@@ -25,9 +26,29 @@ class App extends StatefulWidget {
 class AppState extends State<App> {
   String _appUrl = "";
 
+  // 注册监听原生通道
+  EventChannel eventChannel = const EventChannel('com.rtzl.zbc/honeywell');
+
+  // 监听到数据后用于处理数据的方法，这个函数是用于处理接收到原生传进来的数据的，可自行定义
+  void _receiveFromeNative(dynamic res) {
+    Utils.runChannelJs(globalWebViewController, "scannerCallback('$res')");
+  }
+
+  // 原生返回错误信息
+  void _fromNativeError(Object error) {
+    print(" =====================================_fromNativeError ");
+    print(error);
+  }
+
   @override
   void initState() {
     super.initState();
+
+    //实现通道的监听，并传入两个带有参数的函数用于监听到数据后 对数据进行处理
+    eventChannel
+        .receiveBroadcastStream()
+        .listen(_receiveFromeNative, onError: _fromNativeError);
+
     if (Configure.debugging) {
       // 监听摇一摇事件
       ShakeDetector.autoStart(
@@ -81,6 +102,7 @@ class AppState extends State<App> {
         ? Container()
         : WillPopScope(
             onWillPop: () async {
+              print("-----------------------------WillPopScope");
               Utils.runChannelJs(globalWebViewController, "goback()");
               return false;
             },

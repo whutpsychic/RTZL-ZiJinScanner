@@ -15,5 +15,5 @@ flutter create --org com.rtzl zijinscanner -a java
 
 - 屏幕尺寸：320x486
 
-
+- flutter version: 3.10.5
 
