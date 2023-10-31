@@ -30,17 +30,16 @@ import { showToast } from 'vant'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { setToastDefaultOptions } from 'vant'
-import appConfig from '@/utils/tool.js'
+import appConfig from '@/appConfig'
 
 export default {
   setup() {
 
-    const inputUser = ref(appConfig.developing ? 'admin' : '')
-    const inputPw = ref(appConfig.developing ? 'admin' : '')
+    const inputUser = ref('')
+    const inputPw = ref('')
     const bodyHeight = ref('')
     const store = useStore()
     const router = useRouter()
-
 
     const onClickLeft = () => {
       fc.call('exitApp')
@@ -53,6 +52,9 @@ export default {
 
 
     onMounted(() => {
+      if (appConfig.developing) {
+        onSubmit({ inputUser: 'admin', inputUser: 'admin' })
+      }
       bodyHeight.value = document.documentElement.clientHeight
     })
 

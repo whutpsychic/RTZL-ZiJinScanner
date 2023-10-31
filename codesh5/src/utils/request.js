@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'production') {
 
 } else {
     //开发环境
-    baseUrl.api_base_url = 'http://192.168.0.250:8081/zjky_mes'
+    baseUrl.api_base_url = 'http://192.168.1.33:8081/zjky_mes'
     // baseUrl.api_base_url = 'http://e.zijinty.com:8018/zjky_mes'
 }
 
