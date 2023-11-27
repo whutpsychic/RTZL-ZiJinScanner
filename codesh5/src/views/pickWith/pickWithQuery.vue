@@ -57,13 +57,13 @@
 </template>
 
 <script>
-
+    import fc from 'flutter-core'
     import {onBeforeRouteLeave, useRouter} from "vue-router";
     import {ref} from "vue";
     import {showDialog} from "vant";
     import {useStore} from "vuex";
     import {toRaw} from "@vue/reactivity";
-    import {onMounted} from "@vue/runtime-core";
+    import {onMounted, onUnmounted} from "@vue/runtime-core";
 
     let nowDat = new Date();
     let dateY = parseInt(nowDat.getFullYear() - 1);
@@ -97,6 +97,10 @@
                 endDate.value = dateFormat('YYYY-mm-dd', new Date())
                 dataText.value = startDate.value + '至' + endDate.value
 
+                fc.register("goback", () => {
+                    router.push({path: '/home'})
+                })
+
             })
 
 
@@ -104,7 +108,6 @@
                 showPicker.value = false
                 F_STORECODE.value = selectedOptions[0].value;
             }
-
 
 
             //跳转到首页
@@ -136,7 +139,7 @@
                 obj.strStore = '1403'
 
                 store.commit('setPickWithQuery', obj)
-                store.commit('setPickWithScroll',0)
+                store.commit('setPickWithScroll', 0)
                 router.push({name: 'pickWithQueryListData',})
 
             }
@@ -150,7 +153,7 @@
             }
 
             //格式化时间
-            const dateFormat=(fmt, date) =>  {
+            const dateFormat = (fmt, date) => {
                 let ret;
                 let d = new Date(date);
                 const opt = {

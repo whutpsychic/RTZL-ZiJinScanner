@@ -10,13 +10,14 @@ const baseUrl = {}
 if (process.env.NODE_ENV === 'production') {
     //baseUrl.api_base_url = 'http://192.168.0.250:8081/zjky_mes'
     // baseUrl.api_base_url = 'http://218.86.88.125:8018/zjky_mes'
-    baseUrl.api_base_url = ' http://e.zijinty.com:8018/zjky_mes'
+    baseUrl.api_base_url = 'http://e.zijinty.com:8018/zjky_mes'
 
 
 } else {
     //开发环境
-    baseUrl.api_base_url = 'http://192.168.0.250:8081/zjky_mes'
-    // baseUrl.api_base_url = 'http://e.zijinty.com:8018/zjky_mes'
+    //  baseUrl.api_base_url = 'http://127.0.0.1:8081/zjky_mes'
+    // baseUrl.api_base_url = 'http://223.99.214.182:8081/zjky_mes'
+     baseUrl.api_base_url = 'http://192.168.0.250:8081/zjky_mes'
 }
 
 const request = axios.create({
@@ -45,7 +46,6 @@ request.defaults.headers['Content-Type'] = 'application/json'
 // }
 
 request.interceptors.request.use(
-
     (config) => {
         // console.log("+++++++++++++++++++")
         // console.log(config)
@@ -69,7 +69,8 @@ request.interceptors.response.use(
         if (url.indexOf("loginCheck.do") == -1) {
             //如果重定向的地址为登录地址的话，手机端跳转到登录页面
             if (config.request.responseURL.indexOf("loginCheck.do") != -1) {
-                router.push({path: '/login'}).then(r => {})
+                router.push({path: '/login'}).then(r => {
+                })
                 // router.push({path: '/login'})
             }
         }

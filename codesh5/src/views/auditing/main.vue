@@ -309,8 +309,9 @@
 </template>
 
 <script>
+    import fc from "flutter-core";
     import {onMounted, ref} from 'vue';
-    import {useRouter} from "vue-router";
+    import {onBeforeRouteLeave, useRouter} from "vue-router";
     import {
         auditorDataQuery,
         cathodeCopperAuditor
@@ -378,14 +379,31 @@
 
 
             onMounted(() => {
+                fc.register("goback", () => {
+                    if (centerDialogVisible.value){
+                        centerDialogVisible.value=false
+                    }else {
+                        router.push({path: '/home'})
+                    }
+                })
                 offset.value = 1
                 getAuditorDataQuery({batchnumber: searchValue.value, status: status.value})
             })
 
 
+            // onBeforeRouteLeave((to, from,next) => {
+            //     if (centerDialogVisible.value){
+            //         centerDialogVisible.value=false
+            //     }else {
+            //         router.push({path: '/home'})
+            //         next()
+            //     }
+            // })
+
             //跳转到首页
             const onClickLeft = () => {
-                router.push({path: '/home'})
+                // router.push({path: '/home'})
+                router.back()
             }
 
             const onLoad = () => {

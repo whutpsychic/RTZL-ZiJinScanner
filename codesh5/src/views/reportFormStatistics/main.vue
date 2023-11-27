@@ -58,8 +58,9 @@
             <p style="margin: 5px;display: block">合计重量（KG）：{{totalWeight}}</p>
             <el-table :data="tableDataWeight" style="width: 100%">
                 <el-table-column fixed prop="exteriorName" label="品级"/>
-                <el-table-column prop="summations" label="总重量" :formatter="formatter"/>
+                <el-table-column prop="summations" label="总重量" width="130" :formatter="formatter"/>
                 <el-table-column v-for="(item,index) in  tbYjtJyDictList"
+                                 width="95"
                                  :formatter="formatter"
                                  :prop="item.columnName" :label="item.name"/>
             </el-table>
@@ -295,6 +296,7 @@
             //跳转到首页
             const onClickLeft = () => {
                 router.push({path: '/home'})
+                // router.back()
             }
 
 

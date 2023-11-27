@@ -138,6 +138,7 @@
     import {useStore} from 'vuex'
     import {pick} from 'vant/lib/utils'
     import fc from "flutter-core";
+    import {onUnmounted} from "@vue/runtime-core";
 
     export default {
         setup() {
@@ -186,22 +187,45 @@
                                         })
                                 } else {
                                     let message = ''
+                                    let showDialogState = true
                                     if (res.data.distinguish == '1') {
                                         message = '<span style="font-size: 18px;color: red">' + res.data.message + '</span>'
                                     } else if (res.data.distinguish == '2') {
                                         message = '<span style="font-size: 18px;color: #0e80d2">' + res.data.message + '</span>'
+                                    } else if (res.data.distinguish == '4') {
+                                        showDialogState = false
+                                        showConfirmDialog({
+                                            title: '提示',
+                                            width: '600',
+                                            allowHtml: true,
+                                            message: '<span style="font-size: 18px">' + res.data.message + '</span>',
+                                        }).then(() => {
+                                            return decode(barcode)
+                                                .then((result) => {
+                                                    let date = result.shengchanriqi,
+                                                        number = result.kunxuhao,
+                                                        barcode = result.barcode,
+                                                        weight = result.kunjingzhong
+                                                    let databar = {date, number, barcode, weight}
+                                                    checkIfExist(toRaw(tableData.value), databar);
+                                                })
+                                        }).catch((err) => {
+                                            console.log(err)
+                                        })
                                     } else {
                                         message = '<span style="font-size: 18px">' + res.data.message + '</span>'
                                     }
 
-                                    showDialog({
-                                        title: '提示',
-                                        width: '600',
-                                        allowHtml: true,
-                                        message: message,
-                                    }).then(() => {
-                                        // on close
-                                    })
+                                    if (showDialogState) {
+                                        showDialog({
+                                            title: '提示',
+                                            width: '600',
+                                            allowHtml: true,
+                                            message: message,
+                                        }).then(() => {
+                                            // on close
+                                        })
+                                    }
                                 }
                             })
                         } else {
@@ -230,6 +254,16 @@
 
             })
 
+            window.history.pushState(null, null, document.URL);
+            window.addEventListener("popstate", browserBack, false);
+            onUnmounted(() => {
+                window.removeEventListener("popstate", browserBack, false);
+            })
+            function browserBack() {
+                router.push({path: '/pickWithQueryInfoData'})
+            }
+
+
             const onClickLeft = () => {
                 router.push({path: '/pickWithQueryInfoData'})
             }
@@ -255,6 +289,9 @@
 
 
             onMounted(() => {
+                fc.register("goback", () => {
+                    router.push({path: '/pickWithQueryInfoData'})
+                })
                 let chukudanListInfo = toRaw(store.state.chukudanListInfo)
                 if (toRaw(store.state.carInfo.pizhong)) {
                     pizhong.value = toRaw(store.state.carInfo.pizhong).toFixed(4)
@@ -313,22 +350,45 @@
                                 })
                         } else {
                             let message = ''
+                            let showDialogState = true
                             if (res.data.distinguish == '1') {
                                 message = '<span style="font-size: 18px;color: red">' + res.data.message + '</span>'
                             } else if (res.data.distinguish == '2') {
                                 message = '<span style="font-size: 18px;color: #0e80d2">' + res.data.message + '</span>'
+                            } else if (res.data.distinguish == '4') {
+                                showDialogState = false
+                                showConfirmDialog({
+                                    title: '提示',
+                                    width: '600',
+                                    allowHtml: true,
+                                    message: '<span style="font-size: 18px">' + res.data.message + '</span>',
+                                }).then(() => {
+                                    return decode(barcode)
+                                        .then((result) => {
+                                            let date = result.shengchanriqi,
+                                                number = result.kunxuhao,
+                                                barcode = result.barcode,
+                                                weight = result.kunjingzhong
+                                            let databar = {date, number, barcode, weight}
+                                            checkIfExist(toRaw(tableData.value), databar);
+                                        })
+                                }).catch((err) => {
+                                    console.log(err)
+                                })
                             } else {
                                 message = '<span style="font-size: 18px">' + res.data.message + '</span>'
                             }
 
-                            showDialog({
-                                title: '提示',
-                                width: '600',
-                                allowHtml: true,
-                                message: message,
-                            }).then(() => {
-                                // on close
-                            })
+                            if (showDialogState) {
+                                showDialog({
+                                    title: '提示',
+                                    width: '600',
+                                    allowHtml: true,
+                                    message: message,
+                                }).then(() => {
+                                    // on close
+                                })
+                            }
                         }
                     })
                 } else {

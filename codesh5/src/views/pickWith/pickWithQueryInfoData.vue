@@ -69,6 +69,7 @@
     import fc from 'flutter-core'
     import {toRaw} from "@vue/reactivity";
     import {showDialog} from "vant";
+    import {onUnmounted} from "@vue/runtime-core";
 
     export default {
         setup() {
@@ -114,6 +115,10 @@
             }
 
             onMounted(() => {
+                fc.register("goback", () => {
+                    router.push({path: '/pickWithQueryListData'})
+                })
+
                 let chukudanListInfo = toRaw(store.state.chukudanListInfo)
                 formData.F_DELIVERYNO = chukudanListInfo.F_DELIVERYNO
                 formData.F_DELIVERYDATE = chukudanListInfo.F_DELIVERYDATE
@@ -126,8 +131,6 @@
                     formData.F_TRUCKNO=toRaw(store.state.carInfo.chehao)
                 }
             })
-
-
 
 
             //格式化时间

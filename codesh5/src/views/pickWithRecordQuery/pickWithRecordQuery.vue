@@ -41,8 +41,9 @@
 </template>
 
 <script>
-    import {useRouter} from "vue-router";
-    import {onMounted} from "@vue/runtime-core";
+    import fc from 'flutter-core'
+    import {onBeforeRouteLeave, useRouter} from "vue-router";
+    import {onBeforeUnmount, onMounted, onUnmounted} from "@vue/runtime-core";
     import {ref} from "vue";
     import {showDialog} from "vant";
     import {useStore} from "vuex";
@@ -72,7 +73,13 @@
                 endDate.value = dateFormat('YYYY-mm-dd', new Date())
                 dataText.value = startDate.value + '至' + endDate.value
 
+
+                fc.register("goback", () => {
+                    router.push({path: '/home'})
+                })
+
             })
+
 
             const onConfirm = (values) => {
                 const [start, end] = values;
@@ -115,7 +122,9 @@
             //跳转到首页
             const onClickLeft = () => {
                 router.push({path: '/home'})
+
             }
+
 
 
             //格式化时间

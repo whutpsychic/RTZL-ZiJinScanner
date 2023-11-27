@@ -94,6 +94,7 @@
 </template>
 
 <script>
+    import fc from 'flutter-core'
     import {toRaw} from '@vue/reactivity'
     import {onMounted, ref} from 'vue'
     import {onBeforeRouteLeave, useRoute, useRouter} from 'vue-router'
@@ -104,7 +105,7 @@
         getPickListData,
         deletePickNo
     } from '@/api/pickWithRecordQuery'
-    import {onActivated, onUnmounted} from "@vue/runtime-core";
+    import {onActivated, onBeforeUnmount, onUnmounted} from "@vue/runtime-core";
     import {default as vElTableInfiniteScroll} from "el-table-infinite-scroll";
 
     export default {
@@ -162,11 +163,28 @@
 
             let queryParams = ''
             onMounted(() => {
+                fc.register("goback", () => {
+                    if (centerDialogVisible.value){
+                        centerDialogVisible.value=false
+                    }else {
+                        router.push({path: '/pickWithRecordQuery'})
+                    }
+                })
+
+
                 let height = document.body.scrollHeight - 170
                 tableHeight.value = 'height:' + height + 'px'
                 queryParams = toRaw(store.state.pickWithRecordQuery)
             })
 
+
+            // onBeforeRouteLeave((to, from,next) => {
+            //     if (centerDialogVisible.value){
+            //         centerDialogVisible.value=false
+            //     }else {
+            //         next()
+            //     }
+            // })
 
             const scrollBehavior = () => {
                 if (continuation.value) {
@@ -178,6 +196,7 @@
 
             const onClickLeft = () => {
                 router.push({path: '/pickWithRecordQuery'})
+
             }
 
             let selectedRow = ''

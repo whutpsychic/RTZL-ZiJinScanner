@@ -1,0 +1,1 @@
+import{a7 as i,a8 as a}from"./index-ecb86d45.js";function t(e){return i({url:`${a.api_base_url}/mobileTerminalApi.do?method=qualityCheckingRecord`,method:"post",data:e})}function r(e){return i({url:`${a.api_base_url}/mobileTerminalApi.do?method=qualityCheckingRecordDecide`,method:"get",params:e})}export{t as a,r as q};

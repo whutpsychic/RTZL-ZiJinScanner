@@ -41,6 +41,7 @@
 </template>
 
 <script>
+    import fc from 'flutter-core'
     import {reactive, toRaw} from '@vue/reactivity'
     import {onMounted, ref} from 'vue'
     import {useRoute, useRouter, onBeforeRouteLeave} from 'vue-router'
@@ -49,7 +50,7 @@
     import {
         getPlanMain
     } from '@/api/pickWith'
-    import {onActivated} from "@vue/runtime-core";
+    import {onActivated, onUnmounted} from "@vue/runtime-core";
 
     export default {
         setup() {
@@ -143,6 +144,10 @@
             }
 
             onMounted(() => {
+                fc.register("goback", () => {
+                    router.push({path: '/pickWithQuery'})
+                })
+
                 let height = document.body.scrollHeight - 185
                 tableHeight.value = 'height:' + height + 'px'
                 queryParams = toRaw(store.state.pickWithQuery)

@@ -464,6 +464,9 @@
 
 
             onMounted(() => {
+                fc.register("goback", () => {
+                    router.push({path: '/home'})
+                })
                 if (active.value == 0) {
                     identifyTitle.value = '批量鉴定（优等品）'
                     getNotDeterminedData()

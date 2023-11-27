@@ -173,7 +173,7 @@
 
 <script>
     import {onMounted, ref} from 'vue';
-    import {useRouter} from "vue-router";
+    import {onBeforeRouteLeave, useRouter} from "vue-router";
     import {
         qualityCheckingRecordDecide,
         qualityCheckingRecord
@@ -225,9 +225,25 @@
 
 
             onMounted(() => {
+                fc.register("goback", () => {
+                    if (centerDialogVisible.value){
+                        centerDialogVisible.value=false
+                    }else {
+                        router.push({path: '/home'})
+                    }
+                })
                 offset.value = 1
                 getQualityCheckingRecord({batchnumber: searchValue.value, barcode: ''})
             })
+
+
+            // onBeforeRouteLeave((to, from,next) => {
+            //     if (centerDialogVisible.value){
+            //         centerDialogVisible.value=false
+            //     }else {
+            //         next()
+            //     }
+            // })
 
 
             //跳转到首页

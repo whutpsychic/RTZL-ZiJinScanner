@@ -60,6 +60,7 @@
 </template>
 
 <script>
+    import fc from 'flutter-core'
     import {ref} from 'vue'
     import {useRouter} from 'vue-router'
     import {useStore} from 'vuex'
@@ -67,7 +68,7 @@
     import {
         getTruckNo
     } from '@/api/pickWith'
-    import {onMounted} from "@vue/runtime-core";
+    import {onMounted, onUnmounted} from "@vue/runtime-core";
     import {toRaw} from "@vue/reactivity";
 
     let nowDat = new Date();
@@ -94,6 +95,9 @@
             const loading = ref(true)
             const tableRef = ref(null)
             onMounted(() => {
+                fc.register("goback", () => {
+                    router.push({path: '/pickWithQueryInfoData'})
+                })
                 startDate.value = dateFormat('YYYY-mm-dd', new Date((new Date).getTime() - 24 * 60 * 60 * 1000))
                 endDate.value = dateFormat('YYYY-mm-dd', new Date())
                 let height = document.body.scrollHeight - 275
@@ -103,7 +107,6 @@
                     queryData()
                 }, 0)
             })
-
 
             const formatter = (row, column) => {
                 return toRaw(row).pizhong.toFixed(4)

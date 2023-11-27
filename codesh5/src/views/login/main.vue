@@ -9,7 +9,7 @@
           autocomplete="off" :rules="[{ required: true, message: '请填写密码' }]" />
       </van-cell-group>
       <div class="login-btn-area">
-        <van-button round block type="primary" @click="onClickLeft">
+        <van-button round block type="primary" style="margin-top:50px" @click="onClickLeft">
           取消
         </van-button>
         <van-button round block style="background-color: #d77100;color: #FFFFFF;margin-top:50px;" type="primary"
@@ -31,6 +31,7 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { setToastDefaultOptions } from 'vant'
 import appConfig from '@/utils/tool.js'
+import {onUnmounted} from "@vue/runtime-core";
 
 export default {
   setup() {
@@ -46,14 +47,12 @@ export default {
       fc.call('exitApp')
     }
 
-    history.pushState(null, null, document.URL);
-    window.addEventListener("popstate", function (e) {
-      history.pushState(null, null, document.URL);
-    }, false)
-
 
     onMounted(() => {
       bodyHeight.value = document.documentElement.clientHeight
+      fc.register("goback", () => {
+        fc.call('exitApp')
+      })
     })
 
 

@@ -243,6 +243,9 @@
 
 
             onMounted(() => {
+                fc.register("goback", () => {
+                    router.push({path: '/gradeDetermination'})
+                })
                 getTypeCodeData(typeCode.value)
                 getAlterReasonQuery()
             })
@@ -250,7 +253,7 @@
 
             //返回上一页
             const onClickLeft = () => {
-                router.back()
+                router.push({path: '/gradeDetermination'})
             }
 
 
