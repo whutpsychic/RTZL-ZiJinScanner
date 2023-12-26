@@ -1,49 +1,51 @@
 <template>
-    <van-nav-bar
-            title="查询拣配单头"
-            class="page-nav-bar"
-            left-arrow
-            @click-left="onClickLeft"
-    />
+    <main>
+        <van-nav-bar
+                title="查询拣配单头"
+                class="page-nav-bar"
+                left-arrow
+                @click-left="onClickLeft"
+        />
 
-    <div>
-        <van-form @submit="onSubmit" ref="formRef">
-            <van-cell-group inset>
+        <div>
+            <van-form @submit="onSubmit" ref="formRef">
+                <van-cell-group inset>
 
-                <van-cell title="日期区间：" title-style="max-width: 25%" :value="dataText" @click="show = true"/>
-                <van-calendar v-model:show="show" :min-date="minDate" type="range" allow-same-day @confirm="onConfirm"/>
+                    <van-cell title="日期区间：" title-style="max-width: 25%" :value="dataText" @click="show = true"/>
+                    <van-calendar v-model:show="show" :min-date="minDate" type="range" allow-same-day
+                                  @confirm="onConfirm"/>
 
-                <van-field
-                        v-model="F_DELIVERYNO"
-                        name="F_DELIVERYNO"
-                        label="发货单号"
-                        placeholder="请填写单号"
-                />
-
-
-            </van-cell-group>
+                    <van-field
+                            v-model="F_DELIVERYNO"
+                            name="F_DELIVERYNO"
+                            label="发货单号"
+                            placeholder="请填写单号"
+                    />
 
 
-            <div class="btn-area" style="margin-top: 50px">
-                <div @click="onClickLeft">
-                    <img src="@/assets/image/btn_fanhui1.png"/>
-                    <div>返回</div>
+                </van-cell-group>
+
+
+                <div class="btn-area" style="margin-top: 50px">
+                    <div @click="onClickLeft">
+                        <img src="@/assets/image/btn_fanhui1.png"/>
+                        <div>返回</div>
+                    </div>
+                    <div @click="onSearch">
+                        <img src="@/assets/image/btn_chaxun1.png"/>
+                        <div>查询</div>
+                    </div>
                 </div>
-                <div @click="onSearch">
-                    <img src="@/assets/image/btn_chaxun1.png"/>
-                    <div>查询</div>
-                </div>
-            </div>
-        </van-form>
-    </div>
-
+            </van-form>
+        </div>
+    </main>
 
 </template>
 
 <script>
     import fc from 'flutter-core'
-    import {onBeforeRouteLeave, useRouter} from "vue-router";
-    import {onBeforeUnmount, onMounted, onUnmounted} from "@vue/runtime-core";
+    import {useRouter} from "vue-router";
+    import {onMounted} from "@vue/runtime-core";
     import {ref} from "vue";
     import {showDialog} from "vant";
     import {useStore} from "vuex";
@@ -124,7 +126,6 @@
                 router.push({path: '/home'})
 
             }
-
 
 
             //格式化时间

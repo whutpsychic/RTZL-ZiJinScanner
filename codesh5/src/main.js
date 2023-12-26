@@ -7,17 +7,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import Vant from 'vant'
-// 2. 引入组件样式
 import 'vant/lib/index.css'
 const app = createApp(App)
 
-import elTableInfiniteScroll from 'el-table-infinite-scroll';
-
-import VueECharts from "vue-echarts";
-app.component('v-chart', VueECharts)
-
-app.use(Vant).use(store).use(router).use(elTableInfiniteScroll)
+app.use(store).use(router)
 app.mount('#app')
 
 

@@ -1,75 +1,73 @@
 <template>
+    <main>
+        <van-nav-bar
+                title="出库单内容"
+                class="page-nav-bar"
+                left-arrow
+                @click-left="onClickLeft"
+        />
 
-    <van-nav-bar
-            title="出库单内容"
-            class="page-nav-bar"
-            left-arrow
-            @click-left="onClickLeft"
-    />
+        <div id="content" class="content">
+            <div class="container">
+                <div class="prop-value-div">
+                    <div class="label">发货单号</div>
+                    <div class="value">{{ formData.F_DELIVERYNO }}</div>
+                </div>
 
-    <div id="content" class="content">
-        <div class="container">
-            <div class="prop-value-div">
-                <div class="label">发货单号</div>
-                <div class="value">{{ formData.F_DELIVERYNO }}</div>
-            </div>
+                <div class="prop-value-div">
+                    <div class="label">制单日期</div>
+                    <div class="value">{{dateFormat("YYYY-mm-dd HH:MM:SS",formData.F_DELIVERYDATE)}}</div>
+                </div>
+                <div class="prop-value-div">
+                    <div class="label">计划数量</div>
+                    <div class="value">{{ formData.F_PLANSUTTLE }}</div>
+                </div>
+                <div class="prop-value-div">
+                    <div class="label">已发数量</div>
+                    <div class="value">{{ formData.F_SUTTLE }}</div>
+                </div>
+                <div class="prop-value-div">
+                    <div class="label">应拣数量</div>
+                    <div class="value">{{ formData.yingjianshuliang }}</div>
+                </div>
+                <div class="prop-value-div">
+                    <div class="label">收货单位</div>
+                    <div class="value">{{ formData.F_RECIVE }}</div>
+                </div>
+                <div class="prop-value-div">
+                    <div class="label">车号</div>
+                    <div class="showMoreDiv">
+                        <div class="value">{{ formData.F_TRUCKNO }}</div>
+                        <div class="showMore" @click="selectCarNo">
+                            <img src="@/assets/image/btn_showmore.png" alt=""/>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="prop-value-div">
-                <div class="label">制单日期</div>
-                <div class="value">{{dateFormat("YYYY-mm-dd HH:MM:SS",formData.F_DELIVERYDATE)}}</div>
-            </div>
-            <div class="prop-value-div">
-                <div class="label">计划数量</div>
-                <div class="value">{{ formData.F_PLANSUTTLE }}</div>
-            </div>
-            <div class="prop-value-div">
-                <div class="label">已发数量</div>
-                <div class="value">{{ formData.F_SUTTLE }}</div>
-            </div>
-            <div class="prop-value-div">
-                <div class="label">应拣数量</div>
-                <div class="value">{{ formData.yingjianshuliang }}</div>
-            </div>
-            <div class="prop-value-div">
-                <div class="label">收货单位</div>
-                <div class="value">{{ formData.F_RECIVE }}</div>
-            </div>
-            <div class="prop-value-div">
-                <div class="label">车号</div>
-                <div class="showMoreDiv">
-                    <div class="value">{{ formData.F_TRUCKNO }}</div>
-                    <div class="showMore" @click="selectCarNo">
-                        <img src="@/assets/image/btn_showmore.png" alt=""/>
+                <div class="btn-area">
+                    <div @click="onClickLeft">
+                        <img src="@/assets/image/btn_fanhui1.png"/>
+                        <div>返回</div>
+                    </div>
+
+                    <div @click="onScan">
+                        <img src="@/assets/image/btn_chaxun1.png"/>
+                        <div>扫描</div>
                     </div>
                 </div>
             </div>
-
-            <div class="btn-area">
-                <div   @click="onClickLeft">
-                    <img src="@/assets/image/btn_fanhui1.png"/>
-                    <div>返回</div>
-                </div>
-
-                <div  @click="onScan">
-                    <img src="@/assets/image/btn_chaxun1.png"/>
-                    <div>扫描</div>
-                </div>
-            </div>
         </div>
-    </div>
+    </main>
 </template>
 
 <script>
     import BigNumber from 'bignumber.js'
-    import {ref} from 'vue'
-    import {useRoute, useRouter} from 'vue-router'
-    import {reactive} from 'vue'
-    import {onMounted} from 'vue'
+    import {useRouter} from 'vue-router'
+    import {ref,reactive,onMounted} from 'vue'
     import {useStore} from 'vuex'
     import fc from 'flutter-core'
     import {toRaw} from "@vue/reactivity";
     import {showDialog} from "vant";
-    import {onUnmounted} from "@vue/runtime-core";
 
     export default {
         setup() {
@@ -82,7 +80,6 @@
                 F_RECIVE: '',
                 F_TRUCKNO: '',
             })
-            const route = useRoute()
             const router = useRouter()
             const store = useStore()
 
@@ -96,21 +93,21 @@
 
             const onScan = () => {
 
-               if (Object.getOwnPropertyNames(toRaw(store.state.carInfo)).length == 0){
-                   showDialog({
-                       title: '提示',
-                       width: '600',
-                       allowHtml: true,
-                       message: '<span style="font-size: 18px">您尚未选择车号</span>',
-                   }).then(() => {
-                       // on close
-                   })
+                if (Object.getOwnPropertyNames(toRaw(store.state.carInfo)).length == 0) {
+                    showDialog({
+                        title: '提示',
+                        width: '600',
+                        allowHtml: true,
+                        message: '<span style="font-size: 18px">您尚未选择车号</span>',
+                    }).then(() => {
+                        // on close
+                    })
 
-                   return false
-               }
+                    return false
+                }
 
                 router.push({
-                  name: 'pickWith',
+                    name: 'pickWith',
                 })
             }
 
@@ -128,7 +125,7 @@
                 formData.yingjianshuliang = new BigNumber(chukudanListInfo.F_PLANSUTTLE).minus(chukudanListInfo.F_SUTTLE).toFixed(4)
 
                 if (store.state.carInfo) {
-                    formData.F_TRUCKNO=toRaw(store.state.carInfo.chehao)
+                    formData.F_TRUCKNO = toRaw(store.state.carInfo.chehao)
                 }
             })
 

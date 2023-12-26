@@ -8,23 +8,29 @@
 </template>
 
 <script>
+    import {toRaw} from "@vue/reactivity";
+    import {useStore} from 'vuex'
+    import {ref} from 'vue'
+    import {useRouter} from "vue-router";
     export default {
-        data() {
-            return {
-                active: 0
-            }
-        },
-        methods: {
-            onChange(index) {
-                this.active=index
+        setup() {
+            const store = useStore()
+            const router = useRouter()
+            const active=ref(toRaw(store.state.dhIndex))
+            const onChange = (index) => {
+                active.value=index
+                store.commit('setDhIndex', index)
                 if (index == 0) {
-                    this.$router.push({path: '/home'})
+                    router.push({path: '/home'})
                 } else if (index == 1) {
-                    this.$router.push({path: '/my'})
+                    router.push({path: '/my'})
                 }
             }
-        }
-
+            return{
+                active,
+                onChange
+            }
+        },
     }
 </script>
 

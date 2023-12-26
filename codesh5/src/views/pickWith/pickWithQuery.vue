@@ -1,69 +1,70 @@
 <template>
+    <main>
+        <van-nav-bar
+                title="查询出库单"
+                class="page-nav-bar"
+                left-arrow
+                @click-left="onClickLeft"
+        />
 
-    <van-nav-bar
-            title="查询出库单"
-            class="page-nav-bar"
-            left-arrow
-            @click-left="onClickLeft"
-    />
+        <div>
+            <van-form @submit="onSubmit" ref="formRef">
+                <van-cell-group inset>
 
-    <div>
-        <van-form @submit="onSubmit" ref="formRef">
-            <van-cell-group inset>
+                    <van-cell title="日期区间：" title-style="max-width: 25%" :value="dataText" @click="show = true"/>
+                    <van-calendar v-model:show="show" :min-date="minDate" type="range" allow-same-day
+                                  @confirm="onConfirm"/>
 
-                <van-cell title="日期区间：" title-style="max-width: 25%" :value="dataText" @click="show = true"/>
-                <van-calendar v-model:show="show" :min-date="minDate" type="range" allow-same-day @confirm="onConfirm"/>
-
-                <van-field
-                        v-model="F_DELIVERYNO"
-                        name="F_DELIVERYNO"
-                        label="发货单号"
-                        placeholder="请填写单号"
-                />
-
-                <van-field
-                        v-model="F_STORECODE"
-                        is-link
-                        readonly
-                        name="F_STORECODE"
-                        label="库区"
-                        placeholder="点击选择库区"
-                        @click="showPicker = true"
-                />
-                <van-popup v-model:show="showPicker" position="bottom">
-                    <van-picker
-                            :columns="storagePlaceOptions"
-                            @confirm="onConfirmPicker"
-                            @cancel="showPicker = false"
+                    <van-field
+                            v-model="F_DELIVERYNO"
+                            name="F_DELIVERYNO"
+                            label="发货单号"
+                            placeholder="请填写单号"
                     />
-                </van-popup>
 
-            </van-cell-group>
+                    <van-field
+                            v-model="F_STORECODE"
+                            is-link
+                            readonly
+                            name="F_STORECODE"
+                            label="库区"
+                            placeholder="点击选择库区"
+                            @click="showPicker = true"
+                    />
+                    <van-popup v-model:show="showPicker" position="bottom">
+                        <van-picker
+                                :columns="storagePlaceOptions"
+                                @confirm="onConfirmPicker"
+                                @cancel="showPicker = false"
+                        />
+                    </van-popup>
+
+                </van-cell-group>
 
 
-            <div class="btn-area" style="margin-top: 50px">
-                <div @click="onClickLeft">
-                    <img src="@/assets/image/btn_fanhui1.png"/>
-                    <div>返回</div>
+                <div class="btn-area" style="margin-top: 50px">
+                    <div @click="onClickLeft">
+                        <img src="@/assets/image/btn_fanhui1.png"/>
+                        <div>返回</div>
+                    </div>
+                    <div @click="onSearch">
+                        <img src="@/assets/image/btn_chaxun1.png"/>
+                        <div>查询</div>
+                    </div>
                 </div>
-                <div @click="onSearch">
-                    <img src="@/assets/image/btn_chaxun1.png"/>
-                    <div>查询</div>
-                </div>
-            </div>
-        </van-form>
-    </div>
-
+            </van-form>
+        </div>
+    </main>
 </template>
 
 <script>
     import fc from 'flutter-core'
-    import {onBeforeRouteLeave, useRouter} from "vue-router";
+    import {useRouter} from "vue-router";
     import {ref} from "vue";
     import {showDialog} from "vant";
     import {useStore} from "vuex";
     import {toRaw} from "@vue/reactivity";
-    import {onMounted, onUnmounted} from "@vue/runtime-core";
+    import {onMounted} from "@vue/runtime-core";
 
     let nowDat = new Date();
     let dateY = parseInt(nowDat.getFullYear() - 1);
@@ -140,7 +141,7 @@
 
                 store.commit('setPickWithQuery', obj)
                 store.commit('setPickWithScroll', 0)
-                router.push({name: 'pickWithQueryListData',})
+                router.push({name: 'pickWithQueryListData'})
 
             }
 

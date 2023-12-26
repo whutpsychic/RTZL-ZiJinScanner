@@ -1,127 +1,131 @@
 <template>
-    <div class="container">
-        <div class="header">
-            <van-nav-bar
-                    title="品级质检"
-                    class="page-nav-bar"
-                    left-arrow
-                    @click-left="onClickLeft"
-            />
-        </div>
+    <main>
+        <div class="container">
+            <div class="header">
+                <van-nav-bar
+                        title="品级质检"
+                        class="page-nav-bar"
+                        left-arrow
+                        @click-left="onClickLeft"
+                />
+            </div>
 
 
-        <div class="content">
-            <el-card class="box-card" shadow="always">
-                <van-divider content-position="left">基本信息</van-divider>
-                <div>
-                    <p>
-                        <span style="font-weight: bold">编号：</span>
-                        <span>{{listData.yjtJyInformationData.batchnumber}}</span>
-                    </p>
+            <div class="content">
+                <el-card class="box-card" shadow="always">
+                    <van-divider content-position="left">基本信息</van-divider>
+                    <div>
+                        <p>
+                            <span style="font-weight: bold">编号：</span>
+                            <span>{{listData.yjtJyInformationData.batchnumber}}</span>
+                        </p>
 
-                    <p>
-                        <span style="font-weight: bold">重量：</span>
-                        <span>{{parseFloat(listData.yjtJyInformationData.suttle)}}{{listData.yjtJyInformationData.unit}}</span>
-                    </p>
+                        <p>
+                            <span style="font-weight: bold">重量：</span>
+                            <span>{{parseFloat(listData.yjtJyInformationData.suttle)}}{{listData.yjtJyInformationData.unit}}</span>
+                        </p>
 
-                    <p>
-                        <span style="font-weight: bold">标准：</span>
-                        <span>{{listData.yjtJyInformationData.standard}}</span>
-                    </p>
+                        <p>
+                            <span style="font-weight: bold">标准：</span>
+                            <span>{{listData.yjtJyInformationData.standard}}</span>
+                        </p>
 
-                    <p>
-                        <span style="font-weight: bold">计量员：</span>
-                        <span>{{listData.yjtJyInformationData.suttleperson}}</span>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        <span style="font-weight: bold">扫描人：</span>
-                        <span>{{listData.yjtJyInformationData.scanUser}}</span>
-                    </p>
+                        <p>
+                            <span style="font-weight: bold">计量员：</span>
+                            <span>{{listData.yjtJyInformationData.suttleperson}}</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span style="font-weight: bold">扫描人：</span>
+                            <span>{{listData.yjtJyInformationData.scanUser}}</span>
+                        </p>
 
-                    <p>
-                        <span style="font-weight: bold">生产日期：</span>
-                        <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationData.proDate)}}</span>
-                    </p>
-                </div>
+                        <p>
+                            <span style="font-weight: bold">生产日期：</span>
+                            <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationData.proDate)}}</span>
+                        </p>
+                    </div>
 
-                <div>
-                    <van-divider content-position="left"><span style="color: red">*</span>{{typeCodeText}}</van-divider>
-                    <van-radio-group v-model="typeCodeChecked" direction="horizontal">
-                        <van-radio v-for="(item,index) in  listData.typeCodeList" :name="String(item.id)">{{item.name}}
-                        </van-radio>
-                    </van-radio-group>
-                </div>
+                    <div>
+                        <van-divider content-position="left"><span style="color: red">*</span>{{typeCodeText}}
+                        </van-divider>
+                        <van-radio-group v-model="typeCodeChecked" direction="horizontal">
+                            <van-radio v-for="(item,index) in  listData.typeCodeList" :name="String(item.id)">
+                                {{item.name}}
+                            </van-radio>
+                        </van-radio-group>
+                    </div>
 
 
-                <div>
-                    <van-divider content-position="left"><span style="color: red">*</span> 质检照片</van-divider>
-                    <div class="van-uploader">
-                        <div class="van-uploader__wrapper">
-                            <div class="van-uploader__preview" v-for="(item,index) in  fileList" :key="item.index">
-                                <div class="van-image van-uploader__preview-image">
-                                    <img class="van-image__img" :src="item.base64Img"
-                                         style="object-fit: cover;" @click="seeImg">
+                    <div>
+                        <van-divider content-position="left"><span style="color: red">*</span> 质检照片</van-divider>
+                        <div class="van-uploader">
+                            <div class="van-uploader__wrapper">
+                                <div class="van-uploader__preview" v-for="(item,index) in  fileList" :key="item.index">
+                                    <div class="van-image van-uploader__preview-image">
+                                        <img class="van-image__img" :src="item.base64Img"
+                                             style="object-fit: cover;" @click="seeImg">
+                                    </div>
+                                    <div role="button"
+                                         class="van-uploader__preview-delete van-uploader__preview-delete--shadow"
+                                         tabindex="0" aria-label="删除" @click="beforeDelete(item.index,item.base64Img)">
+                                        <i class="van-badge__wrapper van-icon van-icon-cross van-uploader__preview-delete-icon"></i>
+                                    </div>
                                 </div>
-                                <div role="button"
-                                     class="van-uploader__preview-delete van-uploader__preview-delete--shadow"
-                                     tabindex="0" aria-label="删除" @click="beforeDelete(item.index,item.base64Img)">
-                                    <i class="van-badge__wrapper van-icon van-icon-cross van-uploader__preview-delete-icon"></i>
+
+
+                                <div class="van-uploader__upload" @click="takePhotoZJ">
+                                    <i class="van-badge__wrapper van-icon van-icon-photograph van-uploader__upload-icon"></i>
                                 </div>
-                            </div>
-
-
-                            <div class="van-uploader__upload" @click="takePhotoZJ">
-                                <i class="van-badge__wrapper van-icon van-icon-photograph van-uploader__upload-icon"></i>
                             </div>
                         </div>
                     </div>
-                </div>
 
 
-                <div v-if="tabIndex==1">
-                    <van-divider content-position="left"><span style="color: red">*</span>改判理由</van-divider>
-                    <el-select v-model="alterReason" filterable
-                               clearable allow-create
-                               placeholder="改判理由" style="width: 100%">
-                        <el-option
-                                v-for="item in listData.alterReasonList"
-                                :key="item.alterReason"
-                                :label="item.alterReason"
-                                :value="item.alterReason"
-                        />
-                    </el-select>
-                </div>
+                    <div v-if="tabIndex==1">
+                        <van-divider content-position="left"><span style="color: red">*</span>改判理由</van-divider>
+                        <el-select v-model="alterReason" filterable
+                                   clearable allow-create
+                                   placeholder="改判理由" style="width: 100%">
+                            <el-option
+                                    v-for="item in listData.alterReasonList"
+                                    :key="item.alterReason"
+                                    :label="item.alterReason"
+                                    :value="item.alterReason"
+                            />
+                        </el-select>
+                    </div>
 
-                <div>
-                    <van-divider content-position="left">备注</van-divider>
-                    <van-cell-group inset>
-                        <van-field
-                                v-model="remarks"
-                                rows="1"
-                                autosize
-                                label="备注"
-                                type="textarea"
-                                placeholder="请输入备注"
-                        />
-                    </van-cell-group>
-                </div>
+                    <div>
+                        <van-divider content-position="left">备注</van-divider>
+                        <van-cell-group inset>
+                            <van-field
+                                    v-model="remarks"
+                                    rows="1"
+                                    autosize
+                                    label="备注"
+                                    type="textarea"
+                                    placeholder="请输入备注"
+                            />
+                        </van-cell-group>
+                    </div>
 
-            </el-card>
+                </el-card>
 
-            <van-button type="primary" size="large"
-                        :disabled="disabled"
-                        style="width: 80%;position: absolute;left: 10%;margin-top: 15px;background-color: #003363;color:#FFFFFF"
-                        @click="conservation">提交
-            </van-button>
+                <van-button type="primary" size="large"
+                            :disabled="disabled"
+                            style="width: 80%;position: absolute;left: 10%;margin-top: 15px;background-color: #003363;color:#FFFFFF"
+                            @click="conservation">提交
+                </van-button>
 
-            <van-image-preview
-                    v-model:show="showImage"
-                    :images="imgList"
-                    :closeable="true"
-                    :loop="false"
-                    :closeOnPopstate="true"
-            />
+                <van-image-preview
+                        v-model:show="showImage"
+                        :images="imgList"
+                        :closeable="true"
+                        :loop="false"
+                        :closeOnPopstate="true"
+                />
+            </div>
         </div>
-    </div>
+    </main>
 </template>
 
 <script>
@@ -244,7 +248,10 @@
 
             onMounted(() => {
                 fc.register("goback", () => {
-                    router.push({path: '/gradeDetermination'})
+                    router.push({
+                        path: '/gradeDetermination',
+                        query: {barcode: listData.yjtJyInformationData.barcode, tabState: tabIndex.value}
+                    })
                 })
                 getTypeCodeData(typeCode.value)
                 getAlterReasonQuery()
@@ -253,7 +260,10 @@
 
             //返回上一页
             const onClickLeft = () => {
-                router.push({path: '/gradeDetermination'})
+                router.push({
+                    path: '/gradeDetermination',
+                    query: {barcode: listData.yjtJyInformationData.barcode, tabState: tabIndex.value}
+                })
             }
 
 
@@ -322,7 +332,7 @@
                             overlay: true,
                         })
                         disabled.value = false
-                        //router.back()
+                        // router.back()
                         router.push({
                             path: '/gradeDetermination',
                             query: {barcode: listData.yjtJyInformationData.barcode, tabState: '1'}

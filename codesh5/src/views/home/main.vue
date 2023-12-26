@@ -1,42 +1,48 @@
 <template>
-    <van-nav-bar title="主菜单"/>
+    <main>
+        <van-nav-bar title="主菜单"/>
 
-    <van-grid :gutter="5" :column-num="2" style="margin-top: 6px;
+        <van-grid :gutter="5" :column-num="2" style="margin-top: 6px;
                                                font-size: 18px;
                                                font-weight: bold;">
-        <van-grid-item @click="scanCode" v-if="gradeDeterminationRole">
-            <img src="/image/pjpd.png" style="width: 40%;"/>
-            <span style="margin-top: 8px;">品级质检</span>
-        </van-grid-item>
 
-        <van-grid-item to="/reportFormStatistics" v-if="reportFormStatisticsRole">
-            <img src="/image/baobiao.png" style="width: 40%;"/>
-            <span style="margin-top: 8px;">报表查询</span>
-        </van-grid-item>
+            <van-grid-item @click="scanCode" v-if="gradeDeterminationRole">
+                <img src="/image/pjpd.png" style="width: 40%;"/>
+                <span style="margin-top: 8px;">品级质检</span>
+            </van-grid-item>
 
-        <van-grid-item to="/auditingList" v-if="auditingListRole">
-            <img src="/image/shenhe.png" style="width: 40%;"/>
-            <span style="margin-top: 8px;">品级质检审核</span>
-        </van-grid-item>
+            <van-grid-item to="/reportFormStatistics" v-if="reportFormStatisticsRole">
+                <img src="/image/baobiao.png" style="width: 40%;"/>
+                <span style="margin-top: 8px;">报表查询</span>
+            </van-grid-item>
 
-
-        <van-grid-item to="/qualityCheckingRecord" v-if="qualityCheckingRecordRole">
-            <img src="/image/zjjl.png" style="width: 40%;"/>
-            <span style="margin-top: 8px;">质检记录</span>
-        </van-grid-item>
+            <van-grid-item to="/auditingList" v-if="auditingListRole">
+                <img src="/image/shenhe.png" style="width: 40%;"/>
+                <span style="margin-top: 8px;">品级质检审核</span>
+            </van-grid-item>
 
 
-        <van-grid-item to="/pickWithQuery" v-if="pickWithQueryRecordRole">
-            <img src="/image/jianpei.png" style="width: 40%;"/>
-            <span style="margin-top: 8px;">拣配</span>
-        </van-grid-item>
+            <van-grid-item to="/qualityCheckingRecord" v-if="qualityCheckingRecordRole">
+                <img src="/image/zjjl.png" style="width: 40%;"/>
+                <span style="margin-top: 8px;">质检记录</span>
+            </van-grid-item>
 
 
-        <van-grid-item to="/pickWithRecordQuery" v-if="pickWithRecordQueryRecordRole">
-            <img src="/image/jianpeidan.png" style="width: 40%;"/>
-            <span style="margin-top: 8px;">查询拣配单</span>
-        </van-grid-item>
-    </van-grid>
+            <van-grid-item to="/pickWithQuery" v-if="pickWithQueryRecordRole">
+                <img src="/image/jianpei.png" style="width: 40%;"/>
+                <span style="margin-top: 8px;">拣配</span>
+            </van-grid-item>
+
+
+            <van-grid-item to="/pickWithRecordQuery" v-if="pickWithRecordQueryRecordRole">
+                <img src="/image/jianpeidan.png" style="width: 40%;"/>
+                <span style="margin-top: 8px;">查询拣配单</span>
+            </van-grid-item>
+
+        </van-grid>
+
+        <my-footer></my-footer>
+    </main>
 </template>
 
 <script>
@@ -49,8 +55,10 @@
     import tools from '@/utils/tool.js'
     import {showConfirmDialog} from "vant";
     import {logout} from '@/api/user'
+    import myFooter from "../tabbar/main.vue";
 
     export default {
+        components: {myFooter},
         setup() {
             const router = useRouter()
             const store = useStore()
@@ -77,7 +85,7 @@
                         })
                             .then(() => {
                                 logout().then(() => {
-                                  router.push({path: '/login'})
+                                    router.push({path: '/login'})
                                 }).catch(error => {
                                     console.log(error)
                                 })

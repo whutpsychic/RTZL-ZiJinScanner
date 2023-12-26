@@ -1,317 +1,318 @@
 <template>
-
-
-    <div class="header">
-        <van-nav-bar
-                title="审核列表"
-                class="page-nav-bar"
-                left-arrow
-                @click-left="onClickLeft"
-        />
-
-        <div style="display: flex;background-color: #ffffff;">
-            <van-search style="width: 68%"
-                        v-model="searchValue"
-                        shape="round"
-                        placeholder="请输入编号搜索"
-                        @search="onSearch"
+    <main>
+        <div class="header">
+            <van-nav-bar
+                    title="审核列表"
+                    class="page-nav-bar"
+                    left-arrow
+                    @click-left="onClickLeft"
             />
 
-            <el-select v-model="status" clearable placeholder="状态"
-                       style="width: 31%;float: right;margin-top: 0.8rem" @change="statusChange">
-                <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
+            <div style="display: flex;background-color: #ffffff;">
+                <van-search style="width: 68%"
+                            v-model="searchValue"
+                            shape="round"
+                            placeholder="请输入编号搜索"
+                            @search="onSearch"
                 />
-            </el-select>
+
+                <el-select v-model="status" clearable placeholder="状态"
+                           style="width: 31%;float: right;margin-top: 0.8rem" @change="statusChange">
+                    <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                    />
+                </el-select>
+            </div>
         </div>
-    </div>
 
-    <div class="content">
-        <van-list
-                v-model:loading="loading"
-                :immediate-check="false"
-                :finished="finished"
-                finished-text="没有更多了"
-                @load="onLoad"
+        <div class="content">
+            <van-list
+                    v-model:loading="loading"
+                    :immediate-check="false"
+                    :finished="finished"
+                    finished-text="没有更多了"
+                    @load="onLoad"
+            >
+
+                <div style="padding:0px 5px 5px 5px">
+
+                    <el-card class="box-card" shadow="always" style="margin-top:5px" @click="auditingDetails(item)"
+                             v-for="(item,index) in  listData.auditorListData">
+
+                        <div>
+                            <p>
+                                <span style="font-weight: bold">编号：</span>
+                                <span>{{item.batchnumber}}</span>
+                            </p>
+
+                            <p>
+                                <span style="font-weight: bold">重量：</span>
+                                <span>{{parseFloat(item.suttle)}}{{item.unit}}</span>
+                            </p>
+
+                            <p>
+                                <span style="font-weight: bold">标准：</span>
+                                <span>{{item.standard}}</span>
+                            </p>
+
+                            <p>
+                                <span style="font-weight: bold">品级分类：</span>
+                                <span>{{item.exteriorName}}</span>
+                                &nbsp;&nbsp;
+                                <span v-if="item.exterior!='0'" style="font-weight: bold">类型：</span>
+                                <span>{{item.dictName}}</span>
+                            </p>
+
+                            <p>
+                                <van-tag v-if="item.status=='0'" type="primary" size="large">未审核</van-tag>
+                                <van-tag v-if="item.status=='1'" type="danger" size="large">驳回</van-tag>
+                                <van-tag v-if="item.status=='2'" type="success" size="large">审核通过</van-tag>
+
+                            </p>
+
+                            <van-divider style="color:#c8c8c8"></van-divider>
+
+                            <span style="color: #bbbbbb">{{dateFormat("YYYY-mm-dd HH:MM:SS",item.checkoutDate)}}</span>
+                            <span style="float:right;color: #bbbbbb">{{item.checkoutUser}}</span>
+                        </div>
+                    </el-card>
+
+
+                </div>
+
+            </van-list>
+
+        </div>
+
+        <el-dialog
+                v-model="centerDialogVisible"
+                :destroy-on-close="true"
+                title="审核详情"
+                width="96%"
+                align-center
         >
-
-            <div style="padding:0px 5px 5px 5px">
-
-                <el-card class="box-card" shadow="always" style="margin-top:5px" @click="auditingDetails(item)"
-                         v-for="(item,index) in  listData.auditorListData">
-
+            <div style="padding: 15px;overflow-y: auto;overscroll-behavior-y: contain;" :style="elDialogHeight">
+                <div>
                     <div>
+                        <van-divider content-position="left">基本信息</van-divider>
                         <p>
                             <span style="font-weight: bold">编号：</span>
-                            <span>{{item.batchnumber}}</span>
+                            <span>{{listData.yjtJyInformationDetails.batchnumber}}</span>
                         </p>
 
                         <p>
                             <span style="font-weight: bold">重量：</span>
-                            <span>{{parseFloat(item.suttle)}}{{item.unit}}</span>
+                            <span>{{parseFloat(listData.yjtJyInformationDetails.suttle)}}{{listData.yjtJyInformationDetails.unit}}</span>
                         </p>
 
                         <p>
                             <span style="font-weight: bold">标准：</span>
-                            <span>{{item.standard}}</span>
+                            <span>{{listData.yjtJyInformationDetails.standard}}</span>
                         </p>
 
                         <p>
-                            <span style="font-weight: bold">品级分类：</span>
-                            <span>{{item.exteriorName}}</span>
-                            &nbsp;&nbsp;
-                            <span v-if="item.exterior!='0'" style="font-weight: bold">类型：</span>
-                            <span>{{item.dictName}}</span>
+                            <span style="font-weight: bold">计量员：</span>
+                            <span>{{listData.yjtJyInformationDetails.suttleperson}}</span>
+                            &nbsp;&nbsp;&nbsp;
+                            <span style="font-weight: bold">扫描人：</span>
+                            <span>{{listData.yjtJyInformationDetails.scanUser}}</span>
                         </p>
 
                         <p>
-                            <van-tag v-if="item.status=='0'" type="primary" size="large">未审核</van-tag>
-                            <van-tag v-if="item.status=='1'" type="danger" size="large">驳回</van-tag>
-                            <van-tag v-if="item.status=='2'" type="success" size="large">审核通过</van-tag>
-
+                            <span style="font-weight: bold">生产日期：</span>
+                            <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetails.proDate)}}</span>
                         </p>
 
-                        <van-divider style="color:#c8c8c8"></van-divider>
-
-                        <span style="color: #bbbbbb">{{dateFormat("YYYY-mm-dd HH:MM:SS",item.checkoutDate)}}</span>
-                        <span style="float:right;color: #bbbbbb">{{item.checkoutUser}}</span>
                     </div>
-                </el-card>
 
-
-            </div>
-
-        </van-list>
-
-    </div>
-
-    <el-dialog
-            v-model="centerDialogVisible"
-            :destroy-on-close="true"
-            title="审核详情"
-            width="96%"
-            align-center
-    >
-        <div style="padding: 15px;overflow-y: auto;overscroll-behavior-y: contain;" :style="elDialogHeight">
-            <div>
-                <div>
-                    <van-divider content-position="left">基本信息</van-divider>
-                    <p>
-                        <span style="font-weight: bold">编号：</span>
-                        <span>{{listData.yjtJyInformationDetails.batchnumber}}</span>
-                    </p>
-
-                    <p>
-                        <span style="font-weight: bold">重量：</span>
-                        <span>{{parseFloat(listData.yjtJyInformationDetails.suttle)}}{{listData.yjtJyInformationDetails.unit}}</span>
-                    </p>
-
-                    <p>
-                        <span style="font-weight: bold">标准：</span>
-                        <span>{{listData.yjtJyInformationDetails.standard}}</span>
-                    </p>
-
-                    <p>
-                        <span style="font-weight: bold">计量员：</span>
-                        <span>{{listData.yjtJyInformationDetails.suttleperson}}</span>
-                        &nbsp;&nbsp;&nbsp;
-                        <span style="font-weight: bold">扫描人：</span>
-                        <span>{{listData.yjtJyInformationDetails.scanUser}}</span>
-                    </p>
-
-                    <p>
-                        <span style="font-weight: bold">生产日期：</span>
-                        <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetails.proDate)}}</span>
-                    </p>
-
-                </div>
-
-                <div>
-                    <van-divider content-position="left">历史质检信息</van-divider>
                     <div>
+                        <van-divider content-position="left">历史质检信息</van-divider>
+                        <div>
+                            <p>
+                                <span style="font-weight: bold">品级分类：</span>
+                                <van-tag v-if="listData.yjtJyInformationDecideData.details.exteriorName=='优等品'"
+                                         type="primary"
+                                         size="medium">优等品
+                                </van-tag>
+                                <van-tag v-if="listData.yjtJyInformationDecideData.details.exteriorName=='合格'"
+                                         type="warning"
+                                         size="medium">合格
+                                </van-tag>
+                                <van-tag v-if="listData.yjtJyInformationDecideData.details.exteriorName=='不合格'"
+                                         type="danger"
+                                         size="medium">不合格
+                                </van-tag>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <span v-if="listData.yjtJyInformationDecideData.details.exterior!='0'"
+                                      style="font-weight: bold">类型：</span>
+                                <span>{{listData.yjtJyInformationDecideData.details.dictName}}</span>
+                            </p>
+
+                            <p>
+                                <span style="font-weight: bold">质检时间：</span>
+                                <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDecideData.details.checkoutDate)}}</span>
+                            </p>
+
+                            <p>
+                                <span style="font-weight: bold">质检人：</span>
+                                <span>{{listData.yjtJyInformationDecideData.details.checkoutUser}}</span>
+                            </p>
+
+                            <p v-if="listData.yjtJyInformationDecideData.details.alterReason">
+                                <span style="font-weight: bold">改判理由：</span><span>{{listData.yjtJyInformationDecideData.details.alterReason}}</span>
+                            </p>
+
+                            <p v-if="listData.yjtJyInformationDecideData.details.remarks">
+                                <span style="font-weight: bold">备注：</span><span>{{listData.yjtJyInformationDecideData.details.remarks}}</span>
+                            </p>
+
+
+                            <div v-if="listData.yjtJyInformationDecideData.details.exterior!='0'">
+                                <van-image style="margin:0 2%"
+                                           @click="seeImg(listData.yjtJyInformationDecideData.fileList)"
+                                           v-for="(file,index) in  listData.yjtJyInformationDecideData.fileList"
+                                           width="45%"
+                                           height="8rem"
+                                           fit="cover"
+                                           position="left"
+                                           :src="file"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <van-divider content-position="left">审核的质检信息</van-divider>
                         <p>
                             <span style="font-weight: bold">品级分类：</span>
-                            <van-tag v-if="listData.yjtJyInformationDecideData.details.exteriorName=='优等品'"
-                                     type="primary"
+                            <van-tag v-if="listData.yjtJyInformationDetails.exteriorName=='优等品'" type="primary"
                                      size="medium">优等品
                             </van-tag>
-                            <van-tag v-if="listData.yjtJyInformationDecideData.details.exteriorName=='合格'"
-                                     type="warning"
+                            <van-tag v-if="listData.yjtJyInformationDetails.exteriorName=='合格'" type="warning"
                                      size="medium">合格
                             </van-tag>
-                            <van-tag v-if="listData.yjtJyInformationDecideData.details.exteriorName=='不合格'"
-                                     type="danger"
+                            <van-tag v-if="listData.yjtJyInformationDetails.exteriorName=='不合格'" type="danger"
                                      size="medium">不合格
                             </van-tag>
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                            <span v-if="listData.yjtJyInformationDecideData.details.exterior!='0'"
+                            &nbsp;&nbsp;
+                            <span v-if="listData.yjtJyInformationDetails.exterior!='0'"
                                   style="font-weight: bold">类型：</span>
-                            <span>{{listData.yjtJyInformationDecideData.details.dictName}}</span>
+                            <span>{{listData.yjtJyInformationDetails.dictName}}</span>
                         </p>
 
                         <p>
                             <span style="font-weight: bold">质检时间：</span>
-                            <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDecideData.details.checkoutDate)}}</span>
+                            <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetails.checkoutDate)}}</span>
                         </p>
 
                         <p>
                             <span style="font-weight: bold">质检人：</span>
-                            <span>{{listData.yjtJyInformationDecideData.details.checkoutUser}}</span>
+                            <span>{{listData.yjtJyInformationDetails.checkoutUser}}</span>
                         </p>
 
-                        <p v-if="listData.yjtJyInformationDecideData.details.alterReason">
-                            <span style="font-weight: bold">改判理由：</span><span>{{listData.yjtJyInformationDecideData.details.alterReason}}</span>
-                        </p>
-
-                        <p v-if="listData.yjtJyInformationDecideData.details.remarks">
-                            <span style="font-weight: bold">备注：</span><span>{{listData.yjtJyInformationDecideData.details.remarks}}</span>
+                        <p>
+                            <span style="font-weight: bold">改判理由：</span>
+                            <span>{{listData.yjtJyInformationDetails.alterReason}}</span>
                         </p>
 
 
-                        <div v-if="listData.yjtJyInformationDecideData.details.exterior!='0'">
-                            <van-image style="margin:0 2%" @click="seeImg(listData.yjtJyInformationDecideData.fileList)"
-                                       v-for="(file,index) in  listData.yjtJyInformationDecideData.fileList"
-                                       width="45%"
-                                       height="8rem"
-                                       fit="cover"
-                                       position="left"
-                                       :src="file"
-                            />
-                        </div>
+                        <p v-if="listData.yjtJyInformationDetails.remarks">
+                            <span style="font-weight: bold">备注：</span><span>{{listData.yjtJyInformationDetails.remarks}}</span>
+                        </p>
+
+
                     </div>
-                </div>
+
+                    <div v-if="listData.yjtJyInformationDetails.status!='0'" style="margin-top: 15px">
+                        <p>
+                            <span style="font-weight: bold">状态：</span>
+                            <span>{{listData.yjtJyInformationDetails.status ==='0' ? '未审核' : (listData.yjtJyInformationDetails.status ==='1' ? '驳回' : '通过')}}</span>
+                            &nbsp;&nbsp;&nbsp;
+                            <span style="font-weight: bold">审核人：</span>
+                            <span>{{listData.yjtJyInformationDetails.auditorUserName}}</span>
+                        </p>
+
+                        <p>
+                            <span style="font-weight: bold">审核时间：</span>
+                            <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetails.auditorDate)}}</span>
+                        </p>
+
+                        <p>
+                            <span style="font-weight: bold">审核内容：</span>
+                            <span>{{listData.yjtJyInformationDetails.auditorContent}}</span>
+                        </p>
+                    </div>
+
+                    <div v-if="listData.yjtJyInformationDetails.exterior!='0'">
+                        <van-image style="margin:0 2%" @click="seeImg(listData.yjtJyInformationFileList)"
+                                   v-for="(item,index) in  listData.yjtJyInformationFileList"
+                                   width="45%"
+                                   height="8rem"
+                                   fit="cover"
+                                   position="left"
+                                   :src="item"
+                        />
+
+                    </div>
 
 
-                <div>
-                    <van-divider content-position="left">审核的质检信息</van-divider>
-                    <p>
-                        <span style="font-weight: bold">品级分类：</span>
-                        <van-tag v-if="listData.yjtJyInformationDetails.exteriorName=='优等品'" type="primary"
-                                 size="medium">优等品
-                        </van-tag>
-                        <van-tag v-if="listData.yjtJyInformationDetails.exteriorName=='合格'" type="warning"
-                                 size="medium">合格
-                        </van-tag>
-                        <van-tag v-if="listData.yjtJyInformationDetails.exteriorName=='不合格'" type="danger"
-                                 size="medium">不合格
-                        </van-tag>
-                        &nbsp;&nbsp;
-                        <span v-if="listData.yjtJyInformationDetails.exterior!='0'" style="font-weight: bold">类型：</span>
-                        <span>{{listData.yjtJyInformationDetails.dictName}}</span>
-                    </p>
-
-                    <p>
-                        <span style="font-weight: bold">质检时间：</span>
-                        <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetails.checkoutDate)}}</span>
-                    </p>
-
-                    <p>
-                        <span style="font-weight: bold">质检人：</span>
-                        <span>{{listData.yjtJyInformationDetails.checkoutUser}}</span>
-                    </p>
-
-                    <p>
-                        <span style="font-weight: bold">改判理由：</span>
-                        <span>{{listData.yjtJyInformationDetails.alterReason}}</span>
-                    </p>
-
-
-                    <p v-if="listData.yjtJyInformationDetails.remarks">
-                        <span style="font-weight: bold">备注：</span><span>{{listData.yjtJyInformationDetails.remarks}}</span>
-                    </p>
-
-
-                </div>
-
-                <div v-if="listData.yjtJyInformationDetails.status!='0'" style="margin-top: 15px">
-                    <p>
-                        <span style="font-weight: bold">状态：</span>
-                        <span>{{listData.yjtJyInformationDetails.status ==='0' ? '未审核' : (listData.yjtJyInformationDetails.status ==='1' ? '驳回' : '通过')}}</span>
-                        &nbsp;&nbsp;&nbsp;
-                        <span style="font-weight: bold">审核人：</span>
-                        <span>{{listData.yjtJyInformationDetails.auditorUserName}}</span>
-                    </p>
-
-                    <p>
-                        <span style="font-weight: bold">审核时间：</span>
-                        <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetails.auditorDate)}}</span>
-                    </p>
-
-                    <p>
-                        <span style="font-weight: bold">审核内容：</span>
-                        <span>{{listData.yjtJyInformationDetails.auditorContent}}</span>
-                    </p>
-                </div>
-
-                <div v-if="listData.yjtJyInformationDetails.exterior!='0'">
-                    <van-image style="margin:0 2%" @click="seeImg(listData.yjtJyInformationFileList)"
-                               v-for="(item,index) in  listData.yjtJyInformationFileList"
-                               width="45%"
-                               height="8rem"
-                               fit="cover"
-                               position="left"
-                               :src="item"
+                    <van-field v-if="listData.yjtJyInformationDetails.status=='0'"
+                               v-model="auditorContent"
+                               rows="5"
+                               autosize
+                               label="审核内容"
+                               type="textarea"
+                               maxlength="50"
+                               placeholder="请输入审核内容"
+                               show-word-limit
                     />
 
+
                 </div>
 
-
-                <van-field v-if="listData.yjtJyInformationDetails.status=='0'"
-                           v-model="auditorContent"
-                           rows="5"
-                           autosize
-                           label="审核内容"
-                           type="textarea"
-                           maxlength="50"
-                           placeholder="请输入审核内容"
-                           show-word-limit
+                <van-image-preview
+                        v-model:show="showImage"
+                        :images="listData.filePathList"
+                        :closeable="true"
+                        :loop="false"
+                        :closeOnPopstate="true"
                 />
 
 
-            </div>
+                <div style="margin-top: 30px" v-if="listData.yjtJyInformationDetails.status=='0'">
+                    <van-row>
+                        <van-col span="2"></van-col>
+                        <van-col span="10">
+                            <van-button icon="close" type="danger" style="width:90%"
+                                        @click="cathodeCopperAuditorClick('1')">驳回
+                            </van-button>
+                        </van-col>
+                        <van-col span="10">
+                            <van-button icon="passed" type="success" style="width:90%"
+                                        @click="cathodeCopperAuditorClick('2')">通过
+                            </van-button>
+                        </van-col>
+                        <van-col span="2"></van-col>
 
-            <van-image-preview
-                    v-model:show="showImage"
-                    :images="listData.filePathList"
-                    :closeable="true"
-                    :loop="false"
-                    :closeOnPopstate="true"
-            />
+                    </van-row>
+                </div>
 
 
-            <div style="margin-top: 30px" v-if="listData.yjtJyInformationDetails.status=='0'">
-                <van-row>
-                    <van-col span="2"></van-col>
-                    <van-col span="10">
-                        <van-button icon="close" type="danger" style="width:90%"
-                                    @click="cathodeCopperAuditorClick('1')">驳回
-                        </van-button>
-                    </van-col>
-                    <van-col span="10">
-                        <van-button icon="passed" type="success" style="width:90%"
-                                    @click="cathodeCopperAuditorClick('2')">通过
-                        </van-button>
-                    </van-col>
-                    <van-col span="2"></van-col>
-
-                </van-row>
             </div>
 
 
-        </div>
-
-
-    </el-dialog>
-
+        </el-dialog>
+    </main>
 </template>
 
 <script>
     import fc from "flutter-core";
     import {onMounted, ref} from 'vue';
-    import {onBeforeRouteLeave, useRouter} from "vue-router";
+    import {useRouter} from "vue-router";
     import {
         auditorDataQuery,
         cathodeCopperAuditor
@@ -328,14 +329,7 @@
     import {showConfirmDialog, showToast} from "vant";
 
     export default {
-        // beforeRouteEnter(to, from, next) {
-        //     if (from.path=='/home'){
-        //         to.meta.keepAlive = false
-        //     }else {
-        //         to.meta.keepAlive = true
-        //     }
-        //      next()
-        // },
+
 
         setup() {
             const router = useRouter()
@@ -380,9 +374,9 @@
 
             onMounted(() => {
                 fc.register("goback", () => {
-                    if (centerDialogVisible.value){
-                        centerDialogVisible.value=false
-                    }else {
+                    if (centerDialogVisible.value) {
+                        centerDialogVisible.value = false
+                    } else {
                         router.push({path: '/home'})
                     }
                 })
@@ -390,15 +384,6 @@
                 getAuditorDataQuery({batchnumber: searchValue.value, status: status.value})
             })
 
-
-            // onBeforeRouteLeave((to, from,next) => {
-            //     if (centerDialogVisible.value){
-            //         centerDialogVisible.value=false
-            //     }else {
-            //         router.push({path: '/home'})
-            //         next()
-            //     }
-            // })
 
             //跳转到首页
             const onClickLeft = () => {
@@ -430,11 +415,6 @@
 
             //跳转到审核页面
             const auditingDetails = (item) => {
-                // let data = encodeURIComponent(JSON.stringify(item))
-                // router.push({
-                //     path: '/auditingDetails',
-                //     query: {yjtJyInformationDetails: data}
-                // })
                 let obj = {yjtJyInformationId: item.yjtJyInformationId, status: '2'}
                 getQualityCheckingRecordDecide(obj)
                 listData.yjtJyInformationDetails = item
@@ -518,7 +498,7 @@
                     title: '提示',
                     width: '600',
                     allowHtml: true,
-                    message: '<span style="font-size: 18px">是否'+text+'这条数据？</span>',
+                    message: '<span style="font-size: 18px">是否' + text + '这条数据？</span>',
                 })
                     .then(() => {
                         cathodeCopperAuditor(paramInfo).then((result) => {

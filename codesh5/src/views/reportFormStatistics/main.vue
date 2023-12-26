@@ -1,97 +1,101 @@
 <template>
-    <div>
-        <van-nav-bar
-                title="报表统计"
-                class="page-nav-bar"
-                left-arrow
-                @click-left="onClickLeft"
-        />
+    <main>
+        <div>
+            <van-nav-bar
+                    title="报表统计"
+                    class="page-nav-bar"
+                    left-arrow
+                    @click-left="onClickLeft"
+            />
 
-        <van-tabs v-model:active="active" @click-tab="onClickTab">
-            <van-tab title="按数量统计"></van-tab>
-            <van-tab title=" 按重量统计"></van-tab>
-        </van-tabs>
+            <van-tabs v-model:active="active" @click-tab="onClickTab">
+                <van-tab title="按数量统计"></van-tab>
+                <van-tab title=" 按重量统计"></van-tab>
+            </van-tabs>
 
-        <div style="background-color: #FFFFFF; z-index: 999;">
-            <van-cell-group inset>
-                <van-cell title="日期区间：" title-style="max-width: 25%" :value="dataText" @click="show = true"/>
-                <van-calendar v-model:show="show" :min-date="minDate" type="range" allow-same-day @confirm="onConfirm"/>
+            <div style="background-color: #FFFFFF; z-index: 999;">
+                <van-cell-group inset>
+                    <van-cell title="日期区间：" title-style="max-width: 25%" :value="dataText" @click="show = true"/>
+                    <van-calendar v-model:show="show" :min-date="minDate" type="range" allow-same-day
+                                  @confirm="onConfirm"/>
 
 
-                <div style="margin:8px">
-                    <van-checkbox v-model="checkboxValue" shape="square" @click="checkboxClick">按个人查询</van-checkbox>
+                    <div style="margin:8px">
+                        <van-checkbox v-model="checkboxValue" shape="square" @click="checkboxClick">按个人查询</van-checkbox>
+                    </div>
+                </van-cell-group>
+            </div>
+        </div>
+        <div id="content" class="content">
+            <div v-show="active==0">
+                <p style="margin: 5px;display: block">合计数量（捆）：{{totalQuantity}}</p>
+                <el-table :data="tableDataQuantity" style="width: 100%">
+                    <el-table-column fixed prop="exteriorName" label="品级"/>
+                    <el-table-column prop="summations" label="总数"/>
+                    <el-table-column v-for="(item,index) in  tbYjtJyDictList"
+                                     :prop="item.columnName" :label="item.name"/>
+
+                </el-table>
+                <div>
+                    <p style="text-align: center;margin-top: 5px;font-size: 16px;">品级比例（数量（捆））</p>
+                    <v-chart v-if="showEcharts" ref="tu1" style="height: 300px;width:100vw" :option="exteriorOption"/>
+                    <van-empty v-else description="暂无数据"/>
                 </div>
-            </van-cell-group>
+
+                <div>
+                    <p style="text-align: center;margin-top: 5px;font-size: 16px;">合格品类型（数量（捆））</p>
+                    <v-chart v-if="showEcharts" ref="tu2" style="height:400px;width:100vw" :option="qualifiedOption"/>
+                    <van-empty v-else description="暂无数据"/>
+                </div>
+
+                <div>
+                    <p style="text-align: center;margin-top: 5px;font-size: 16px;">不合格品类型（数量（捆））</p>
+                    <v-chart v-if="showEcharts" ref="tu3" style="height:400px;width:100vw" :option="unqualifiedOption"/>
+                    <van-empty v-else description="暂无数据"/>
+                </div>
+
+
+            </div>
+            <div v-show="active==1">
+                <p style="margin: 5px;display: block">合计重量（KG）：{{totalWeight}}</p>
+                <el-table :data="tableDataWeight" style="width: 100%">
+                    <el-table-column fixed prop="exteriorName" label="品级"/>
+                    <el-table-column prop="summations" label="总重量" width="130" :formatter="formatter"/>
+                    <el-table-column v-for="(item,index) in  tbYjtJyDictList"
+                                     width="95"
+                                     :formatter="formatter"
+                                     :prop="item.columnName" :label="item.name"/>
+                </el-table>
+
+                <div>
+                    <p style="text-align: center;margin-top: 5px;font-size: 16px;">品级比例（重量（KG））</p>
+                    <v-chart v-if="showEcharts" ref="tu4" style="height:300px;width:100vw" :option="exteriorOption"/>
+                    <van-empty v-else description="暂无数据"/>
+                </div>
+
+                <div>
+                    <p style="text-align: center;margin-top: 5px;font-size: 16px;">合格品类型（重量（KG））</p>
+                    <v-chart v-if="showEcharts" ref="tu5" style="height: 400px;width:100vw" :option="qualifiedOption"/>
+                    <van-empty v-else description="暂无数据"/>
+                </div>
+
+                <div>
+                    <p style="text-align: center;margin-top: 5px;font-size: 16px;">不合格品类型（重量（KG））</p>
+                    <v-chart v-if="showEcharts" ref="tu6" style="height: 400px;width:100vw"
+                             :option="unqualifiedOption"/>
+                    <van-empty v-else description="暂无数据"/>
+                </div>
+
+            </div>
         </div>
-    </div>
-    <div id="content" class="content">
-        <div v-show="active==0">
-            <p style="margin: 5px;display: block">合计数量（捆）：{{totalQuantity}}</p>
-            <el-table :data="tableDataQuantity" style="width: 100%">
-                <el-table-column fixed prop="exteriorName" label="品级"/>
-                <el-table-column prop="summations" label="总数"/>
-                <el-table-column v-for="(item,index) in  tbYjtJyDictList"
-                                 :prop="item.columnName" :label="item.name"/>
-
-            </el-table>
-            <div>
-                <p style="text-align: center;margin-top: 5px;font-size: 16px;">品级比例（数量（捆））</p>
-                <v-chart v-if="showEcharts" ref="tu1" style="height: 300px;width:100vw" :option="exteriorOption"/>
-                <van-empty v-else description="暂无数据"/>
-            </div>
-
-            <div>
-                <p style="text-align: center;margin-top: 5px;font-size: 16px;">合格品类型（数量（捆））</p>
-                <v-chart v-if="showEcharts" ref="tu2" style="height:400px;width:100vw" :option="qualifiedOption"/>
-                <van-empty v-else description="暂无数据"/>
-            </div>
-
-            <div>
-                <p style="text-align: center;margin-top: 5px;font-size: 16px;">不合格品类型（数量（捆））</p>
-                <v-chart v-if="showEcharts" ref="tu3" style="height:400px;width:100vw" :option="unqualifiedOption"/>
-                <van-empty v-else description="暂无数据"/>
-            </div>
-
-
-        </div>
-        <div v-show="active==1">
-            <p style="margin: 5px;display: block">合计重量（KG）：{{totalWeight}}</p>
-            <el-table :data="tableDataWeight" style="width: 100%">
-                <el-table-column fixed prop="exteriorName" label="品级"/>
-                <el-table-column prop="summations" label="总重量" width="130" :formatter="formatter"/>
-                <el-table-column v-for="(item,index) in  tbYjtJyDictList"
-                                 width="95"
-                                 :formatter="formatter"
-                                 :prop="item.columnName" :label="item.name"/>
-            </el-table>
-
-            <div>
-                <p style="text-align: center;margin-top: 5px;font-size: 16px;">品级比例（重量（KG））</p>
-                <v-chart v-if="showEcharts" ref="tu4" style="height:300px;width:100vw" :option="exteriorOption"/>
-                <van-empty v-else description="暂无数据"/>
-            </div>
-
-            <div>
-                <p style="text-align: center;margin-top: 5px;font-size: 16px;">合格品类型（重量（KG））</p>
-                <v-chart v-if="showEcharts" ref="tu5" style="height: 400px;width:100vw" :option="qualifiedOption"/>
-                <van-empty v-else description="暂无数据"/>
-            </div>
-
-            <div>
-                <p style="text-align: center;margin-top: 5px;font-size: 16px;">不合格品类型（重量（KG））</p>
-                <v-chart v-if="showEcharts" ref="tu6" style="height: 400px;width:100vw" :option="unqualifiedOption"/>
-                <van-empty v-else description="暂无数据"/>
-            </div>
-
-        </div>
-    </div>
-
+    </main>
 </template>
 
 <script>
+
     import {useRouter} from "vue-router";
     import {onMounted, ref} from "vue";
-    import {shallowReactive, toRaw} from "@vue/reactivity";
+    import {toRaw} from "@vue/reactivity";
     import {
         typeCodeData,
     } from '@/api/gradeDetermination'
@@ -99,8 +103,40 @@
         appReportFormStatisticsTable,
     } from '@/api/reportFormStatistics'
     import {useStore} from "vuex";
-    import "echarts";
     import {onBeforeUnmount} from "@vue/runtime-core";
+    import ECharts from 'vue-echarts'
+    // 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
+    import * as echarts from 'echarts/core';
+    // 引入柱状图图表，图表后缀都为 Chart
+    import { BarChart,PieChart } from 'echarts/charts';
+
+    // 引入提示框，标题，直角坐标系，数据集，内置数据转换器组件，组件后缀都为 Component
+    import {
+        TitleComponent,
+        TooltipComponent,
+        GridComponent,
+        DatasetComponent,
+        TransformComponent,
+        LegendComponent,
+    } from 'echarts/components';
+    // 标签自动布局、全局过渡动画等特性
+    // import { LabelLayout, UniversalTransition } from 'echarts/features';
+    // 引入 Canvas 渲染器，注意引入 CanvasRenderer 或者 SVGRenderer 是必须的一步
+    import { CanvasRenderer } from 'echarts/renderers';
+
+    // 注册必须的组件
+    echarts.use([
+        TitleComponent,
+        TooltipComponent,
+        GridComponent,
+        DatasetComponent,
+        TransformComponent,
+        BarChart,
+        PieChart,
+        CanvasRenderer,
+        LegendComponent,
+    ]);
+
 
     let nowDat = new Date();
     let dateY = parseInt(nowDat.getFullYear() - 1);
@@ -108,7 +144,9 @@
     let dateD = parseInt(nowDat.getDate());
 
     export default {
-
+        components: {
+            'v-chart': ECharts
+        },
         setup() {
             const router = useRouter()
             const active = ref(0)
@@ -230,10 +268,6 @@
                     }
                 ]
             })
-
-
-            const listData = shallowReactive({})
-
 
             onMounted(() => {
                 startDate.value = dateFormat('YYYY-mm-dd', new Date())

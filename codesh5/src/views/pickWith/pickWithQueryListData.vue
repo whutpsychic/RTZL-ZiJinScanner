@@ -1,60 +1,58 @@
 <template>
+    <main>
+        <van-nav-bar
+                title="出库单查询结果"
+                class="page-nav-bar"
+                left-arrow
+                @click-left="onClickLeft"
+        />
+        <div>
+            <el-table ref="tableRef"
+                      :data="tableData"
+                      id="data-area"
+                      :style="tableHeight"
+                      v-loading="loading"
+                      element-loading-text="数据加载中..."
+                      element-loading-background="rgba(122, 122, 122, 0.8)"
+                      @row-click="selectRow">
+                <el-table-column prop="F_DELIVERYNO" fixed label="发货单号" width="110px"/>
+                <el-table-column prop="F_RECIVE" label="收货单位"/>
+                <el-table-column prop="F_PLANSUTTLE" label="计划重量" width="90px"/>
+            </el-table>
 
-    <van-nav-bar
-            title="出库单查询结果"
-            class="page-nav-bar"
-            left-arrow
-            @click-left="onClickLeft"
-    />
-    <div>
-        <el-table ref="tableRef"
-                  :data="tableData"
-                  id="data-area"
-                  :style="tableHeight"
-                  v-loading="loading"
-                  element-loading-text="数据加载中..."
-                  element-loading-background="rgba(122, 122, 122, 0.8)"
-                  @row-click="selectRow">
-            <el-table-column prop="F_DELIVERYNO" fixed label="发货单号" width="110px"/>
-            <el-table-column prop="F_RECIVE" label="收货单位"/>
-            <el-table-column prop="F_PLANSUTTLE" label="计划重量" width="90px"/>
-        </el-table>
+            <div class="btn-area">
+                <div @click="onClickLeft">
+                    <img src="@/assets/image/btn_fanhui2.png"/>
+                    <div>返回</div>
+                </div>
 
-        <div class="btn-area">
-            <div @click="onClickLeft">
-                <img src="@/assets/image/btn_fanhui2.png"/>
-                <div>返回</div>
-            </div>
+                <div @click="renovateClikc">
+                    <img src="@/assets/image/btn_shuaxin2.png"/>
+                    <div>刷新</div>
+                </div>
 
-            <div @click="renovateClikc">
-                <img src="@/assets/image/btn_shuaxin2.png"/>
-                <div>刷新</div>
-            </div>
-
-            <div @click="showDetail">
-                <img src="@/assets/image/btn_chaxun2.png"/>
-                <div>查看</div>
+                <div @click="showDetail">
+                    <img src="@/assets/image/btn_chaxun2.png"/>
+                    <div>查看</div>
+                </div>
             </div>
         </div>
-    </div>
-
+    </main>
 </template>
 
 <script>
     import fc from 'flutter-core'
-    import {reactive, toRaw} from '@vue/reactivity'
+    import {toRaw} from '@vue/reactivity'
     import {onMounted, ref} from 'vue'
-    import {useRoute, useRouter, onBeforeRouteLeave} from 'vue-router'
-    import {showToast, showLoadingToast, closeToast, showDialog} from 'vant'
+    import {useRouter} from 'vue-router'
+    import {showDialog} from 'vant'
     import {useStore} from 'vuex'
     import {
         getPlanMain
     } from '@/api/pickWith'
-    import {onActivated, onUnmounted} from "@vue/runtime-core";
 
     export default {
         setup() {
-            const route = useRoute()
             const router = useRouter()
             const tableData = ref([])
             const store = useStore()
@@ -73,7 +71,6 @@
             const selectRow = (row, column, event) => {
                 selectedRow = toRaw(row)
             }
-
 
             const showDetail = () => {
                 if (selectedRow) {
@@ -99,13 +96,9 @@
                     store.commit('setPickWithScroll', scrollTop.scrollTop)
                     store.commit('setChukudanListInfo', selectedRow)
                     store.commit('setCarInfo', {})
-                    // store.commit('setScandList', [])
-                    // store.commit('setScandCalculateData', {})
+
                     router.push({
-                        name: 'pickWithQueryInfoData',
-                        // query: {
-                        //   rowData,
-                        // },
+                        name: 'pickWithQueryInfoData'
                     })
                 } else {
                     showDialog({
@@ -120,7 +113,6 @@
                     return false
                 }
             }
-
 
             const renovateClikc = () => {
                 store.commit('setPickWithScroll', 0)

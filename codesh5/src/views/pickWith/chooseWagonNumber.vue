@@ -1,62 +1,63 @@
 <template>
-
-    <van-nav-bar
-            title="选择车号"
-            class="page-nav-bar"
-            left-arrow
-            @click-left="onClickLeft"
-    />
-
-    <div>
-        <van-form @submit="onSubmit" id="form-area" ref="formRef">
-            <van-cell-group inset>
-                <van-cell title="选择日期：" title-style="max-width: 25%" :value="dataText" @click="show = true"/>
-                <van-calendar v-model:show="show" :min-date="minDate" :default-date="deDate"
-                              type="range" allow-same-day @confirm="onConfirm"/>
-            </van-cell-group>
-        </van-form>
-
-        <el-table ref="tableRef"
-                  :data="tableData"
-                  id="data-area"
-                  :style="tableHeight"
-                  v-loading="loading"
-                  element-loading-text="数据加载中..."
-                  element-loading-background="rgba(122, 122, 122, 0.8)"
-                  @row-click="selectRow">
-            <el-table-column fixed prop="chehao" label="车号" width="110px">
-                <template #default="scope">
-                    <span style="font-weight: bolder;font-size: 16px">{{ scope.row.chehao }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="danjuhao" label="单据号" width="130px"/>
-            <el-table-column prop="chengfang" label="秤房"/>
-            <el-table-column prop="pizhong" label="皮重" :formatter="formatter"/>
-        </el-table>
+    <main>
+        <van-nav-bar
+                title="选择车号"
+                class="page-nav-bar"
+                left-arrow
+                @click-left="onClickLeft"
+        />
 
         <div>
-            <van-cell-group inset>
-                <van-field class="chehao"
-                           v-model="chehao" label="车牌号" placeholder=""/>
-            </van-cell-group>
-            <div class="btn-area">
-                <div @click="onQuery">
-                    <img src="@/assets/image/btn_chaxun1.png"/>
-                    <div>查询</div>
-                </div>
-                <div @click="confirmSelect">
-                    <img src="@/assets/image/btn_queren.png"/>
-                    <div>确认</div>
-                </div>
+            <van-form @submit="onSubmit" id="form-area" ref="formRef">
+                <van-cell-group inset>
+                    <van-cell title="选择日期：" title-style="max-width: 25%" :value="dataText" @click="show = true"/>
+                    <van-calendar v-model:show="show" :min-date="minDate" :default-date="deDate"
+                                  type="range" allow-same-day @confirm="onConfirm"/>
+                </van-cell-group>
+            </van-form>
 
-                <div @click="handleConfirmSelect">
-                    <img src="@/assets/image/btn_shoudong.png"/>
-                    <div>手动确认</div>
-                </div>
+            <el-table ref="tableRef"
+                      :data="tableData"
+                      id="data-area"
+                      :style="tableHeight"
+                      v-loading="loading"
+                      element-loading-text="数据加载中..."
+                      element-loading-background="rgba(122, 122, 122, 0.8)"
+                      @row-click="selectRow">
+                <el-table-column fixed prop="chehao" label="车号" width="110px">
+                    <template #default="scope">
+                        <span style="font-weight: bolder;font-size: 16px">{{ scope.row.chehao }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="danjuhao" label="单据号" width="130px"/>
+                <el-table-column prop="chengfang" label="秤房"/>
+                <el-table-column prop="pizhong" label="皮重" :formatter="formatter"/>
+            </el-table>
 
+            <div>
+                <van-cell-group inset>
+                    <van-field class="chehao"
+                               v-model="chehao" label="车牌号" placeholder=""/>
+                </van-cell-group>
+                <div class="btn-area">
+                    <div @click="onQuery">
+                        <img src="@/assets/image/btn_chaxun1.png"/>
+                        <div>查询</div>
+                    </div>
+                    <div @click="confirmSelect">
+                        <img src="@/assets/image/btn_queren.png"/>
+                        <div>确认</div>
+                    </div>
+
+                    <div @click="handleConfirmSelect">
+                        <img src="@/assets/image/btn_shoudong.png"/>
+                        <div>手动确认</div>
+                    </div>
+
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 </template>
 
 <script>
@@ -64,11 +65,11 @@
     import {ref} from 'vue'
     import {useRouter} from 'vue-router'
     import {useStore} from 'vuex'
-    import {showToast, showLoadingToast, closeToast, showFailToast, showDialog} from 'vant'
+    import {showToast, showDialog} from 'vant'
     import {
         getTruckNo
     } from '@/api/pickWith'
-    import {onMounted, onUnmounted} from "@vue/runtime-core";
+    import {onMounted} from "@vue/runtime-core";
     import {toRaw} from "@vue/reactivity";
 
     let nowDat = new Date();
@@ -141,13 +142,10 @@
             }
 
 
-
             const confirmSelect = () => {
 
                 if (selectedCheHao) {
                     store.commit('setCarInfo', selectedCheHao)
-                    // store.commit('setScandList', [])
-                    // store.commit('setScandCalculateData', {})
                     router.push({
                         name: 'pickWithQueryInfoData',
                     })
@@ -175,8 +173,6 @@
                         DataId: '',
                     }
                     store.commit('setCarInfo', obj)
-                    // store.commit('setScandList', [])
-                    // store.commit('setScandCalculateData', {})
                     router.push({
                         name: 'pickWithQueryInfoData',
                     })
@@ -284,7 +280,7 @@
 
     .btn-area > div:nth-child(3) {
         background-color: var(--btn-color1);
-        margin-right:10px
+        margin-right: 10px
     }
 
     .btn-area > div:nth-child(2) {
@@ -293,7 +289,7 @@
 
     .btn-area > div:nth-child(1) {
         background-color: var(--btn-color1);
-        margin-left:10px
+        margin-left: 10px
     }
 
 
@@ -302,7 +298,7 @@
         margin-bottom: 10px;
     }
 
-    .chehao /deep/ .van-cell__value {
+    ::v-deep(.chehao  .van-cell__value) {
         background-color: #d0dde9;
         height: 35px;
         border-radius: 10px;
@@ -311,7 +307,7 @@
         color: black;
     }
 
-    .chehao /deep/ .van-cell__title {
+    ::v-deep(.chehao  .van-cell__title) {
         font-size: 18px;
         font-weight: bold;
         color: black;

@@ -174,17 +174,6 @@
             })
 
 
-            // onBeforeRouteLeave((to, from, next) => {
-            //     // to.meta.keepAlive = true
-            //     if (state.value){
-            //         to.meta.keepAlive = false
-            //     }
-            //     console.log(to)
-            //     console.log(from)
-            //     next();
-            // })
-
-
 
             //返回上一页
             const onClickLeft = () => {

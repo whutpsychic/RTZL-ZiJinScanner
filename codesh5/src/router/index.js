@@ -1,7 +1,5 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import Preopen from '../views/preopen/main.vue'
-import LoginView from '../views/login/main.vue'
-
 
 const router = createRouter({
     history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -47,14 +45,6 @@ const router = createRouter({
             name: 'auditingList',
             component: () => import('../views/auditing/main.vue')
         },
-
-        // //审核页面
-        // {
-        //     path: '/auditingDetails',
-        //     name: 'auditingDetails',
-        //     component: () => import('../views/auditing/details.vue')
-        // },
-
 
         //报表统计页面
         {
@@ -121,21 +111,10 @@ const router = createRouter({
         {
             path: '/pickWithRecordListData',
             name: 'pickWithRecordListData',
-            // meta: {
-            //     keepAlive: true
-            // },
             component: () => import('../views/pickWithRecordQuery/pickWithRecordListData.vue')
         },
 
-        //拣配记录明细页面
-        {
-            path: '/pickWithRecordInfoData',
-            name: 'pickWithRecordInfoData',
-            // meta: {
-            //     keepAlive: false
-            // },
-            component: () => import('../views/pickWithRecordQuery/pickWithRecordInfoData.vue')
-        },
+
 
         {
             path: '/login',
@@ -149,14 +128,6 @@ const router = createRouter({
             component: () => import('../views/login/main.vue')
         }
     ],
-    // scrollBehavior(to, from, savedPosition) {
-    //     console.log(savedPosition)
-    //     if (savedPosition) {
-    //         return savedPosition
-    //     } else {
-    //         return {left: 0, top: 0}
-    //     }
-    // }
 
 
 })

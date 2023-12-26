@@ -1,135 +1,135 @@
 <template>
-
-    <van-nav-bar
-            title="拣配"
-            class="page-nav-bar"
-            left-arrow
-            @click-left="onClickLeft"
-    >
-        <template #right>
-            <van-icon @click="scanCode" style="color: #FFFFFF" name="scan" size="40"/>
-        </template>
-    </van-nav-bar>
-
-    <div class="container">
-        <el-table
-                :data="tableData"
-                style="height:260px"
-                id="data-area1"
-                :key="itemKey"
-                highlight-current-row
-                @row-click="selectRow"
+    <main>
+        <van-nav-bar
+                title="拣配"
+                class="page-nav-bar"
+                left-arrow
+                @click-left="onClickLeft"
         >
-            <el-table-column fixed prop="date" label="日期"/>
-            <el-table-column prop="number" label="包号"/>
-            <el-table-column prop="weight" label="重量"/>
-            <el-table-column prop="barcode" label="条码" width="250"/>
+            <template #right>
+                <van-icon @click="scanCode" style="color: #FFFFFF" name="scan" size="40"/>
+            </template>
+        </van-nav-bar>
 
-        </el-table>
+        <div class="container">
+            <el-table
+                    :data="tableData"
+                    style="height:260px"
+                    id="data-area1"
+                    :key="itemKey"
+                    highlight-current-row
+                    @row-click="selectRow"
+            >
+                <el-table-column fixed prop="date" label="日期"/>
+                <el-table-column prop="number" label="包号"/>
+                <el-table-column prop="weight" label="重量"/>
+                <el-table-column prop="barcode" label="条码" width="250"/>
 
-        <div class="info-container">
-            <span class="title">应拣</span>
-            <span class="title">已拣</span>
-            <span class="title">缺少</span>
-            <span>{{yingj}}</span>
-            <span>{{yij1}}</span>
-            <span>{{ques}}</span>
-            <span class="title">皮重</span>
-            <span class="title">捆数</span>
-            <span class="title">合计</span>
-            <span>{{pizhong}}</span>
-            <span>{{yij2}}</span>
-            <span>{{pz}}</span>
-        </div>
+            </el-table>
 
-        <div class="btn-area">
-            <div @click="onConfirm">
-                <img src="@/assets/image/btn_queren.png"/>
-                <div>确认</div>
+            <div class="info-container">
+                <span class="title">应拣</span>
+                <span class="title">已拣</span>
+                <span class="title">缺少</span>
+                <span>{{yingj}}</span>
+                <span>{{yij1}}</span>
+                <span>{{ques}}</span>
+                <span class="title">皮重</span>
+                <span class="title">捆数</span>
+                <span class="title">合计</span>
+                <span>{{pizhong}}</span>
+                <span>{{yij2}}</span>
+                <span>{{pz}}</span>
             </div>
-            <div @click="onHandle">
-                <img src="@/assets/image/btn_shoudong.png"/>
-                <div>手动</div>
-            </div>
-            <div @click="onDelete">
-                <img src="@/assets/image/btn_tichu.png"/>
-                <div>剔除</div>
-            </div>
-        </div>
-    </div>
 
-
-    <el-dialog
-            v-model="centerDialogVisibleTXM"
-            title="手动不合格条码"
-            width="96%"
-            align-center
-    >
-
-        <van-form @submit="onSubmit">
-            <van-cell-group inset>
-                <van-field
-                        v-model="F_BATCHGROUP"
-                        name="F_BATCHGROUP"
-                        label="批次号"
-                        placeholder="批次号(四位)"
-                        :rules="[{ required: true, message: '请填写批次号' }]"
-                />
-                <van-field
-                        v-model="F_BATCHNUMBER"
-                        name="F_BATCHNUMBER"
-                        label="编号"
-                        placeholder="编号(三位)"
-                        :rules="[{ required: true, message: '请填写编号' }]"
-                />
-            </van-cell-group>
-            <div style="margin: 16px;">
-                <van-button square icon="search" block type="primary" native-type="submit"
-                            style="background-color: #003363;color:#FFFFFF">
-                    查询
-                </van-button>
-
-                <div style="margin-top: 10px">
-                    <p>条形码</p>
-
-                    <el-select v-model="barCodeSelect"
-                               placeholder="条形码" style="width: 100%;">
-                        <el-option
-                                v-for="item in listData.barCodeSelectList"
-                                :key="item.F_BARCODE"
-                                :label="item.F_BARCODE"
-                                :value="item.F_BARCODE"
-                        />
-                    </el-select>
+            <div class="btn-area">
+                <div @click="onConfirm">
+                    <img src="@/assets/image/btn_queren.png"/>
+                    <div>确认</div>
                 </div>
-
-                <van-row style="margin-top: 15px">
-                    <van-col span="2"></van-col>
-                    <van-col span="10">
-                        <van-button icon="passed" style="background-color: #003363;color:#FFFFFF"
-                                    @click="passedTXMClick">确定
-                        </van-button>
-                    </van-col>
-                    <van-col span="10" style="text-align: center">
-                        <van-button icon="close" style="background-color:red;color:#FFFFFF" @click="closeTXMClick">退出
-                        </van-button>
-                    </van-col>
-                    <van-col span="2"></van-col>
-
-                </van-row>
-
+                <div @click="onHandle">
+                    <img src="@/assets/image/btn_shoudong.png"/>
+                    <div>手动</div>
+                </div>
+                <div @click="onDelete">
+                    <img src="@/assets/image/btn_tichu.png"/>
+                    <div>剔除</div>
+                </div>
             </div>
-        </van-form>
+        </div>
+        <el-dialog
+                v-model="centerDialogVisibleTXM"
+                title="手动不合格条码"
+                width="96%"
+                align-center
+        >
 
-    </el-dialog>
+            <van-form @submit="onSubmit">
+                <van-cell-group inset>
+                    <van-field
+                            v-model="F_BATCHGROUP"
+                            name="F_BATCHGROUP"
+                            label="批次号"
+                            placeholder="批次号(四位)"
+                            :rules="[{ required: true, message: '请填写批次号' }]"
+                    />
+                    <van-field
+                            v-model="F_BATCHNUMBER"
+                            name="F_BATCHNUMBER"
+                            label="编号"
+                            placeholder="编号(三位)"
+                            :rules="[{ required: true, message: '请填写编号' }]"
+                    />
+                </van-cell-group>
+                <div style="margin: 16px;">
+                    <van-button square icon="search" block type="primary" native-type="submit"
+                                style="background-color: #003363;color:#FFFFFF">
+                        查询
+                    </van-button>
+
+                    <div style="margin-top: 10px">
+                        <p>条形码</p>
+
+                        <el-select v-model="barCodeSelect"
+                                   placeholder="条形码" style="width: 100%;">
+                            <el-option
+                                    v-for="item in listData.barCodeSelectList"
+                                    :key="item.F_BARCODE"
+                                    :label="item.F_BARCODE"
+                                    :value="item.F_BARCODE"
+                            />
+                        </el-select>
+                    </div>
+
+                    <van-row style="margin-top: 15px">
+                        <van-col span="2"></van-col>
+                        <van-col span="10">
+                            <van-button icon="passed" style="background-color: #003363;color:#FFFFFF"
+                                        @click="passedTXMClick">确定
+                            </van-button>
+                        </van-col>
+                        <van-col span="10" style="text-align: center">
+                            <van-button icon="close" style="background-color:red;color:#FFFFFF" @click="closeTXMClick">
+                                退出
+                            </van-button>
+                        </van-col>
+                        <van-col span="2"></van-col>
+
+                    </van-row>
+
+                </div>
+            </van-form>
+
+        </el-dialog>
+    </main>
 </template>
 
 <script>
     import BigNumber from 'bignumber.js'
     import {ref, onMounted} from 'vue'
     import {shallowReactive, toRaw} from '@vue/reactivity'
-    import {useRouter, useRoute, onBeforeRouteLeave} from 'vue-router'
-    import {closeToast, showConfirmDialog, showDialog, showFailToast, showLoadingToast, showToast} from 'vant'
+    import {useRouter} from 'vue-router'
+    import {closeToast, showConfirmDialog, showDialog, showLoadingToast, showToast} from 'vant'
     import {
         checkBatchNo,
         getBarcode,
@@ -138,12 +138,10 @@
     import {useStore} from 'vuex'
     import {pick} from 'vant/lib/utils'
     import fc from "flutter-core";
-    import {onUnmounted} from "@vue/runtime-core";
 
     export default {
         setup() {
             const router = useRouter()
-            const route = useRoute()
             const tableData = ref([])
             const store = useStore()
             const itemKey = ref('')
@@ -254,16 +252,6 @@
 
             })
 
-            window.history.pushState(null, null, document.URL);
-            window.addEventListener("popstate", browserBack, false);
-            onUnmounted(() => {
-                window.removeEventListener("popstate", browserBack, false);
-            })
-            function browserBack() {
-                router.push({path: '/pickWithQueryInfoData'})
-            }
-
-
             const onClickLeft = () => {
                 router.push({path: '/pickWithQueryInfoData'})
             }
@@ -299,17 +287,7 @@
                 yingj.value = new BigNumber(chukudanListInfo.F_PLANSUTTLE).minus(chukudanListInfo.F_SUTTLE).toFixed(4)
                 ques.value = new BigNumber(chukudanListInfo.F_PLANSUTTLE).minus(chukudanListInfo.F_SUTTLE).toFixed(4)
                 pz.value = new BigNumber(pizhong.value).plus(yij1.value).toFixed(4)
-                // tableData.value = toRaw(store.state.scandList)
-                // let calculateData = toRaw(store.state.scandCalculateData)
-                // if (Object.getOwnPropertyNames(calculateData).length == 0) {
-                //     ques.value = new BigNumber(chukudanListInfo.F_PLANSUTTLE).minus(chukudanListInfo.F_SUTTLE).toFixed(4)
-                //     pz.value = new BigNumber(pizhong.value).plus(yij1.value).toFixed(4)
-                // } else {
-                //     yij1.value = calculateData.yij1
-                //     ques.value = calculateData.ques
-                //     pz.value = calculateData.pz
-                //     yij2.value = calculateData.yij2
-                // }
+
 
             })
 
@@ -572,14 +550,6 @@
                 tableData.value = arr
                 itemKey.value = Math.random()
 
-
-                // let calculateData = {}
-                // calculateData.yij1 = yij1.value
-                // calculateData.ques = ques.value
-                // calculateData.pz = pz.value
-                // calculateData.yij2 = yij2.value
-                // store.commit('setScandCalculateData', calculateData)
-                // store.commit('setScandList', tableData.value)
 
                 if (ques.value < 0) {
                     showDialog({

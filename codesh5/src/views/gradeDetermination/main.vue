@@ -1,356 +1,357 @@
 <template>
-
-    <div class="header">
-        <van-nav-bar
-                title="品级质检列表"
-                class="page-nav-bar"
-                left-arrow
-                @click-left="onClickLeft"
-        >
-            <template #right>
-                <van-icon @click="scanCode" style="color: #FFFFFF" name="scan" size="40"/>
-            </template>
-        </van-nav-bar>
-        <van-tabs v-model:active="active" @click-tab="onClickTab">
-            <van-tab :title="quantity"></van-tab>
-            <van-tab title=" 已质检"></van-tab>
-        </van-tabs>
-    </div>
-
-    <div class="content">
-        <div v-show="active==0" style="padding:0px 5px 5px 5px">
-
-            <el-card class="box-card" shadow="always" style="margin-top:5px"
-                     v-for="(item,index) in  listData.yjtJyInformationListData">
-
-                <div class="test">
-
-                    <div @click="details(item)">{{item.batchnumber}}</div>
-                    <van-button size="small" style="margin-left: 30px;background-color: #003363;color:#FFFFFF"
-                                @click="identifyClick('0',item)">单个鉴定
-                    </van-button>
-
-                    <img src="/image/delete.png" class="delete" @click="deleteData(item)"/>
-
-                </div>
-
-            </el-card>
+    <main>
+        <div class="header">
+            <van-nav-bar
+                    title="品级质检列表"
+                    class="page-nav-bar"
+                    left-arrow
+                    @click-left="onClickLeft"
+            >
+                <template #right>
+                    <van-icon @click="scanCode" style="color: #FFFFFF" name="scan" size="40"/>
+                </template>
+            </van-nav-bar>
+            <van-tabs v-model:active="active" @click-tab="onClickTab">
+                <van-tab :title="quantity"></van-tab>
+                <van-tab title=" 已质检"></van-tab>
+            </van-tabs>
         </div>
-        <div v-show="active==1">
-            <div v-if="JSON.stringify(listData.yjtJyInformationData) !== '{}'">
-                <div style="position: relative">
 
-                    <el-card class="box-card" shadow="always" style="margin-top:5px">
-                        <van-divider content-position="left">基本信息</van-divider>
-                        <div style="position: relative">
-                            <p>
-                                <span style="font-weight: bold">编号：</span>
-                                <span>{{listData.yjtJyInformationData.batchnumber}}</span>
-                            </p>
+        <div class="content">
+            <div v-show="active==0" style="padding:0px 5px 5px 5px">
 
-                            <p>
-                                <span style="font-weight: bold">重量：</span>
-                                <span>{{parseFloat(listData.yjtJyInformationData.suttle)}}{{listData.yjtJyInformationData.unit}}</span>
-                            </p>
+                <el-card class="box-card" shadow="always" style="margin-top:5px"
+                         v-for="(item,index) in  listData.yjtJyInformationListData">
 
-                            <p>
-                                <span style="font-weight: bold">标准：</span>
-                                <span>{{listData.yjtJyInformationData.standard}}</span>
-                            </p>
+                    <div class="test">
 
-                            <p>
-                                <span style="font-weight: bold">计量员：</span>
-                                <span>{{listData.yjtJyInformationData.suttleperson}}</span>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <span style="font-weight: bold">扫描人：</span>
-                                <span>{{listData.yjtJyInformationData.scanUser}}</span>
-                            </p>
+                        <div @click="details(item)">{{item.batchnumber}}</div>
+                        <van-button size="small" style="margin-left: 30px;background-color: #003363;color:#FFFFFF"
+                                    @click="identifyClick('0',item)">单个鉴定
+                        </van-button>
 
-                            <p>
-                                <span style="font-weight: bold">生产日期：</span>
-                                <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationData.proDate)}}</span>
-                            </p>
+                        <img src="/image/delete.png" class="delete" @click="deleteData(item)"/>
 
-                            <div v-if="listData.yjtJyInformationDetailsData.status=='2'" class="yijianyan"
-                                 style="position: absolute;">
-                                <img src="/image/yijianyan.png">
+                    </div>
+
+                </el-card>
+            </div>
+            <div v-show="active==1">
+                <div v-if="JSON.stringify(listData.yjtJyInformationData) !== '{}'">
+                    <div style="position: relative">
+
+                        <el-card class="box-card" shadow="always" style="margin-top:5px">
+                            <van-divider content-position="left">基本信息</van-divider>
+                            <div style="position: relative">
+                                <p>
+                                    <span style="font-weight: bold">编号：</span>
+                                    <span>{{listData.yjtJyInformationData.batchnumber}}</span>
+                                </p>
+
+                                <p>
+                                    <span style="font-weight: bold">重量：</span>
+                                    <span>{{parseFloat(listData.yjtJyInformationData.suttle)}}{{listData.yjtJyInformationData.unit}}</span>
+                                </p>
+
+                                <p>
+                                    <span style="font-weight: bold">标准：</span>
+                                    <span>{{listData.yjtJyInformationData.standard}}</span>
+                                </p>
+
+                                <p>
+                                    <span style="font-weight: bold">计量员：</span>
+                                    <span>{{listData.yjtJyInformationData.suttleperson}}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span style="font-weight: bold">扫描人：</span>
+                                    <span>{{listData.yjtJyInformationData.scanUser}}</span>
+                                </p>
+
+                                <p>
+                                    <span style="font-weight: bold">生产日期：</span>
+                                    <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationData.proDate)}}</span>
+                                </p>
+
+                                <div v-if="listData.yjtJyInformationDetailsData.status=='2'" class="yijianyan"
+                                     style="position: absolute;">
+                                    <img src="/image/yijianyan.png">
+                                </div>
+
+                                <div v-if="listData.yjtJyInformationDetailsData.status=='0'" class="yijianyan"
+                                     style="position: absolute;">
+                                    <img src="/image/shenhezhong.png">
+                                </div>
+
                             </div>
 
-                            <div v-if="listData.yjtJyInformationDetailsData.status=='0'" class="yijianyan"
-                                 style="position: absolute;">
-                                <img src="/image/shenhezhong.png">
+
+                            <van-divider content-position="left">质检信息</van-divider>
+
+                            <div>
+                                <p>
+                                    <span style="font-weight: bold">品级分类：</span>
+                                    <span>{{listData.yjtJyInformationDetailsData.exteriorName}}</span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span v-if="listData.yjtJyInformationDetailsData.exterior!='0'"
+                                          style="font-weight: bold">类型：</span>
+                                    <span>{{listData.yjtJyInformationDetailsData.dictName}}</span>
+                                </p>
+
+                                <p>
+                                    <span style="font-weight: bold">质检时间：</span>
+                                    <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetailsData.checkoutDate)}}</span>
+                                </p>
+
+                                <p>
+                                    <span style="font-weight: bold">质检人：</span>
+                                    <span>{{listData.yjtJyInformationDetailsData.checkoutUser}}</span>
+                                </p>
+
+                                <p v-if="listData.yjtJyInformationDetailsData.alterReason">
+                                    <span style="font-weight: bold">改判理由：</span>
+                                    <span>{{listData.yjtJyInformationDetailsData.alterReason}}</span>
+                                </p>
+
                             </div>
 
-                        </div>
 
+                            <div v-if="listData.yjtJyInformationDetailsData.exterior!='0'">
+                                <van-image style="margin:0 2%" @click="seeImg"
+                                           v-for="(item,index) in  listData.yjtJyInformationFileList"
+                                           width="45%"
+                                           height="8rem"
+                                           fit="cover"
+                                           position="left"
+                                           :src="item"
+                                />
+                            </div>
+                        </el-card>
 
-                        <van-divider content-position="left">质检信息</van-divider>
-
-                        <div>
-                            <p>
-                                <span style="font-weight: bold">品级分类：</span>
-                                <span>{{listData.yjtJyInformationDetailsData.exteriorName}}</span>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <span v-if="listData.yjtJyInformationDetailsData.exterior!='0'"
-                                      style="font-weight: bold">类型：</span>
-                                <span>{{listData.yjtJyInformationDetailsData.dictName}}</span>
-                            </p>
-
-                            <p>
-                                <span style="font-weight: bold">质检时间：</span>
-                                <span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.yjtJyInformationDetailsData.checkoutDate)}}</span>
-                            </p>
-
-                            <p>
-                                <span style="font-weight: bold">质检人：</span>
-                                <span>{{listData.yjtJyInformationDetailsData.checkoutUser}}</span>
-                            </p>
-
-                            <p v-if="listData.yjtJyInformationDetailsData.alterReason">
-                                <span style="font-weight: bold">改判理由：</span>
-                                <span>{{listData.yjtJyInformationDetailsData.alterReason}}</span>
-                            </p>
-
-                        </div>
-
-
-                        <div v-if="listData.yjtJyInformationDetailsData.exterior!='0'">
-                            <van-image style="margin:0 2%" @click="seeImg"
-                                       v-for="(item,index) in  listData.yjtJyInformationFileList"
-                                       width="45%"
-                                       height="8rem"
-                                       fit="cover"
-                                       position="left"
-                                       :src="item"
-                            />
-                        </div>
-                    </el-card>
-
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="empennage">
+        <div class="empennage">
 
-        <van-row>
-            <van-col span="2"></van-col>
-            <van-col span="8">
-                <van-button style="background-color: #003363;color:#FFFFFF" @click="queryTXM">手动录入</van-button>
-            </van-col>
-            <van-col span="12" style="text-align: center">
-                <van-button style="background-color: #003363;color:#FFFFFF" @click="identifyClick('1')">
-                    {{identifyTitle}}
-                </van-button>
-            </van-col>
-            <van-col span="2"></van-col>
-
-        </van-row>
-    </div>
-
-    <van-popup
-            v-model:show="buttonShow"
-            closeable
-            close-icon="close"
-            position="bottom"
-            :style="{ height: '50%' }"
-    >
-
-        <div style="margin-top:15%">
             <van-row>
-                <van-col span="3"></van-col>
-                <van-col span="18">
-                    <van-button type="primary" size="large" @click="outstandingClick">优等品</van-button>
+                <van-col span="2"></van-col>
+                <van-col span="8">
+                    <van-button style="background-color: #003363;color:#FFFFFF" @click="queryTXM">手动录入</van-button>
                 </van-col>
-                <van-col span="3"></van-col>
-            </van-row>
+                <van-col span="12" style="text-align: center">
+                    <van-button style="background-color: #003363;color:#FFFFFF" @click="identifyClick('1')">
+                        {{identifyTitle}}
+                    </van-button>
+                </van-col>
+                <van-col span="2"></van-col>
 
-            <van-row style="margin-top:15px">
-                <van-col span="3"></van-col>
-                <van-col span="18">
-                    <van-button type="warning" size="large" @click="qualifiedClick">合格</van-button>
-                </van-col>
-                <van-col span="3"></van-col>
-            </van-row>
-
-            <van-row style="margin-top:15px">
-                <van-col span="3"></van-col>
-                <van-col span="18">
-                    <van-button type="danger" size="large" @click="unqualifiedClick">不合格</van-button>
-                </van-col>
-                <van-col span="3"></van-col>
             </van-row>
         </div>
-    </van-popup>
+
+        <van-popup
+                v-model:show="buttonShow"
+                closeable
+                close-icon="close"
+                position="bottom"
+                :style="{ height: '50%' }"
+        >
+
+            <div style="margin-top:15%">
+                <van-row>
+                    <van-col span="3"></van-col>
+                    <van-col span="18">
+                        <van-button type="primary" size="large" @click="outstandingClick">优等品</van-button>
+                    </van-col>
+                    <van-col span="3"></van-col>
+                </van-row>
+
+                <van-row style="margin-top:15px">
+                    <van-col span="3"></van-col>
+                    <van-col span="18">
+                        <van-button type="warning" size="large" @click="qualifiedClick">合格</van-button>
+                    </van-col>
+                    <van-col span="3"></van-col>
+                </van-row>
+
+                <van-row style="margin-top:15px">
+                    <van-col span="3"></van-col>
+                    <van-col span="18">
+                        <van-button type="danger" size="large" @click="unqualifiedClick">不合格</van-button>
+                    </van-col>
+                    <van-col span="3"></van-col>
+                </van-row>
+            </div>
+        </van-popup>
 
 
-    <van-popup
-            v-model:show="buttonShowPL"
-            closeable
-            close-icon="close"
-            position="bottom"
-            :style="{ height: '25%' }"
-    >
+        <van-popup
+                v-model:show="buttonShowPL"
+                closeable
+                close-icon="close"
+                position="bottom"
+                :style="{ height: '25%' }"
+        >
 
-        <div style="margin-top:15%">
-            <van-row>
-                <van-col span="3"></van-col>
-                <van-col span="18">
-                    <van-button type="primary" size="large" @click="outstandingClick">优等品</van-button>
-                </van-col>
-                <van-col span="3"></van-col>
-            </van-row>
-        </div>
-    </van-popup>
+            <div style="margin-top:15%">
+                <van-row>
+                    <van-col span="3"></van-col>
+                    <van-col span="18">
+                        <van-button type="primary" size="large" @click="outstandingClick">优等品</van-button>
+                    </van-col>
+                    <van-col span="3"></van-col>
+                </van-row>
+            </div>
+        </van-popup>
 
-    <van-image-preview
-            v-model:show="showImage"
-            :images="listData.yjtJyInformationFileList"
-            :closeable="true"
-            :loop="false"
-            :closeOnPopstate="true"
-    />
+        <van-image-preview
+                v-model:show="showImage"
+                :images="listData.yjtJyInformationFileList"
+                :closeable="true"
+                :loop="false"
+                :closeOnPopstate="true"
+        />
 
 
-    <el-dialog
-            v-model="centerDialogVisible"
-            title="请选择或填写改判理由"
-            width="90%"
-            align-center
-    >
-        <div style="padding: 15px;">
-            <el-select v-model="alterReason" filterable
-                       clearable allow-create
-                       placeholder="改判理由" style="width: 100%">
-                <el-option
-                        v-for="item in listData.alterReasonList"
-                        :key="item.alterReason"
-                        :label="item.alterReason"
-                        :value="item.alterReason"
-                />
-            </el-select>
-        </div>
-        <template #footer>
+        <el-dialog
+                v-model="centerDialogVisible"
+                title="请选择或填写改判理由"
+                width="90%"
+                align-center
+        >
+            <div style="padding: 15px;">
+                <el-select v-model="alterReason" filterable
+                           clearable allow-create
+                           placeholder="改判理由" style="width: 100%">
+                    <el-option
+                            v-for="item in listData.alterReasonList"
+                            :key="item.alterReason"
+                            :label="item.alterReason"
+                            :value="item.alterReason"
+                    />
+                </el-select>
+            </div>
+            <template #footer>
       <span class="dialog-footer">
         <el-button @click="outstandingAlter" type="primary">提交</el-button>
         <el-button type="danger" @click="centerDialogVisible = false">
           退出
         </el-button>
       </span>
-        </template>
+            </template>
 
 
-    </el-dialog>
+        </el-dialog>
 
 
-    <el-dialog
-            v-model="centerDialogVisibleJBXX"
-            title="基本信息"
-            width="96%"
-            align-center
-    >
+        <el-dialog
+                v-model="centerDialogVisibleJBXX"
+                title="基本信息"
+                width="96%"
+                align-center
+        >
 
-        <div style="position: relative;padding: 15px;">
-            <p>
-                <span style="font-weight: bold">编号：</span><span>{{listData.detailsInfo.batchnumber}}</span>
-            </p>
+            <div style="position: relative;padding: 15px;">
+                <p>
+                    <span style="font-weight: bold">编号：</span><span>{{listData.detailsInfo.batchnumber}}</span>
+                </p>
 
-            <p>
-                <span style="font-weight: bold">重量：</span><span>{{parseFloat(listData.detailsInfo.suttle)}}{{listData.detailsInfo.unit}}</span>
-            </p>
+                <p>
+                    <span style="font-weight: bold">重量：</span><span>{{parseFloat(listData.detailsInfo.suttle)}}{{listData.detailsInfo.unit}}</span>
+                </p>
 
-            <p>
-                <span style="font-weight: bold">标准：</span><span>{{listData.detailsInfo.standard}}</span>
-            </p>
+                <p>
+                    <span style="font-weight: bold">标准：</span><span>{{listData.detailsInfo.standard}}</span>
+                </p>
 
-            <p>
-                <span style="font-weight: bold">计量员：</span><span>{{listData.detailsInfo.suttleperson}}</span>
-                &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: bold">扫描人：</span><span>{{listData.detailsInfo.scanUser}}</span>
-            </p>
+                <p>
+                    <span style="font-weight: bold">计量员：</span><span>{{listData.detailsInfo.suttleperson}}</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: bold">扫描人：</span><span>{{listData.detailsInfo.scanUser}}</span>
+                </p>
 
-            <p>
-                <span style="font-weight: bold">生产日期：</span><span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.detailsInfo.proDate)}}</span>
-            </p>
+                <p>
+                    <span style="font-weight: bold">生产日期：</span><span>{{dateFormat("YYYY-mm-dd HH:MM:SS",listData.detailsInfo.proDate)}}</span>
+                </p>
 
-            <P><span style="font-weight: bold">条形码：</span><span>{{listData.detailsInfo.barcode}}</span></P>
-        </div>
-    </el-dialog>
+                <P><span style="font-weight: bold">条形码：</span><span>{{listData.detailsInfo.barcode}}</span></P>
+            </div>
+        </el-dialog>
 
 
-    <el-dialog
-            v-model="centerDialogVisibleTXM"
-            title="条形码筛选"
-            width="96%"
-            align-center
-    >
-        <div style="padding: 15px;">
-            <van-form @submit="onSubmit">
-                <van-cell-group inset>
-                    <van-field
-                            v-model="F_BATCHGROUP"
-                            name="F_BATCHGROUP"
-                            label="批次号"
-                            placeholder="批次号(四位)"
-                            :rules="[{ required: true, message: '请填写批次号' }]"
-                    />
-                    <van-field
-                            v-model="F_BATCHNUMBER"
-                            name="F_BATCHNUMBER"
-                            label="编号"
-                            placeholder="编号(三位)"
-                            :rules="[{ required: true, message: '请填写编号' }]"
-                    />
-                </van-cell-group>
-                <div style="margin: 16px;">
-                    <van-button square icon="search" block type="primary" native-type="submit"
-                                style="background-color: #003363;color:#FFFFFF">
-                        查询
-                    </van-button>
+        <el-dialog
+                v-model="centerDialogVisibleTXM"
+                title="条形码筛选"
+                width="96%"
+                align-center
+        >
+            <div style="padding: 15px;">
+                <van-form @submit="onSubmit">
+                    <van-cell-group inset>
+                        <van-field
+                                v-model="F_BATCHGROUP"
+                                name="F_BATCHGROUP"
+                                label="批次号"
+                                placeholder="批次号(四位)"
+                                :rules="[{ required: true, message: '请填写批次号' }]"
+                        />
+                        <van-field
+                                v-model="F_BATCHNUMBER"
+                                name="F_BATCHNUMBER"
+                                label="编号"
+                                placeholder="编号(三位)"
+                                :rules="[{ required: true, message: '请填写编号' }]"
+                        />
+                    </van-cell-group>
+                    <div style="margin: 16px;">
+                        <van-button square icon="search" block type="primary" native-type="submit"
+                                    style="background-color: #003363;color:#FFFFFF">
+                            查询
+                        </van-button>
 
-                    <div style="margin-top: 10px">
-                        <p>条形码</p>
+                        <div style="margin-top: 10px">
+                            <p>条形码</p>
 
-                        <el-select v-model="barCodeSelect"
-                                   placeholder="条形码" style="width: 100%;">
-                            <el-option
-                                    v-for="item in listData.barCodeSelectList"
-                                    :key="item.F_BARCODE"
-                                    :label="item.F_BARCODE"
-                                    :value="item.F_BARCODE"
-                            />
-                        </el-select>
+                            <el-select v-model="barCodeSelect"
+                                       placeholder="条形码" style="width: 100%;">
+                                <el-option
+                                        v-for="item in listData.barCodeSelectList"
+                                        :key="item.F_BARCODE"
+                                        :label="item.F_BARCODE"
+                                        :value="item.F_BARCODE"
+                                />
+                            </el-select>
+                        </div>
+
+                        <van-row style="margin-top: 15px">
+                            <van-col span="2"></van-col>
+                            <van-col span="10">
+                                <van-button icon="passed" style="background-color: #003363;color:#FFFFFF"
+                                            @click="passedTXMClick">确定
+                                </van-button>
+                            </van-col>
+                            <van-col span="10" style="text-align: center">
+                                <van-button icon="close" style="background-color:red;color:#FFFFFF"
+                                            @click="closeTXMClick">
+                                    退出
+                                </van-button>
+                            </van-col>
+                            <van-col span="2"></van-col>
+
+                        </van-row>
+
                     </div>
-
-                    <van-row style="margin-top: 15px">
-                        <van-col span="2"></van-col>
-                        <van-col span="10">
-                            <van-button icon="passed" style="background-color: #003363;color:#FFFFFF"
-                                        @click="passedTXMClick">确定
-                            </van-button>
-                        </van-col>
-                        <van-col span="10" style="text-align: center">
-                            <van-button icon="close" style="background-color:red;color:#FFFFFF" @click="closeTXMClick">
-                                退出
-                            </van-button>
-                        </van-col>
-                        <van-col span="2"></van-col>
-
-                    </van-row>
-
-                </div>
-            </van-form>
-        </div>
+                </van-form>
+            </div>
 
 
-    </el-dialog>
+        </el-dialog>
 
-
+    </main>
 </template>
 
 <script>
     import fc from "flutter-core";
     import {judgementCathodeCopper, alterReasonQuery} from '@/api/gradeDetermination'
-    import {closeToast, showConfirmDialog, showDialog, showImagePreview, showLoadingToast, showToast} from "vant";
+    import {closeToast, showConfirmDialog, showDialog,showLoadingToast, showToast} from "vant";
     import {onMounted, ref} from 'vue';
     import {useRoute, useRouter} from "vue-router";
     import {
@@ -562,31 +563,6 @@
             //扫码
             const scanCode = () => {
                 fc.scan()
-                // let tbCathodeCopper = {}
-                // tbCathodeCopper.fBarcode = '1240101220616033003524362'
-                // judgementCathodeCopper(tbCathodeCopper).then((result) => {
-                //    if (result.data.code){
-                //        if (result.data.code != 200) {
-                //            showDialog({
-                //                title: '提示',
-                //                width: '600',
-                //                message: result.data.message,
-                //            }).then(() => {
-                //
-                //            });
-                //        } else {
-                //            router.push({
-                //                path: '/gradeDetermination',
-                //                query: {barcode: '1240101220616033003524362', tabState: result.data.data}
-                //            })
-                //        }
-                //    }
-                //
-                //
-                // }).catch(error => {
-                //     console.log(error)
-                // })
-
             }
 
             //弹出品级鉴定按钮

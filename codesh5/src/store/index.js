@@ -22,9 +22,18 @@ const store = createStore({
             chukudanListInfo: getItem(CHU_KU_DAN_LIST_INFO),
             carInfo: getItem(CAR_INFO),
             scandList: getItem(SCAND_LIST),
+            pickWithQuery: getItem(PICKWITH_QUERY),
+            pickWithScroll: getItem(PICKWITH_SCROLL),
+            pickWithRecordQuery: getItem(PICKWITH_RECORD_QUERY),
+            setPickWithRecordScroll: getItem(PICKWITH_RECORD_SCROLL),
+
         }
     },
     mutations: {
+        setDhIndex(state, data) {
+            state.dhIndex = data
+        },
+
         setUser(state, data) {
             state.user = data
             setItem(USER_KEY, state.user)
