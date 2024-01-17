@@ -337,6 +337,14 @@
                             path: '/gradeDetermination',
                             query: {barcode: listData.yjtJyInformationData.barcode, tabState: '1'}
                         })
+                    }else {
+                        showToast({
+                            message: result.data.message,
+                            type: 'success',
+                            className: 'particulars-detail-popup',
+                            overlay: true,
+                        })
+                        disabled.value = false
                     }
                 }).catch(error => {
                     console.log(error)

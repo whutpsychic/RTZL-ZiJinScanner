@@ -824,8 +824,8 @@
                     message: '正在质检...',
                 });
                 excellentJudgement(listMap).then((result) => {
+                    closeToast();
                     if (result.data.code == 200) {
-                        closeToast();
                         showToast({
                             message: '质检成功',
                             type: 'success',
@@ -837,6 +837,13 @@
                         } else {
                             getAlreadyDeterminedData()
                         }
+                    }else {
+                        showToast({
+                            message: result.data.message,
+                            type: 'success',
+                            className: 'particulars-detail-popup',
+                            overlay: true,
+                        })
                     }
                 }).catch(error => {
                     console.log(error)
